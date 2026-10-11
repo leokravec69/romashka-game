@@ -314,6 +314,28 @@ table.offer td:last-child{color:var(--muted);text-align:left;font-weight:400}
 @media (max-width:560px){ .plate{margin-left:14px} .pMood{flex:1 1 105px} .pMood .thermo{height:7px} .plate b{padding-right:1px} }
 @media (max-width:560px){ .hudGap{display:none} .pMood{flex:0 1 auto} }
 @media (max-width:440px){ .pMood .pIn{display:none} .pMood b{min-width:2.6ch} }
+.seg.warn .ds{color:#c77a00;font-weight:700}
+
+/* главное меню в стиле Brawl Stars */
+.menuBS{background:radial-gradient(120% 90% at 50% 0%,#3f7bff 0%,#1b3ea8 55%,#10226b 100%);border-radius:18px;padding:14px 12px 14px;display:flex;flex-direction:column;gap:10px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.25);margin-bottom:10px}
+.mbSub{text-align:center;margin-top:-6px;color:#aebbe8;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.mbStart{font-size:18px;padding:14px 16px}
+.mbLead{margin:0;color:#e9eeff;font-size:13px;line-height:1.45}
+.mbLead b{color:#ffd21f}
+.mbModes{color:#aebbe8;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.mbGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:760px){.mbGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.mbBtn{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:flex;flex-direction:column;gap:2px;padding:10px 10px 10px 50px;min-height:58px;justify-content:center;background:linear-gradient(180deg,#4d8bff,#2453c9);border:3px solid #0b0f1f;border-radius:14px;box-shadow:0 5px 0 #0b0f1f;color:#fff;transition:transform .1s}
+.mbBtn:first-child{background:linear-gradient(180deg,#b06bff,#6a2fc9)}
+.mbBtn:hover{transform:translateY(-2px)}
+.mbBtn:active{transform:translateY(3px);box-shadow:0 2px 0 #0b0f1f}
+.mbBtn:focus-visible{outline:3px solid #ffd21f;outline-offset:2px}
+.mbBtn[disabled]{filter:grayscale(.6) brightness(.85);cursor:default}
+.mbBtn b{font-family:var(--display);font-weight:700;font-size:14px;line-height:1.15;-webkit-text-stroke:.6px #0b0f1f;paint-order:stroke fill;text-shadow:0 2px 0 #0b0f1f}
+.mbBtn .mbS{font-size:11px;font-weight:700;color:#dfe7ff;line-height:1.25}
+.mbIco{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:17px;background:radial-gradient(circle at 35% 30%,#fff7b8,#ffb800);border:2px solid #0b0f1f;box-shadow:0 3px 0 #0b0f1f;color:#1a1a1a}
+.mbRank{display:flex;gap:6px;align-items:center;justify-content:center;color:#aebbe8;font-size:12px;font-weight:700}
+.mbRank b{color:#ffd21f;font-family:var(--display)}
 </style>
 </head>
 <body>
@@ -598,7 +620,8 @@ function tailX(id){
 }
 function hideDlg(){ dlg.className = 'dlg'; }
 function showDlg(id, text, opt = {}){
-  dlg.className = 'dlg on' + (opt.narr ? ' is-narr' : ' ' + (SIDE[id] || 'up')) + (id === 'aya' ? ' is-aya' : '') + (id === 'narc' ? ' is-narc' : '');
+  const side = opt.stage ? null : SIDE[id];
+  dlg.className = 'dlg on' + (opt.narr ? ' is-narr' : ' ' + (side || 'up')) + (id === 'aya' ? ' is-aya' : '') + (id === 'narc' ? ' is-narc' : '');
   dlg.innerHTML = '';
   if (!opt.narr && ACTORS.includes(id)){
     const im = document.createElement('img'); im.className = 'por'; im.src = portraitSrc(id); im.alt = NAMES[id];
@@ -610,19 +633,21 @@ function showDlg(id, text, opt = {}){
   if (opt.photo){ const ph = document.createElement('img'); ph.className = 'photo'; ph.src = IMG('marina_phone'); ph.alt = 'Фото на телефоне'; box.append(ph); }
   dlg.append(box);
   dlg.style.left = dlg.style.right = '';
-  if (!opt.narr && SIDE[id]){
+  if (!opt.narr && side){
     const sr = stage.getBoundingClientRect(), bw = bustImg.getBoundingClientRect().width;
     const gap = Math.min(bw + 22, sr.width * 0.46) + 'px';
-    if (SIDE[id] === 'side-l') dlg.style.left = gap; else dlg.style.right = gap;
+    if (side === 'side-l') dlg.style.left = gap; else dlg.style.right = gap;
   }
-  if (!opt.narr && !SIDE[id]) dlg.style.setProperty('--tail', tailX(id) + 'px');
+  if (!opt.narr && !side) dlg.style.setProperty('--tail', tailX(id) + 'px');
 }
 const readMs = t => Math.min(8000, 1500 + t.length * 45);
 async function say(id, text, opt = {}){
   if (!text) return;
   if (opt.mood) mood(id, opt.mood);
   const actor = !opt.narr && ACTORS.includes(id) && C[id].vis;
-  showBust(opt.narr ? null : id);
+  const onStage = !opt.narr && (id === 'narc' || id === 'tamara') && C[id] && C[id].vis;
+  if (onStage) opt = Object.assign({}, opt, {stage:true});
+  showBust(opt.narr || onStage ? null : id);
   if (actor) await camClose(id);
   showDlg(id, text, opt);
   const talker = actor ? id : null;
@@ -1156,26 +1181,27 @@ function intro(){
   panel.innerHTML = '';
   setLocation2('entrance'); clips(false);
   pose('kira','diploma'); setPos('kira', 1000, 700); face('kira', 1); mood('kira','happy'); camSet(900);
-  const h = el('div','head'); h.append(el('h1', null, 'Симулятор парикмахера'), el('span','step', 'Академия Льва Кравца'));
-  const all = [];
-  const start = el('button','next big','▶  Начать с выхода из Академии'); start.type = 'button';
-  start.onclick = () => { all.forEach(x => x.disabled = true); heroSelect(); };
-  const lead = el('p','lead','<b>Первый раз? Начните отсюда.</b> Выберите героя — Киру или Эрика. Вместе с Айей герой выберет салон, пройдёт собеседование и выйдет на первую смену.');
-  const b = el('button','next alt','Смена в «Ромашке»'); b.type = 'button';
-  b.onclick = async () => {
-    all.forEach(x => x.disabled = true);
-    resetScene(); hud();
-    if (soundOn && VO['Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.']) await say('aya', 'Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.');
-    track('visit_start'); enter('s0');
-  };
-  const b2 = el('button','next alt','Тренажёр приветствия'); b2.type = 'button'; b2.onclick = () => { all.forEach(x => x.disabled = true); drillStart(); };
-  const b3 = el('button','next alt','Экзамен в Академии'); b3.type = 'button'; b3.onclick = () => { all.forEach(x => x.disabled = true); examStart(); };
-  all.push(start, b, b2, b3);
-  const sub = el('p','modes','Другие режимы — для тренировки:');
-  const row = el('div','btnrow left'); row.append(b, b2, b3);
-  const t = el('p','note','«Смена в «Ромашке»» — полный визит клиентки Марины в салоне среднего уровня. «Тренажёр приветствия» — 5 разных клиентов, первая минута встречи. «Экзамен в Академии» — Айя проверяет общение, колористику, нормы и продажи; сдал на 80% — новый ранг ножниц. Ваш ранг: ' + RANKS[getRank()] + '.');
-  const c = el('div','card','<ul><li>Выбирайте реплики и действия — персонажи разыгрывают их на сцене.</li><li>Шкала сверху — настроение клиента. Если упадёт до −80, клиент уйдёт.</li><li>Нажмите на сцену или на реплику, чтобы ускорить её.</li><li>Айя подсказывает голосом: 🔊 — голос, 🎵 — громкость музыки.</li></ul>');
-  panel.append(h, start, lead, sub, row, t, c);
+  const all = [], box = el('div','menuBS');
+  box.append(el('div','hsTitle','Симулятор парикмахера'), el('div','mbSub','Академия Льва Кравца'));
+  const start = el('button','hsPlay mbStart','▶ Начать с выхода из Академии'); start.type = 'button';
+  start.onclick = () => { all.forEach(x => x.disabled = true); QUICK = false; heroSelect(); };
+  const lead = el('p','mbLead','<b>Первый раз? Начните отсюда.</b> Выберите героя — Киру или Эрика. Вместе с Айей герой выберет салон, пройдёт собеседование и выйдет на первую смену.');
+  const mk = (ico, title, sub, fn) => { const x = el('button','mbBtn'); x.type = 'button'; x.append(el('span','mbIco', ico), el('b', null, title), el('span','mbS', sub)); x.onclick = () => { all.forEach(y => y.disabled = true); fn(); }; all.push(x); return x; };
+  const grid = el('div','mbGrid');
+  grid.append(
+    mk('🏪', 'Выбор салона', 'Сразу к 8 салонам и барбершопам', () => { QUICK = true; heroSelect(); }),
+    mk('✂', 'Смена в «Ромашке»', 'Полный визит клиентки Марины', async () => {
+      resetScene(); hud();
+      if (soundOn && VO['Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.']) await say('aya', 'Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.');
+      track('visit_start'); enter('s0');
+    }),
+    mk('👋', 'Тренажёр приветствия', '5 клиентов, первая минута', () => drillStart()),
+    mk('🎓', 'Экзамен в Академии', 'Сдал на 80% — новый ранг', () => examStart()));
+  all.unshift(start);
+  const rk = el('div','mbRank'); rk.append(el('span', null, 'Ваш ранг:'), el('b', null, RANKS[getRank()]));
+  box.append(start, lead, el('div','mbModes','Другие режимы'), grid, rk);
+  const c = el('div','card','<ul><li>Выбирайте реплики и действия — персонажи разыгрывают их на сцене.</li><li>Плашка с настроением сверху — как себя чувствует клиент. Если упадёт до −80, клиент уйдёт.</li><li>Нажмите на сцену или на реплику, чтобы ускорить её.</li><li>Айя подсказывает голосом: 🔊 — голос, 🎵 — громкость музыки.</li></ul>');
+  panel.append(box, c);
   say('aya', 'Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.', {hold:true});
 }
 /* ================= ТРЕНАЖЁР ПРИВЕТСТВИЯ: 5 клиентов, 5 ситуаций, по 2 решения ================= */
@@ -1546,7 +1572,7 @@ const RANKNAME = {trainee:'стажёр', r3:'парикмахер третье�
 const SKILLS = ['Женские стрижки','Мужские стрижки','Только мужские стрижки','Укладки','Окрашивание','Химзавивка','Вечерние причёски и плетение','Уходовые процедуры'];
 let PR = null;
 function setLocation2(loc){
-  const map = {entrance:'academy_entrance', econom:'salon_econom', eplus:'salon_econom_plus', barber_pijon:'barber_pijon', barber_buxme:'barber_buxme'};
+  const map = {entrance:'academy_entrance', econom:'salon_econom', eplus:'salon_econom_plus', barber_pijon:'barber_pijon', barber_buxme:'barber_buxme', salon_econom:'salon_econom', salon_econom_plus:'salon_econom_plus', salon_super_econom:'salon_super_econom', salon_premium:'salon_premium', salon_super_premium:'salon_super_premium'};
   if (!map[loc]) return setLocation(loc);
   const bg = document.getElementById('bg');
   bg.setAttribute('href', IMG(map[loc])); bg.setAttribute('x', 0); bg.setAttribute('y', 0); bg.setAttribute('width', 1672); bg.setAttribute('height', 941);
@@ -1596,7 +1622,7 @@ function prSkills(){
   });
 }
 /* ---------- герой: Кира (парикмахер-универсал) или Эрик (барбер) ---------- */
-let HERO = 'kira';
+let HERO = 'kira', QUICK = false;
 const ERIC_TXT = {
   hello:'Поздравляю, Эрик! Сертификат барбера есть. Давай решим, где тебе работать.',
   skills:'Восемьдесят часов — это курсы барбера. Ты умеешь короткие мужские стрижки и бороды. Удлинённые мужские стрижки и женский зал пока закрыты.',
@@ -1608,7 +1634,6 @@ const ERIC_TXT = {
 };
 const KIRA_BARBER_LOCK = 'В барбершоп берут тех, кто уверенно стрижёт мужчин. Отметь мужские стрижки — или подучись.';
 function segLocked(s){
-  if (HERO === 'eric') return s.barber ? '' : '🔒 нужно повышение квалификации';
   if (s.barber && PR.skills && !PR.skills.some(x => /Мужские|мужские/.test(x))) return '🔒 нужны мужские стрижки';
   return '';
 }
@@ -1622,6 +1647,7 @@ function segGrid(onPick, mark, lockOn){
     if (mark === i) b.classList.add('rec');
     b.append(pic, el('b', null, s.name), el('span', 'lv', s.lvl + (mark === i ? ' · совет Айи' : '')), el('span', 'ds', lock || s.desc));
     if (lock){ b.classList.add('locked'); b.disabled = true; b.setAttribute('aria-label', s.name + ': ' + lock); }
+    else if (lockOn && HERO === 'eric' && !s.barber){ b.classList.add('warn'); b.lastChild.textContent = '⚠ Женский зал и удлинённые стрижки'; }
     b.onclick = () => { [...g.children].forEach(x => x.disabled = true); b.classList.add('picked'); onPick(i); };
     g.append(b);
   });
@@ -1673,6 +1699,7 @@ async function careerStart(){
   S = fresh(); resetScene(); hud(); stopVoice(); setLocation2('entrance');
   vis('marina', false); coatOn = false; clips(false); PARTNER = 'marina';
   PR = {};
+  if (QUICK) return quickChoose();
   if (HERO === 'eric') return ericStart();
   vis('eric', false);
   pose('kira','diploma'); setPos('kira', 1000, 700); face('kira', 1); mood('kira','happy'); camSet(900);
@@ -1757,11 +1784,12 @@ function prTalon(){
 }
 function prChoose(){
   panel.innerHTML = ''; panel.append(prHead('Куда пойдёшь?'));
-  if (HERO === 'eric') panel.append(el('p','note','Салоны с замком откроются после повышения квалификации.'));
+  if (HERO === 'eric') panel.append(el('p','note','В салонах нужны женские и удлинённые стрижки. Можно сходить и попробовать.'));
   else if (!PR.skills.some(x => /Мужские|мужские/.test(x))) panel.append(el('p','note','Барбершопы закрыты: в анкете не отмечены мужские стрижки.'));
   panel.append(segGrid(i => prPicked(i), PR.adv, true)); fitStage();
 }
 async function prPicked(i){
+  if (HERO === 'eric' && !SEG[i].barber) return ericRejected(i);
   if (SEG[i].id === 'super'){
     panel.innerHTML = ''; panel.append(prHead('Парикмахерская'));
     ayaState('warn'); await say('aya', PV[113]);
@@ -1769,6 +1797,7 @@ async function prPicked(i){
     const no = el('button','next','Выбрать другой'); no.type = 'button'; no.onclick = () => prChoose();
     const row = el('div','btnrow'); row.append(yes, no); panel.append(row); fitStage(); return;
   }
+  if (HERO === 'eric' && !SEG[i].barber) return ericRejected(i);
   panel.innerHTML = ''; panel.append(prHead('«' + SEG[i].name + '»'), el('p','wait','…'));
   if (HERO === 'eric' && SEG[i].id === 'buxme'){ ayaState('warn'); await say('aya', ERIC_TXT.premium); }
   else if (SEG[i].tier > SEG[PR.adv].tier){ ayaState('warn'); await say('aya', PV[111]); }
@@ -1779,15 +1808,134 @@ async function prGo(i){
   PR.salon = i;
   try { localStorage.setItem('romashka_career', JSON.stringify({hero:HERO, rank:PR.rank, salon:SEG[i].id})); } catch(e){}
   track('career_salon_' + SEG[i].id);
+  if (HERO === 'eric' && !SEG[i].barber) return ericRejected(i);
   if (SEG[i].id === 'econom') return ecoStart();
   if (SEG[i].id === 'middle') return midStart();
-  if (SEG[i].barber) setLocation2(SEG[i].img);
+  await heroEnter(i);
   panel.innerHTML = ''; panel.append(prHead('«' + SEG[i].name + '»'));
   const ready = HERO === 'eric' ? 'Пока можно пройти пролог за Киру — у неё открыты «Семейная парикмахерская» и «Ромашка».' : 'Сейчас можно пройти собеседование в «Семейной парикмахерской» или в «Ромашке».';
   const c = el('div','card'); c.append(el('h2', null, 'Скоро'), el('p', null, '«' + SEG[i].name + '» (' + SEG[i].lvl.toLowerCase() + ') откроется в следующей версии игры. ' + ready));
   const back = el('button','next','Выбрать другой'); back.type = 'button'; back.onclick = () => prChoose();
   const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
   const row = el('div','btnrow'); row.append(menu, back); panel.append(c, row); fitStage();
+}
+
+/* быстрый выбор салона из меню: профиль по умолчанию */
+function quickChoose(){
+  const id = HERO; vis(id === 'kira' ? 'eric' : 'kira', false);
+  C[id].pose = 'stand'; setPos(id, 1000, 700); face(id, 1); vis(id, true); mood(id, 'neutral'); camSet(900);
+  if (id === 'eric'){ PR.rank = 'barber'; PR.exp = 0; PR.skills = ['Мужские стрижки']; PR.adv = SEG.findIndex(s => s.id === 'pijon'); }
+  else { PR.rank = 'r3'; PR.exp = 1; PR.skills = ['Женские стрижки','Мужские стрижки','Укладки']; PR.adv = SEG.findIndex(s => s.id === 'eplus'); }
+  PR.dream = PR.adv;
+  prChoose();
+}
+/* герой заходит в выбранный салон */
+function segLoc(i){ const s = SEG[i]; if (s.id === 'middle') return 'salon'; return s.img; }
+async function heroEnter(i){
+  const id = HERO, s = SEG[i];
+  panel.innerHTML = ''; panel.append(prHead('«' + s.name + '»'), el('p','wait','Смотрите сцену…'));
+  hideDlg(); bust.className = 'bust'; await camWide();
+  const loc = segLoc(i); if (loc === 'salon') setLocation('salon'); else setLocation2(loc);
+  ['kira','eric','tamara','narc'].forEach(x => { if (x !== id) vis(x, false); });
+  C[id].pose = 'stand'; setPos(id, P.door[0], 690); face(id, 1); vis(id, true); mood(id, 'neutral');
+  camSet(700);
+  await walk(id, 760, 690, {face:1});
+}
+async function ericRejected(i){
+  const s = SEG[i];
+  track('eric_salon_' + s.id);
+  await heroEnter(i);
+  mood('eric','happy');
+  await say('eric', 'Добрый день! Я барбер, вот мой сертификат. Возьмёте?');
+  const boss = s.id === 'middle' ? 'narc' : s.id === 'econom' ? 'tamara' : null;
+  if (boss){ const bx = boss === 'narc' ? [1250,640] : [1180,690]; setPos(boss, bx[0], bx[1]); face(boss, -1); vis(boss, true); }
+  if (Math.random() < 0.5) return ericTrial(i, boss);
+  if (boss === 'narc') await say('narc', 'Барбер? У нас женский зал: каре, удлинённые стрижки, окрашивание. С восемьюдесятью часами — нет.', {mood:'grumble'});
+  else if (boss === 'tamara') await say('tamara', 'Барбер? У нас семейная парикмахерская: и женщины, и дети. С одними мужскими стрижками — не возьму.', {mood:'doubt'});
+  else await say('eric', 'Администратор смотрит сертификат: «У нас женский зал и удлинённые стрижки. С курсами барбера мы не возьмём, извините».', {narr:true});
+  if (boss) vis(boss, false);
+  await ericSad(i, 'Не взяли', 'Для работы в салоне нужны женские и удлинённые мужские стрижки. Курс барбера 80 ак. ч их не даёт. Повышение квалификации в Академии откроет эти двери — а пока путь Эрика лежит через барбершоп.');
+}
+const ERIC_WOMEN = {
+  galina:{req:'Добрый день! Мне каре освежить и уложить, как в прошлый раз.'},
+  sonya:{req:'Хочу удлинённое каре с чёлкой-шторкой. Сделаете?'},
+  viktoria:{req:'У меня встреча через час. Уложите волосы — что-то элегантное.'}
+};
+async function clientIn(id){
+  PARTNER = id; C[id].pose = 'stand'; setPos(id, P.door[0], 690); face(id, 1); vis(id, true); mood(id, 'neutral');
+  await camWide(); camSet(650);
+  await walk(id, 560, 690, {face:1});
+}
+function ericAsk(title, opts){
+  return new Promise(res => {
+    panel.innerHTML = ''; panel.append(prHead(title, 'Пробная смена'));
+    panel.append(prOptions(opts, o => res(o))); fitStage();
+  });
+}
+async function ericTrial(i, boss){
+  track('eric_trial');
+  const s = SEG[i];
+  const ok = 'Мастер заболел, а клиенты идут. Ладно, попробуй — посмотрим, что умеешь.';
+  if (boss) await say(boss, ok, {mood: boss === 'narc' ? 'suspicious' : 'ok'});
+  else await say('eric', 'Администратор вздыхает: «Мастер заболел, а клиенты идут. Ладно, попробуйте — посмотрим».', {narr:true});
+  if (boss) vis(boss, false);
+  mood('eric','happy'); await say('eric', 'Есть! Пробная смена!', {mood:'happy'});
+  setPos('eric', 900, 690); face('eric', -1);
+  const andreyFirst = Math.random() < 0.5;
+  if (andreyFirst){
+    await clientIn('andrey');
+    await say('andrey', 'Здравствуйте! Мне коротко по бокам, сверху чуть длиннее. И бороду поправить.');
+    const o = await ericAsk('Клиент: Андрей', [
+      {t:'«Сделаем! Фейд по бокам, текстура сверху, бороду — в форму. Минут сорок»', ok:true},
+      {t:'Молча усадить в кресло и включить машинку'}]);
+    await say('eric', o.t.replace(/^«|»$/g, ''));
+    C.eric.pose = 'cut'; place('eric');
+    await say('eric', 'Сорок минут. Машинка, ножницы, бритва — Эрик в своей стихии.', {narr:true});
+    C.eric.pose = 'stand'; place('eric');
+    mood('andrey','happy'); await say('andrey', 'Огонь! Вот это я понимаю. Буду ходить к вам.');
+    S.meter = clamp(S.meter + 30, -100, 100); hud();
+    mood('eric','happy'); await say('eric', 'Вот оно. Это моё место! Я тут останусь.', {mood:'happy'});
+    await walk('andrey', P.door[0], 690, {face:-1}); vis('andrey', false);
+  }
+  const w = ['galina','sonya','viktoria'][Math.floor(Math.random() * 3)];
+  await clientIn(w);
+  await say(w, ERIC_WOMEN[w].req);
+  mood('eric','doubt');
+  const o = await ericAsk('Клиентка: ' + NAMES[w], [
+    {t:'«Простите, женские стрижки — не мой профиль. Давайте я запишу вас к мастеру, чтобы вы ушли довольной»', k:'honest'},
+    {t:'«Сейчас сделаем!» — и взяться за работу', k:'try'},
+    {t:'«Да это то же самое, что мужская, только длиннее»', k:'bluff'}]);
+  await say('eric', o.t.replace(/^«|»$/g, '').replace(/» — и взяться за работу$/, ''));
+  if (o.k === 'honest'){
+    S.meter = clamp(S.meter - 10, -100, 100); hud();
+    mood(w, 'doubt'); await say(w, 'Ну что ж… Тогда в другой раз. Жаль, я рассчитывала сегодня.');
+    await walk(w, P.door[0], 690, {face:-1}); vis(w, false);
+    if (boss){ vis(boss, true); await say(boss, 'Честно — уже хорошо. Но мне нужен мастер, который стрижёт всех. Приходи, когда научишься.', {mood: boss === 'narc' ? 'sigh' : 'doubt'}); vis(boss, false); }
+    else await say('eric', 'Администратор качает головой: «Нам нужен мастер, который стрижёт всех».', {narr:true});
+    await ericSad(i, 'Честно, но не взяли', 'Эрик поступил правильно: не взялся за то, чего не умеет, и не испортил клиентке волосы. Но салону нужен мастер, который работает и с женскими стрижками.' + (andreyFirst ? ' Один удачный мужской клиент — ещё не место работы.' : ''));
+  } else {
+    C.eric.pose = 'cut'; place('eric');
+    await say('eric', 'Эрик берётся за ножницы. Машинка здесь не поможет, а с длиной он никогда не работал…', {narr:true});
+    C.eric.pose = 'stand'; place('eric');
+    S.meter = clamp(S.meter - 60, -100, 100); hud();
+    mood(w, 'upset'); await say(w, o.k === 'bluff' ? 'Что это?! Это вообще не то, что я просила! Позовите директора!' : 'Это совсем не то… Линия кривая, длину срезали. Я больше не приду.');
+    await walk(w, P.door[0], 690, {face:-1}); vis(w, false);
+    if (boss){ vis(boss, true); await say(boss, 'Всё. Свободен. Клиентку мы потеряли.', {mood:'angry'}); vis(boss, false); }
+    else await say('eric', 'Администратор: «Всё, спасибо. Клиентку мы потеряли».', {narr:true});
+    await ericSad(i, 'Пробная смена провалена', 'Женская стрижка — другая техника: длина, линии, форма. Взяться за то, чего не умеешь, — значит потерять клиента и репутацию.' + (andreyFirst ? ' Андрей был доволен — но в салоне приходят не только Андреи.' : ''));
+  }
+}
+async function ericSad(i, title, text){
+  const s = SEG[i];
+  C.eric.pose = 'think'; place('eric'); mood('eric','upset'); PARTNER = 'marina';
+  await say('eric', 'Похоже, надо было учить всё, а не только фейды и бороды…', {mood:'upset'});
+  ayaState('cheer'); await say('aya', ERIC_TXT.locked);
+  panel.innerHTML = ''; panel.append(prHead('«' + s.name + '»'));
+  const c = el('div','card'); c.append(el('h2', null, title), el('p', null, text));
+  const back = el('button','next','Выбрать барбершоп'); back.type = 'button'; back.onclick = () => { ['andrey','galina','sonya','viktoria'].forEach(x => vis(x, false)); S.meter = 0; hud(); prChoose(); };
+  const again = el('button','next alt','Попробовать ещё раз'); again.type = 'button'; again.onclick = () => { S.meter = 0; hud(); ericRejected(i); };
+  const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
+  const row = el('div','btnrow'); row.append(menu, again, back); panel.append(c, row); fitStage();
 }
 /* ---------- средний уровень: «Ромашка», Нарцисс отправляет на пробную работу ---------- */
 async function midStart(){
@@ -1917,7 +2065,7 @@ async function ecoResult(k){
   const ul = el('ul','review');
   PR.eco.log.forEach(r => { const li = el('li', r.ok ? 'good' : 'bad'); const h = el('div','rt'); h.textContent = (r.ok ? '✓ ' : '✗ ') + r.q; const p = el('div','rp'); p.textContent = 'Ответ: ' + r.a; li.append(h, p); ul.append(li); });
   const c2 = el('div','card'); c2.append(el('h2', null, 'Как прошло собеседование'), ul);
-  const again = el('button','next','Пройти пролог заново'); again.type = 'button'; again.onclick = () => heroSelect();
+  const again = el('button','next','Пройти пролог заново'); again.type = 'button'; again.onclick = () => { QUICK = false; heroSelect(); };
   const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
   const row = el('div','btnrow'); row.append(menu, again);
   panel.append(c, c2, row); fitStage();
