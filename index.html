@@ -132,7 +132,7 @@ tr.total td{border-bottom:0;font-weight:700}
 .dlg .txt{min-width:0;display:flex;flex-direction:column}
 .dlg .who{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5b6a61}
 .dlg .say{font-size:clamp(13px,3.6vw,16px);line-height:1.32}
-.dlg .photo{height:56px;width:auto;border-radius:6px;margin-top:4px;align-self:flex-start}
+.dlg .photo{height:84px;width:auto;border-radius:6px;margin-top:4px;align-self:flex-start}
 .dlg.is-aya{background:#f3eefc;border-color:#6a4fb0}
 .dlg.is-aya .who{color:#6a4fb0}
 .dlg.is-narc{border-color:#7a2f2a;background:#fff6f2}
@@ -140,7 +140,8 @@ tr.total td{border-bottom:0;font-weight:700}
 .dlg.is-narr{background:rgba(28,38,32,.92);color:#fffef9;border-color:#1c2620;font-style:italic;padding:8px 14px}
 .dlg.more::after{content:"▸";position:absolute;right:10px;bottom:4px;font-size:13px;opacity:.5;animation:blink 1s infinite}
 @keyframes blink{50%{opacity:0}}
-.aya{display:none}
+#stage:has(#bust.on.round) #aya{opacity:0}
+.aya{transition:opacity .3s}
 /* всплывающие Айя, директор и администратор */
 .bust{position:absolute;bottom:0;z-index:5;height:58%;pointer-events:none;transform:translateY(110%);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
 .bust img{height:100%;width:auto;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
@@ -346,6 +347,20 @@ table.offer td:last-child{color:var(--muted);text-align:left;font-weight:400}
 .menStep{margin:0 0 6px;font-weight:700;font-size:14px;color:var(--ink-2,#555);text-transform:none}
 .hint.best{background:rgba(46,160,90,.12)}
 .hint.best b{color:#1f7a45}
+/* плашка времени визита: сколько прошло минут от начала обслуживания */
+.svcT{position:absolute;top:9px;left:84px;transform:translateY(-160%);z-index:6;display:flex;align-items:center;gap:6px;padding:4px 12px 4px 8px;background:linear-gradient(180deg,#2e3a66,#1a2246);border:2px solid #0b0f1f;border-radius:999px;box-shadow:0 3px 0 #0b0f1f;color:#fff;font-family:var(--display);font-size:13px;white-space:nowrap;transition:transform .3s;pointer-events:none}
+.svcT.on{transform:none}
+.svcT b{font-size:15px;font-variant-numeric:tabular-nums}
+.svcT small{font-family:var(--body);font-size:11px;color:#aebbe8}
+.svcT.over b{color:#ff9b8f}
+.svcT.bump b{animation:tbump .5s}
+@keyframes tbump{40%{transform:scale(1.35);color:#ffe36b}}
+@media (max-width:560px){.svcT{font-size:11px;padding:3px 9px 3px 6px}.svcT b{font-size:13px}.svcT small{font-size:10px}}
+.backBtn{display:block;margin:10px 0 0;background:none;border:0;color:var(--ink-2,#5b6a61);font:600 14px var(--body);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 0}
+.backBtn:hover{color:inherit}
+ul.money{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:4px;font-size:14px}
+ul.money li{display:flex;justify-content:space-between;gap:10px;border-top:1px dashed rgba(0,0,0,.12);padding-top:4px}
+ul.money b{color:#1f7a45;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -601,10 +616,12 @@ const VOICE = {
 "Просветы он увидит и спросит с мастера, а не с себя.": "audio/aya_147.mp3",
 "Публичное «вы не правы» для руководителя — вызов. Он сделает назло.": "audio/aya_148.mp3",
 "В барбершопе можно на «ты» — но не со всеми. С руководителем не спорят: дают факты и оставляют решение за ним": "audio/aya_149.mp3",
+"Эрик, добро пожаловать на экзамен. Пятнадцать заданий: общение, колористика, время и нормы, продажи. Чтобы получить новый ранг, нужно восемьдесят процентов верных ответов.": "audio/aya_220.mp3",
+"Поздравляю, Эрик! Экзамен сдан.": "audio/aya_221.mp3",
 "__silent": "audio/silent.mp3"
 };
 const MUSIC = "audio/music.mp3";
-const ASSET_LIST = ["academy_entrance", "kira_diploma", "aya_c3", "aya_e3", "kira_e4", "academy", "admin_b0", "admin_b1", "admin_b2", "admin_b3", "admin_b4", "admin_stand", "andrey_e0", "andrey_e1", "andrey_e2", "andrey_e3", "andrey_e4", "andrey_stand", "andrey_walk", "aya_c0", "aya_c1", "aya_c2", "aya_e0", "aya_e1", "aya_e2", "barber_buxme", "barber_pijon", "desk", "eric_b0", "eric_b1", "eric_b2", "eric_b3", "eric_b4", "eric_cut", "eric_diploma", "eric_e0", "eric_e1", "eric_e2", "eric_e3", "eric_e4", "eric_greet", "eric_phone", "eric_stand", "eric_think", "eric_walk", "galina_e0", "galina_e1", "galina_e2", "galina_e3", "galina_e4", "galina_stand", "galina_walk", "kira_booking", "kira_coat", "kira_cut", "kira_e0", "kira_e1", "kira_e2", "kira_e3", "kira_greet", "kira_invite", "kira_mirror", "kira_phone", "kira_product", "kira_sit", "kira_stand", "kira_standp", "kira_style", "kira_sweep", "kira_think", "kira_walk", "kira_wash", "man_aleksey_e0", "man_aleksey_stand", "man_artem_e0", "man_artem_stand", "man_denis_e0", "man_denis_stand", "man_mark_e0", "man_mark_stand", "man_mikhail_e0", "man_mikhail_stand", "man_roman_e0", "man_roman_stand", "man_vadim_e0", "man_vadim_stand", "man_viktor_e0", "man_viktor_stand", "marina_cape", "marina_coat", "marina_coatoff", "marina_dress", "marina_e0", "marina_e1", "marina_e2", "marina_e3", "marina_e4", "marina_mirror", "marina_pay", "marina_phone", "marina_photo", "marina_sit", "marina_walk", "marina_walkd", "marina_wash", "marina_wave", "narc_b0", "narc_b1", "narc_b2", "narc_b3", "narc_b4", "narc_stand", "salon", "salon_econom", "salon_econom_plus", "salon_premium", "salon_super_econom", "salon_super_premium", "sonya_e0", "sonya_e1", "sonya_e2", "sonya_e3", "sonya_e4", "sonya_stand", "sonya_walk", "tamara_b0", "tamara_b1", "tamara_b2", "tamara_b3", "tamara_b4", "tamara_sit", "tamara_stand", "viktoria_e0", "viktoria_e1", "viktoria_e2", "viktoria_e3", "viktoria_e4", "viktoria_stand", "viktoria_walk"];
+const ASSET_LIST = ["academy_entrance", "kira_diploma", "aya_c3", "aya_e3", "kira_e4", "academy", "admin_b0", "admin_b1", "admin_b2", "admin_b3", "admin_b4", "admin_stand", "andrey_e0", "andrey_e1", "andrey_e2", "andrey_e3", "andrey_e4", "andrey_stand", "andrey_walk", "aya_c0", "aya_c1", "aya_c2", "aya_e0", "aya_e1", "aya_e2", "barber_buxme", "barber_pijon", "desk", "eric_b0", "eric_b1", "eric_b2", "eric_b3", "eric_b4", "eric_cut", "eric_diploma", "eric_e0", "eric_e1", "eric_e2", "eric_e3", "eric_e4", "eric_greet", "eric_phone", "eric_stand", "eric_think", "eric_walk", "galina_e0", "galina_e1", "galina_e2", "galina_e3", "galina_e4", "galina_stand", "galina_walk", "kira_booking", "kira_coat", "kira_cut", "kira_e0", "kira_e1", "kira_e2", "kira_e3", "kira_greet", "kira_invite", "kira_mirror", "kira_phone", "kira_product", "kira_sit", "kira_stand", "kira_standp", "kira_style", "kira_sweep", "kira_think", "kira_walk", "kira_wash", "man_aleksey_e0", "man_aleksey_nocoat", "man_aleksey_photo", "man_aleksey_sit", "man_aleksey_stand", "man_artem_e0", "man_artem_nocoat", "man_artem_sit", "man_artem_stand", "man_denis_e0", "man_denis_sit", "man_denis_stand", "man_mark_e0", "man_mark_nocoat", "man_mark_sit", "man_mark_stand", "man_mikhail_e0", "man_mikhail_sit", "man_mikhail_stand", "man_roman_e0", "man_roman_sit", "man_roman_stand", "man_vadim_e0", "man_vadim_nocoat", "man_vadim_sit", "man_vadim_stand", "man_viktor_e0", "man_viktor_nocoat", "man_viktor_sit", "man_viktor_stand", "marina_cape", "marina_coat", "marina_coatoff", "marina_dress", "marina_e0", "marina_e1", "marina_e2", "marina_e3", "marina_e4", "marina_mirror", "marina_pay", "marina_phone", "marina_photo", "marina_sit", "marina_walk", "marina_walkd", "marina_wash", "marina_wave", "narc_b0", "narc_b1", "narc_b2", "narc_b3", "narc_b4", "narc_stand", "salon", "salon_econom", "salon_econom_plus", "salon_premium", "salon_super_econom", "salon_super_premium", "sonya_e0", "sonya_e1", "sonya_e2", "sonya_e3", "sonya_e4", "sonya_stand", "sonya_walk", "tamara_b0", "tamara_b1", "tamara_b2", "tamara_b3", "tamara_b4", "tamara_sit", "tamara_stand", "viktoria_e0", "viktoria_e1", "viktoria_e2", "viktoria_e3", "viktoria_e4", "viktoria_stand", "viktoria_walk"];
 </script>
 <script>
 (function(){
@@ -630,7 +647,7 @@ const SP = {
   marina:{wash:['marina_wash',364,400,300,1], coat:['marina_coat',141,388,425,1], dress:['marina_dress',103,389,425,1], walk:['marina_walk',175,387,422,1], walkd:['marina_walkd',148,382,418,1], coatoff:['marina_coatoff',131,389,425,1], sit:['marina_sit',172,340,372,1], cape:['marina_cape',200,341,373,1], mirror:['marina_mirror',135,378,414,1], pay:['marina_pay',194,379,415,-1], wave:['marina_wave',155,381,417,1]},
   narc:{stand:['narc_stand',253,720,335*K,-1]},
   galina:{stand:['galina_stand',263,760,412,1], walk:['galina_walk',352,760,396,1]}, andrey:{stand:['andrey_stand',301,760,445,1], walk:['andrey_walk',510,760,412,1]},
-  sonya:{stand:['sonya_stand',227,760,415,1], walk:['sonya_walk',427,760,405,1]}, viktoria:{stand:['viktoria_stand',262,760,430,1], walk:['viktoria_walk',361,760,413,-1]},
+  sonya:{stand:['sonya_stand',227,760,415,1], walk:['sonya_walk',427,760,405,1]}, viktoria:{stand:['viktoria_stand',262,760,430,1], walk:['viktoria_walk',361,760,413,1]},
   admin:{stand:['admin_stand',162,720,330*K,1]},
   tamara:{stand:['tamara_stand',280,760,410,-1], sit:['tamara_sit',369,760,330,-1]},
   client:{stand:['man_aleksey_stand',296,760,440,1]},
@@ -743,7 +760,7 @@ function camClose(id){
   const both = m.vis && k.vis && Math.abs(k.x - m.x) < ZH * aspect() * 0.75;
   if (both){ x = (k.x + m.x) / 2; feet = Math.max(k.y, m.y); }
   zoomed = true; camTarget = x;
-  return camAnim(closeRect(x, feet), 550);
+  return camAnim(closeRect(x, feet), 420);
 }
 addEventListener('resize', () => { if (zoomed) setVB(closeRect(camTarget, Math.max(C[MASTER].y, C[PARTNER].y))); else setVB(wideRect(camTarget)); });
 const narrow = () => wideRect(0).w < W - 4;
@@ -862,7 +879,7 @@ function showDlg(id, text, opt = {}){
   const box = document.createElement('div'); box.className = 'txt';
   if (!opt.narr){ const w = document.createElement('span'); w.className = 'who'; w.textContent = NAMES[id]; box.append(w); }
   const p = document.createElement('span'); p.className = 'say'; p.textContent = text; box.append(p);
-  if (opt.photo){ const ph = document.createElement('img'); ph.className = 'photo'; ph.src = IMG('marina_phone'); ph.alt = 'Фото на телефоне'; box.append(ph); }
+  if (opt.photo){ const ph = document.createElement('img'); ph.className = 'photo'; ph.src = IMG(typeof opt.photo === 'string' ? opt.photo : 'marina_phone'); ph.alt = 'Фото на телефоне'; box.append(ph); }
   dlg.append(box);
   dlg.style.left = dlg.style.right = '';
   if (!opt.narr && side){
@@ -872,13 +889,14 @@ function showDlg(id, text, opt = {}){
   }
   if (!opt.narr && !side) dlg.style.setProperty('--tail', tailX(id) + 'px');
 }
-const readMs = t => Math.min(8000, 1500 + t.length * 45);
+const readMs = t => Math.min(5500, 900 + t.length * 33);
 async function say(id, text, opt = {}){
   if (!text) return;
   if (opt.mood) mood(id, opt.mood);
   const actor = !opt.narr && ACTORS.includes(id) && C[id].vis;
   const onStage = !opt.narr && (id === 'narc' || id === 'tamara') && C[id] && C[id].vis;
   if (onStage) opt = Object.assign({}, opt, {stage:true});
+  if (id !== 'aya') stopVoice();
   showBust(opt.narr || onStage ? null : id);
   if (actor) await camClose(id);
   showDlg(id, text, opt);
@@ -893,7 +911,7 @@ async function say(id, text, opt = {}){
   await new Promise(res => {
     let t = null;
     skipFn = () => { clearTimeout(t); stopVoice(); res(); };
-    if (vp) vp.then(ok => { t = setTimeout(res, ok ? 450 : readMs(text)); });   // ждём конец фразы; без звука — время на чтение
+    if (vp) vp.then(ok => { t = setTimeout(res, ok ? 150 : readMs(text)); });   // ждём конец фразы; без звука — время на чтение
     else t = setTimeout(res, readMs(text));
   });
   skipFn = null; dlg.classList.remove('more'); stop();
@@ -911,6 +929,17 @@ function narcMood(t){
 }
 /* Нарцисс не ходит по залу: всплывает крупным портретом в окне реплики */
 async function narcVisit(text){ await say('narc', text, {mood:narcMood(text)}); }
+/* плашка «время визита» поверх сцены */
+const svcEl = (() => { const d = document.createElement('div'); d.className = 'svcT'; d.setAttribute('aria-live','polite'); stage.append(d); return d; })();
+let svcMin = 0, svcNorm = 0;
+function svcTime(min, norm){
+  if (min === null){ svcEl.className = 'svcT'; svcMin = 0; svcNorm = 0; return; }
+  const bump = min !== svcMin; svcMin = min; if (norm) svcNorm = norm;
+  svcEl.innerHTML = '🕐 <span>Визит</span> <b>' + min + ' мин</b>' + (svcNorm ? '<small>норма ' + svcNorm + '</small>' : '');
+  svcEl.className = 'svcT on' + (svcNorm && min > svcNorm ? ' over' : '');
+  if (bump){ void svcEl.offsetWidth; svcEl.classList.add('bump'); }
+}
+const svcAdd = m => svcTime(svcMin + m);
 function clock(html, on){ document.getElementById('clockText').innerHTML = html; document.getElementById('clock').classList.toggle('on', on); }
 function clips(on){ const g = document.getElementById('clips'); g.style.transition = 'opacity .4s'; g.style.opacity = on ? 1 : 0; }
 
@@ -1162,8 +1191,8 @@ function hud(){
   bar.style.left = (v >= 0 ? 50 : 50 + v/2) + '%'; bar.style.width = Math.abs(v)/2 + '%';
   bar.className = v >= 0 ? 'pos' : (v <= -50 ? 'neg low' : 'neg');
   document.getElementById('credOut').textContent = (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v);
-  document.getElementById('hudPts').textContent = sumPts()*2;
-  document.getElementById('hudMoney').textContent = rub(earnings().total).replace(' ₽','');
+  document.getElementById('hudPts').textContent = sumPts()*2 + (S.xPts || 0);
+  document.getElementById('hudMoney').textContent = rub(earnings().total + (S.xMoney || 0)).replace(' ₽','');
   document.getElementById('moodIco').textContent = v >= 40 ? '😀' : v >= 10 ? '🙂' : v > -10 ? '😐' : v > -50 ? '😟' : '😡';
   const rk = getRank(), rp = document.getElementById('rankPlate');
   document.getElementById('hudRank').textContent = rk ? RANKS[rk].replace(' ножницы','') : 'Нет';
@@ -1232,6 +1261,7 @@ async function enter(id){
   stopTimer(); clearHeld();
   if (id === 'end') return summary();
   const node = N[id];
+  if (id === 's0') svcTime(null); else if (id === 's1') svcTime(0); else if (id === 's6') svcAdd(TIME[S.service] + (S.wash ? TIME.wash : 0)); else svcAdd(2);
   curTitle = node.title || ''; stage.style.height = '';
   if (node.mood) S.mood = node.mood;
   mood('marina', S.mood); mood('kira','neutral'); ayaState('explain');
@@ -1266,8 +1296,10 @@ async function reactions(o, ayaS){
   if (o.sayNarr) await say('marina', o.sayNarr, {narr:true});
   const narc = o.narc || (o.narcFn && o.narcFn());
   if (narc) await narcVisit(narc);
-  if (o.aya){ ayaState(ayaS); await say('aya', o.aya); }
+  if (o.aya){ ayaState(ayaS); say('aya', o.aya, {hold:true}); }
 }
+/* подсказка Айи после ответа: звучит, но кнопка «Дальше» появляется сразу */
+function ayaTail(text, st){ ayaState(st || 'explain'); say('aya', text, {hold:true}); }
 async function pick(node, c, btn, list){
   if (busy) return; busy = true;
   stopTimer(); clearHeld();
@@ -1330,7 +1362,7 @@ function skillTile(k){
     const h = el('div','rt'); h.textContent = (r.ok ? '✓ ' : '✗ ') + r.title + (r.d ? ' · настроение ' + String(r.d).replace('-','−') : ''); li.append(h);
     const p = el('div','rp'); p.textContent = (r.ok ? 'Вы: ' : 'Вы сказали: ') + r.picked; li.append(p);
     if (!r.ok && r.best){ const b = el('div','rb'); b.textContent = 'Лучше: ' + r.best; li.append(b); }
-    if (!r.ok && r.aya){ const a = el('div','ra'); a.textContent = 'Айя: ' + r.aya; li.append(a); }
+    if (r.aya){ const a = el('div','ra'); a.textContent = 'Айя: ' + r.aya; li.append(a); }
     ul.append(li);
   });
   if (!items.length) ul.append(el('li','none','В этом визите навык не проверялся.'));
@@ -1401,6 +1433,7 @@ function resetScene(){
   coatOn = true;
   C.admin.pose = 'stand'; setPos('admin', P.admin[0], P.admin[1]); face('admin', 1); vis('admin', false); bust.className = 'bust';
   C.kira.pose = 'stand'; setPos('kira', P.chairK[0], P.chairK[1]); face('kira', 1); mood('kira','neutral');
+  vis('kira', true); MASTER = 'kira'; svcTime(null);
   ['walking','busy','talking'].forEach(k => cls('kira', k, false));
   C.marina.pose = 'coat'; setPos('marina', P.door[0], P.door[1]); face('marina', 1); vis('marina', false); mood('marina','neutral');
   C.narc.pose = 'stand'; setPos('narc', 1570, 600); face('narc', -1); vis('narc', false); mood('narc','grumble');
@@ -1429,14 +1462,16 @@ function intro(){
     }),
     mk('💈', 'Мужской зал', 'Эрик и Кира: 12 визитов мужчин', () => menPick()),
     mk('👋', 'Тренажёр приветствия', '5 клиентов, первая минута', () => drillStart()),
-    mk('🎓', 'Экзамен в Академии', 'Сдал на 80% — новый ранг', () => examStart()));
+    mk('🎓', 'Экзамен в Академии', 'Кира или Эрик: 80% — новый ранг', () => examPick0()));
   all.unshift(start);
   const rk = el('div','mbRank'); rk.append(el('span', null, 'Ваш ранг:'), el('b', null, RANKS[getRank()]));
   box.append(start, lead, el('div','mbModes','Другие режимы'), grid, rk);
   const c = el('div','card','<ul><li>Выбирайте реплики и действия — персонажи разыгрывают их на сцене.</li><li>Плашка с настроением сверху — как себя чувствует клиент. Если упадёт до −80, клиент уйдёт.</li><li>Нажмите на сцену или на реплику, чтобы ускорить её.</li><li>Айя подсказывает голосом: 🔊 — голос, 🎵 — громкость музыки.</li></ul>');
   panel.append(box, c);
-  say('aya', 'Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.', {hold:true});
+  stopVoice(); hideDlg(); bust.className = 'bust';
+  if (!introSaid){ introSaid = true; say('aya', 'Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.', {hold:true}); }
 }
+let introSaid = false;
 /* ================= ТРЕНАЖЁР ПРИВЕТСТВИЯ: 5 клиентов, 5 ситуаций, по 2 решения ================= */
 const DRILL_SEC = 30;
 const DRILL = [
@@ -1496,7 +1531,7 @@ const DRILL = [
     {ok:true, m:10, t:'«Марина, здравствуйте, рада вас снова видеть! Проходите, ваше место готово»', aya:'Имя и тёплая короткая фраза. Закрытому клиенту так легче, чем от долгих расспросов.'},
     {m:-6, t:'«Что-то вы грустная сегодня! Что случилось?»', aya:'Не комментируйте настроение клиента. Ему может быть неприятно, что это заметно.'},
     {m:-4, t:'«Как дела? Как держалась укладка? Что сегодня делаем? Может, покрасимся?»', aya:'Поток вопросов давит. Один вопрос за раз.'}],
-   line2:'…',
+   line2:'', line2narr:'Марина молча кивает и садится в кресло, не поднимая глаз. Ждёт.',
    c2:[
     {ok:true, m:15, t:'«Сегодня освежаем форму, как в прошлый раз, или что-то меняем? И как вам комфортнее — поговорить или в тишине?»', aya:'Вопрос с вариантами и право на тишину — это пожелания по стилю обслуживания из эталона.'},
     {m:-10, t:'«Вы чего молчите? Скажите хоть что-нибудь»', aya:'Давление на молчаливого клиента — верный способ его потерять.'},
@@ -1522,15 +1557,16 @@ async function drillRound(){
   await camWide(); camSet(600);
   if (id === 'marina') C.marina.pose = 'dress';
   setPos(id, P.door[0], P.door[1]); face(id, 1); vis(id, true); mood(id, id === 'marina' ? 'doubt' : 'neutral');
+  C.kira.pose = 'stand'; setPos('kira', P.chairK[0], P.chairK[1]); face('kira', -1); vis('kira', true);
   await say('kira', R.setup, {narr:true});
   await walk(id, P.rec[0], P.rec[1], {face:1});
   if (id === 'marina') pose('marina','dress');
   await drillAsk(R, R.line1, R.c1, 1);
 }
-async function drillAsk(R, line, choices, step){
+async function drillAsk(R, line, choices, step, narr){
   const id = R.id;
   panel.innerHTML = ''; panel.append(drillHead(R.title, DR.i + 1));
-  say(id, line, {hold:true});
+  say(id, line, {hold:true, narr:!!narr});
   const list = el('div','choices'); list.setAttribute('role','group'); list.setAttribute('aria-label','Варианты ответа');
   shuffle(choices).forEach(c => {
     const b = el('button','choice'); b.type = 'button';
@@ -1553,10 +1589,11 @@ async function drillPick(R, c, choices, btn, list, step){
   stopTimer(); clearHeld();
   [...list.children].forEach(x => x.disabled = true); btn.classList.add('picked');
   const tm = panel.querySelector('.timer'); if (tm) tm.remove();
-  S.meter = clamp(S.meter + c.m, -100, 100); hud();
+  S.meter = clamp(S.meter + c.m, -100, 100); if (c.ok) S.xPts = (S.xPts || 0) + 2; hud();
   const best = choices.find(x => x.ok);
   DR.log.push({title:NAMES[R.id] + ' · ' + R.title, picked:c.t, ok:!!c.ok, d:c.ok ? 0 : c.m, m:c.ok ? c.m : 0, aya:c.aya, best:c.ok ? null : best.t});
   mood('kira', c.ok ? 'smile' : 'doubt');
+  if (/^Выйти навстречу/.test(c.t)){ await camWide(); await walk('kira', C[R.id].x + 170, P.kiraRec[1], {face:-1, cam:narrow()}); }
   const quotes = c.t.match(/«[^»]*»/g) || [];
   if (quotes.length) for (const q of quotes) await say('kira', q.slice(1, -1));
   else await say('kira', c.t, {narr:true});
@@ -1564,13 +1601,17 @@ async function drillPick(R, c, choices, btn, list, step){
   const fb = el('div','chips');
   fb.append(el('span', 'chip ' + (c.m >= 0 ? 'plus' : 'minus'), 'Настроение ' + (c.m >= 0 ? '+' + c.m : String(c.m).replace('-','−'))));
   panel.append(fb);
-  if (!c.ok){ ayaState('warn'); await say('aya', c.aya); }
+  ayaTail(c.aya, c.ok ? 'praise' : 'warn');
   const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(c.aya)); panel.append(h);
+  if (!c.ok){ const best = choices.find(x => x.ok); const b = el('div','hint best','<b>Лучше:</b>&nbsp;'); b.append(document.createTextNode(best.t)); panel.append(b); }
   busy = false;
   const nx = el('button','next', step === 1 ? 'Дальше' : (DR.i + 1 < DRILL.length ? 'Следующий клиент' : 'Итог тренажёра')); nx.type = 'button';
   nx.onclick = async () => {
     nx.disabled = true;
-    if (step === 1) return drillAsk(R, R.line2, R.c2, 2);
+    if (step === 1){
+      if (Math.abs(C.kira.x - P.kiraRec[0]) > 40){ hideDlg(); await camWide(); await walk('kira', P.kiraRec[0], P.kiraRec[1], {face:-1, cam:narrow()}); }
+      return drillAsk(R, R.line2 || R.line2narr, R.c2, 2, !R.line2);
+    }
     await drillFinishRound(R);
   };
   panel.append(nx); fitStage(); nx.focus({preventScroll:true});
@@ -1603,7 +1644,7 @@ async function drillSummary(){
     const h = el('div','rt'); h.textContent = (r.ok ? '✓ ' : '✗ ') + r.title + (r.d ? ' · настроение ' + String(r.d).replace('-','−') : ''); li.append(h);
     const p = el('div','rp'); p.textContent = (r.ok ? 'Вы: ' : 'Вы сказали: ') + r.picked; li.append(p);
     if (!r.ok && r.best){ const b = el('div','rb'); b.textContent = 'Лучше: ' + r.best; li.append(b); }
-    if (!r.ok && r.aya){ const a = el('div','ra'); a.textContent = 'Айя: ' + r.aya; li.append(a); }
+    if (r.aya){ const a = el('div','ra'); a.textContent = 'Айя: ' + r.aya; li.append(a); }
     ul.append(li);
   });
   c1.append(ul);
@@ -1689,16 +1730,31 @@ const EXAM = [
     {ok:true, t:'Мастера маникюра, у которого есть свободное окошко'}, {t:'Ничего, это навязчиво'}, {t:'Скидку у конкурентов'}],
    why:'Кросс-продажа помогает и салону, и клиентке: всё в одном месте.'}
 ];
-let EX = null;
+let EX = null, EXH = 'kira';
+/* кто сдаёт экзамен: Кира или Эрик */
+function examPick0(){
+  S = fresh(); resetScene(); hud(); stopVoice(); setLocation('academy');
+  vis('marina', false); coatOn = false; clips(false);
+  pose('kira','stand'); setPos('kira', 820, 690); face('kira', 1); vis('kira', true);
+  C.eric.pose = 'stand'; setPos('eric', 1080, 690); face('eric', -1); vis('eric', true); camSet(950);
+  panel.innerHTML = ''; panel.append(drillHead('Экзамен в Академии', 0, 'Кто сдаёт?'));
+  const grid = el('div','mbGrid menGrid');
+  const mk = (ico, title, sub, who) => { const x = el('button','mbBtn'); x.type = 'button'; x.append(el('span','mbIco', ico), el('b', null, title), el('span','mbS', sub)); x.onclick = () => { [...grid.children].forEach(y => y.disabled = true); EXH = who; examStart(); }; return x; };
+  grid.append(mk('✂', 'Кира', 'Парикмахер: женский и мужской зал', 'kira'), mk('💈', 'Эрик', 'Барбер: курс 80 ак. ч', 'eric'));
+  const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
+  panel.append(grid, menu); fitStage();
+}
+const exName = t => EXH === 'eric' ? t.replace('Меня зовут Кира, я парикмахер третьего разряда', 'Меня зовут Эрик, я барбер').replace(/Кира/g, 'Эрик') : t;
 async function examStart(){
-  track('exam_start');
+  track('exam_start_' + EXH);
   S = fresh(); resetScene(); hud(); stopVoice(); setLocation('academy');
   EX = {i:0, log:[], order:EXAM.slice()};
   vis('marina', false); coatOn = false; clips(false);
-  pose('kira','stand'); setPos('kira', 980, 690); face('kira', -1); camSet(900);
+  const other = EXH === 'kira' ? 'eric' : 'kira'; vis(other, false);
+  MASTER = EXH; C[EXH].pose = 'stand'; setPos(EXH, 980, 690); face(EXH, -1); vis(EXH, true); camSet(900);
   panel.innerHTML = ''; panel.append(drillHead('Экзамен в Академии', 0, 'Академия'), el('p','wait','Смотрите сцену…'));
   ayaState('explain');
-  await say('aya', 'Кира, добро пожаловать на экзамен. Пятнадцать заданий: общение, колористика, время и нормы, продажи. Чтобы получить новый ранг, нужно восемьдесят процентов верных ответов.');
+  await say('aya', exName('Кира, добро пожаловать на экзамен. Пятнадцать заданий: общение, колористика, время и нормы, продажи. Чтобы получить новый ранг, нужно восемьдесят процентов верных ответов.'));
   examAsk();
 }
 function examAsk(){
@@ -1708,12 +1764,12 @@ function examAsk(){
   panel.innerHTML = '';
   const h = el('div','head'); h.append(el('h1', null, Q.topic), el('span','step', 'Задание ' + (EX.i + 1) + ' из ' + EXAM.length)); panel.append(h);
   if (!Q.who) PARTNER = 'marina';
-  camClose('kira');
+  camClose(EXH);
   ayaState('explain'); say('aya', Q.q, {hold:true});
   const list = el('div','choices'); list.setAttribute('role','group');
   shuffle(Q.c).forEach(c => {
     const b = el('button','choice'); b.type = 'button';
-    b.innerHTML = '<span class="k" aria-hidden="true"></span><span></span>'; b.lastChild.textContent = c.t;
+    b.innerHTML = '<span class="k" aria-hidden="true"></span><span></span>'; b.lastChild.textContent = exName(c.t);
     b.onclick = () => examPick(Q, c, b, list);
     list.append(b);
   });
@@ -1732,21 +1788,21 @@ async function examPick(Q, c, btn, list){
   [...list.children].forEach(x => x.disabled = true); btn.classList.add('picked');
   const tm = panel.querySelector('.timer'); if (tm) tm.remove();
   const best = Q.c.find(x => x.ok);
-  EX.log.push({title:Q.topic + ' · ' + Q.q, picked:c.t, ok:!!c.ok, best:c.ok ? null : best.t, aya:Q.why});
-  mood('kira', c.ok ? 'happy' : 'doubt');
+  EX.log.push({title:Q.topic + ' · ' + Q.q, picked:exName(c.t), ok:!!c.ok, best:c.ok ? null : exName(best.t), aya:Q.why});
+  mood(EXH, c.ok ? 'happy' : 'doubt');
   if (Q.who) mood(Q.who, c.ok ? 'smile' : 'upset');
   const fb = el('div','chips'); fb.append(el('span', 'chip ' + (c.ok ? 'plus' : 'minus'), c.ok ? 'Верно' : 'Неверно')); panel.append(fb);
   ayaState(c.ok ? 'praise' : 'warn');
   await say('aya', c.ok ? 'Верно!' : 'Неверно.');
-  if (!c.ok){ const rb = el('div','hint','<b>Верный ответ:</b>&nbsp;'); rb.append(document.createTextNode(best.t)); panel.append(rb); }
-  await say('aya', Q.why);
+  if (!c.ok){ const rb = el('div','hint','<b>Верный ответ:</b>&nbsp;'); rb.append(document.createTextNode(exName(best.t))); panel.append(rb); }
+  ayaTail(Q.why, c.ok ? 'praise' : 'warn');
   const hnt = el('div','hint','<b>Айя:</b>&nbsp;'); hnt.append(document.createTextNode(Q.why)); panel.append(hnt);
   busy = false; examNextBtn();
 }
 function examNextBtn(){
   const last = EX.i + 1 >= EXAM.length;
   const nx = el('button','next', last ? 'Итог экзамена' : 'Следующее задание'); nx.type = 'button';
-  nx.onclick = () => { nx.disabled = true; EX.i++; if (last) examSummary(); else examAsk(); };
+  nx.onclick = () => { nx.disabled = true; stopVoice(); EX.i++; if (last) examSummary(); else examAsk(); };
   panel.append(nx); fitStage(); nx.focus({preventScroll:true});
 }
 async function examSummary(){
@@ -1778,10 +1834,10 @@ async function examSummary(){
   });
   c1.append(ul);
   panel.append(c0, c1);
-  mood('kira', passed ? 'happy' : 'upset');
-  await kiraFinale(passed ? 'happy' : 'upset');
+  mood(EXH, passed ? 'happy' : 'upset');
+  if (EXH === 'kira') await kiraFinale(passed ? 'happy' : 'upset'); else { hideDlg(); await camClose('eric'); }
   ayaState(passed ? 'praise' : 'cheer');
-  await say('aya', passed ? 'Поздравляю, Кира! Экзамен сдан.' : 'Не страшно. Разбери ошибки и приходи на пересдачу.');
+  await say('aya', passed ? exName('Поздравляю, Кира! Экзамен сдан.') : 'Не страшно. Разбери ошибки и приходи на пересдачу.');
   const again = el('button','next','Пересдать'); again.type = 'button'; again.onclick = () => examStart();
   const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
   const row = el('div','btnrow'); row.append(menu, again); panel.append(row);
@@ -1925,7 +1981,8 @@ function heroSelect(){
   });
   play.onclick = () => { if (!pick) return; play.disabled = true; [...row.children].forEach(x => x.disabled = true); HERO = pick; vis(pick === 'kira' ? 'eric' : 'kira', false); careerStart(); };
   wrap.append(row, play);
-  panel.append(wrap); fitStage();
+  const back = el('button','backBtn','← В меню'); back.type = 'button'; back.onclick = () => restart(false);
+  panel.append(wrap, back); fitStage();
 }
 async function careerStart(){
   track('career_start_' + HERO);
@@ -2019,7 +2076,9 @@ function prChoose(){
   panel.innerHTML = ''; panel.append(prHead('Куда пойдёшь?'));
   if (HERO === 'eric') panel.append(el('p','note','В салонах нужны женские и удлинённые стрижки. Можно сходить и попробовать.'));
   else if (!PR.skills.some(x => /Мужские|мужские/.test(x))) panel.append(el('p','note','Барбершопы закрыты: в анкете не отмечены мужские стрижки.'));
-  panel.append(segGrid(i => prPicked(i), PR.adv, true)); fitStage();
+  panel.append(segGrid(i => prPicked(i), PR.adv, true));
+  const back = el('button','backBtn','← Сменить героя'); back.type = 'button'; back.onclick = () => { stopVoice(); hideDlg(); heroSelect(); };
+  panel.append(back); fitStage();
 }
 async function prPicked(i){
   if (HERO === 'eric' && !SEG[i].barber) return ericRejected(i);
@@ -2315,26 +2374,41 @@ async function ecoFail(){
   const row = el('div','btnrow'); row.append(other, again); panel.append(c, row); fitStage();
 }
 
-const MEN = [{"salon": "pijon", "master": "eric", "name": "Артём", "age": 27, "title": "Скажи прямо", "img": "artem", "enter": "18:40. Дверь распахивается. Массивный парень в чёрном бомбере, над бровью шрам. За окном — чёрная «бэха» с тонировкой.", "line": "Здарова. Мне коротко. Сколько ждать?", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Тёма. По бокам в ноль, сверху сантиметр. У меня в семь треня"}, {"who": "eric", "note": "", "t": "Успеем. Зачётная бэха, кстати. Твоя? Сам тонировал?"}, {"who": "client", "note": "впервые улыбается", "t": "Сам. А шрам — не от тачки, от бокса. Только не задень"}, {"who": "eric", "note": "", "t": "Расслабься. Я тут самый безопасный человек с бритвой"}], "fin": [{"who": "narr", "t": "Артём крутит головой у зеркала."}, {"who": "client", "t": "Чётко. В следующий раз — сразу к тебе, бро"}, {"who": "eric", "t": "Давай. И за наших болей там"}], "ayaFin": "Прямому клиенту — прямые слова и чёткие цифры. А лёгкая шутка делает из случайного клиента своего", "w": 327, "h": 760, "d1": {"title": "первый контакт", "opts": [{"ok": true, "t": "«Хай, бро! Нисколько — кресло твоё. Я Эрик. А тебя как?»", "pts": 12, "aya": "Он сам задал тон: «здарова». В мужском зале можно ответить на его языке — имя и вопрос всё равно на месте."}, {"ok": false, "t": "«Добрый вечер! Меня зовут Эрик, я барбер, окончил курсы, мои сильные стороны — фейды…»", "pts": -5, "aya": "Длинно и официально. Он спросил одно: сколько ждать."}, {"ok": false, "t": "«Видишь, я занят. Сядь, подожди»", "pts": -7, "aya": "Резкость на резкость. Неформально — не значит грубо."}]}, "d2": {"title": "клиент дёргается", "intro": "Во время фейда Артём крутит головой к телефону: там матч. «Слушай, а быстрее нельзя? Там наши проигрывают».", "opts": [{"ok": true, "t": "«Давай так: десять минут голова неподвижно — и ты свободен к второму тайму. А наши как раз во втором и отыгрываются, традиция»", "pts": 12, "aya": "Прямой договор с цифрой и шутка про футбол. Нетерпение снято и без спора."}, {"ok": false, "t": "Молча придержать голову рукой", "pts": -4, "aya": "Без слов он примет жест за вызов. Скажите, зачем."}, {"ok": false, "t": "«Быстро — это криво. Сиди и не дёргайся»", "pts": -8, "aya": "Смысл верный, форма — приказ. С боксёром в кресле так не разговаривают."}]}}, {"salon": "pijon", "master": "eric", "name": "Виктор Павлович", "age": 58, "title": "Решение принято", "img": "viktor", "enter": "11:00, запись. Тёмно-синий костюм, густая седая борода. Осматривает кирпичные стены, полку с банками, татуировки Эрика. За окном водитель паркует чёрный «Мерседес». Выдерживает паузу.", "line": "Виктор Павлович. Я записан. Вы, стало быть, мастер? Выглядите скорее как охранник ночного клуба", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Бороду — короче и квадратом. Как у меня было двадцать лет назад"}, {"who": "eric", "note": "", "t": "Двадцать лет назад я детский сад возглавлял, так что покажите фото, если есть. А я посмотрю линию скул и плотность"}, {"who": "client", "note": "уголок рта дрогнул", "t": "Фото нет. Делайте, как я сказал"}], "fin": [{"who": "narr", "t": "Виктор Павлович долго смотрит в зеркало и едва заметно кивает."}, {"who": "client", "t": "Дельно. Для охранника — вовсе неплохо. Запишите меня через три недели"}], "ayaFin": "В барбершопе можно на «ты» — но не со всеми. С руководителем не спорят: дают факты и оставляют решение за ним", "w": 274, "h": 760, "d1": {"title": "проверка авторитета", "opts": [{"ok": true, "t": "«Добрый день, Виктор Павлович. Эрик, барбер. С охраной у меня только ножницы, а бороды — моё дело. Расскажите, какой нужен результат»", "pts": 12, "aya": "Лёгкая самоирония снимает укол, а имя-отчество и «вы» показывают уважение. И сразу к делу."}, {"ok": false, "t": "«Хай! Да ладно, батя, всё будет пушка»", "pts": -7, "aya": "«Батя» и «хай» для руководителя сорока лет стажа — фамильярность. Неформал в барбершопе — не для всех."}, {"ok": false, "t": "«Ну, опыт у меня небольшой, но я стараюсь…»", "pts": -5, "aya": "Неуверенность для руководителя — сигнал к контролю каждого движения."}]}, "d2": {"title": "клиент ошибается", "intro": "На щеках борода поредела: жёсткий квадрат откроет просветы. Мягкий квадрат их скроет.", "opts": [{"ok": true, "t": "«Виктор Павлович, решать вам. Один факт: на щеках борода стала реже, жёсткий квадрат покажет просветы. Мягкий квадрат даст ту же строгость. Как делаем?»", "pts": 14, "aya": "Факт без спора, решение за ним. Авторитет цел, а вы — профессионал."}, {"ok": false, "t": "Молча сделать жёсткий квадрат", "pts": -6, "aya": "Просветы он увидит и спросит с мастера, а не с себя."}, {"ok": false, "t": "«Да бросьте, квадрат нынче не носят. Доверьтесь профи»", "pts": -8, "aya": "Публичное «вы не правы» для руководителя — вызов. Он сделает назло."}]}}, {"salon": "pijon", "master": "eric", "name": "Марк", "age": 33, "title": "Есть ещё один вариант", "img": "mark", "enter": "14:15. Платиновый блондин в сером костюме выходит из белой «Камри» и заканчивает разговор по телефону: «…да, брат, сегодня же подпишем».", "line": "Хай, бро! У меня через час переговоры. Сделаешь из меня миллионера? И скидочку новому клиенту, а? Я же вам полгорода приведу", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Марк. Слушай, а свой барбершоп не думал открыть? Я бы вошёл в долю…"}, {"who": "eric", "note": "", "t": "Камри у входа твоя? Зачётная — на такой переговоры сами выигрываются. А про барбершоп — сначала дай себя постричь без сделки, а то вдруг я в пай зайду только фейдами. Волосы у тебя тонкие и осветлённые — аккуратнее с длиной"}, {"who": "client", "note": "", "t": "Вот! Укладка к вечеру разваливается. На утренних встречах я бог, на вечерних — одуванчик"}], "fin": [{"who": "narr", "t": "Марк поправляет манжету и усмехается."}, {"who": "client", "t": "Ладно, бро, ты меня переиграл. Глину беру. И визитку дай — приведу партнёров"}, {"who": "eric", "t": "Приводи. Им тоже без скидки"}], "ayaFin": "Договорщику не сдают цену — ему показывают ценность. Один точный совет продаёт лучше десяти баночек", "w": 254, "h": 760, "d1": {"title": "просьба о скидке", "opts": [{"ok": true, "t": "«Хай! Я Эрик. Миллионера — за сорок минут, по прайсу. Скидки не дам, зато вид будет такой, что скидку дадут тебе. Как зовут?»", "pts": 12, "aya": "Цена остаётся, а шутка переводит разговор на ценность. Переговорщик оценит ход."}, {"ok": false, "t": "«Ну давай десять процентов…»", "pts": -4, "aya": "Уступка с порога дешевит работу. В следующий раз он попросит двадцать."}, {"ok": false, "t": "«Скидок нет. Садись»", "pts": -8, "aya": "Правда, но холодно. Контактный клиент ждёт контакта в ответ."}]}, "d2": {"title": "продажа ухода", "intro": "Клиент сам назвал проблему. На полке — матовая глина и спрей для объёма.", "opts": [{"ok": true, "t": "«Держи сделку: спрей на корни, потом глина с горошину. Одуванчик отменяется. Сделаю прямо сейчас — проверишь на переговорах»", "pts": 12, "aya": "Продажа через демонстрацию и на его языке — «сделка». Клиент видит результат на себе."}, {"ok": false, "t": "«Бери всё: глину, спрей, шампунь и масло для бороды»", "pts": -7, "aya": "Бороды у него нет. Впаривание договорщик чувствует лучше всех."}, {"ok": false, "t": "Ничего не предлагать — вдруг опять попросит скидку", "pts": -5, "aya": "Клиент сам пожаловался. Молчание — упущенная забота и упущенная продажа."}]}}, {"salon": "pijon", "master": "eric", "name": "Денис", "age": 24, "title": "предел барбера", "img": "denis", "enter": "16:30. Рыжие кудри, сливовая рубашка. Денис заходит с улыбкой и сразу нюхает банки на полке.", "line": "Ой, как у вас атмосферно! Кирпич, лампочки… Слушайте, я хочу отрастить кудри до плеч. Надо как-то правильно подрезать, чтобы не было треугольника", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Денис. У меня выставка через месяц, хочу образ как у художников Возрождения!"}, {"who": "eric", "note": "", "t": "Мой образ Возрождения — это когда после курсов заказал новую машинку"}, {"who": "narr", "t": "Эрик про себя: кудри, длина, расчёт под форму… Этого на курсах не было."}, {"who": "client", "note": "смеётся", "t": "Ты ведь справишься? Я тебе доверяю!"}], "fin": [{"who": "narr", "t": "Денис на секунду стихает, потом улыбается."}, {"who": "client", "t": "Знаешь, это даже приятно. Мне обычно обещают всё, а потом… Давай окантовку — и скинь имя того мастера"}, {"who": "narr", "t": "Эрик чешет затылок."}, {"who": "eric", "t": "Второй раз за неделю… Кажется, машинка — это ещё не вся профессия"}], "ayaFin": "Честное «не мой профиль» сохраняет клиента лучше испорченной стрижки. А удлинённые мужские стрижки даст повышение квалификации", "w": 350, "h": 760, "d1": {"title": "приветствие", "opts": [{"ok": true, "t": "«Хай! Атмосфера — это наше всё, стрижки так, приложение. Я Эрик. А ты? Покажи, как кудри лежат сейчас»", "pts": 10, "aya": "Тепло в ответ на тепло, шутка про себя и сразу внимание к его волосам."}, {"ok": false, "t": "«Кудри? Да давай фейд жахнем, сейчас все так ходят»", "pts": -6, "aya": "Вы навязываете своё и обесцениваете его идею. Для чувствительного клиента это отвержение."}, {"ok": false, "t": "«Садись, разберёмся»", "pts": -4, "aya": "Нейтрально, но без имени и без контакта — а ему важнее всего отклик."}]}, "d2": {"title": "честность про границы", "intro": "", "opts": [{"ok": true, "t": "«Ден, скажу честно: удлинённые стрижки на кудрях — не мой профиль. Сегодня сделаю окантовку на шее, а форму под длину посоветую у мастера-парикмахера. Хочу, чтобы на выставке смотрели на картины, а не на твой треугольник»", "pts": 12, "aya": "Эталон Академии: честно про границы и совет коллеги. И с юмором — отказ не звучит как отвержение."}, {"ok": false, "t": "«Конечно, бро, дела на пять минут!» — и взяться за ножницы", "pts": -8, "aya": "Кудри после стрижки сокращаются. Без расчёта формы будет тот самый «треугольник»."}, {"ok": false, "t": "«Длинные кудри — вчерашний день. Может, всё-таки коротко?»", "pts": -4, "aya": "Отговаривать от мечты, потому что сам не умеешь, — нечестно."}]}}, {"salon": "pijon", "master": "eric", "name": "Алексей", "age": 30, "title": "Что мы знаем точно?", "img": "aleksey", "enter": "10:00. Стройный блондин в бежевом бомбере осторожно смотрит на барберский столб и на татуировки Эрика. Достаёт телефон с фото.", "line": "Добрый день. Вот фото моей стрижки на третий день. Нужно именно так. В прошлый раз виски были на полсантиметра короче, чем надо", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Алексей. Я аналитик, привык к точности. Извините, если дотошный"}, {"who": "eric", "note": "", "t": "Дотошный клиент — мечта барбера. Худшее — когда говорят «ну, как-нибудь», а потом оказывается не как-нибудь"}, {"who": "client", "note": "мягко улыбается", "t": "Интересное наблюдение. Так на сколько короче сегодня?"}], "fin": [{"who": "narr", "t": "Алексей сравнивает с фото, делает паузу."}, {"who": "client", "t": "Точно. Знаете, я думал, что барбершоп — это про бороды и рок. А тут линейка"}, {"who": "eric", "t": "Рок — по пятницам. Записать через четыре недели?"}], "ayaFin": "Не каждый мужчина в барбершопе ждёт «бро». Точному клиенту — цифры, план и немного лёгкой иронии в свой адрес", "w": 296, "h": 760, "d1": {"title": "точный клиент в мужском зале", "opts": [{"ok": true, "t": "«Добрый день! Я Эрик, барбер. Не пугайтесь татуировок, линейкой я пользуюсь точнее, чем рисую. Как к вам обращаться? И давайте фото разберём»", "pts": 12, "aya": "Самоирония снимает его настороженность, а «вы» и работа с его фото показывают: его услышали."}, {"ok": false, "t": "«Хай, бро! Да не парься ты с фотками, сделаю кайфово»", "pts": -7, "aya": "Для аналитика «не парься» значит «тебя не слушают». Неформал с порога ему чужд."}, {"ok": false, "t": "«Понял» — и сразу за машинку", "pts": -5, "aya": "Нет имени и нет проверки понимания. Потом спор будет слово против слова."}]}, "d2": {"title": "консультация фактами", "intro": "", "opts": [{"ok": true, "t": "«Волосы растут примерно на сантиметр в месяц. Виски — насадка на полсантиметра длиннее прошлой, сверху снимаю три миллиметра. Покажу в зеркале до того, как резать. Принимается?»", "pts": 12, "aya": "Цифры, насадка и проверка перед действием. Для аналитика это и есть доверие."}, {"ok": false, "t": "«Да на глаз сделаю, рука набита»", "pts": -7, "aya": "«На глаз» — именно то, чего он боится. В прошлый раз он уже получил лишние полсантиметра."}, {"ok": false, "t": "«А давайте лучше скин-фейд! Вообще другой человек будете»", "pts": -5, "aya": "Он пришёл за предсказуемость, а не за новой личностью. Новое предлагают в конце и как вариант."}]}}, {"salon": "pijon", "master": "eric", "name": "Вадим", "age": 55, "title": "Не торопись", "img": "vadim", "enter": "17:20. Худощавый мужчина в сером пальто, волосы с сединой. В зале играет рок, соседний барбер громко обсуждает матч. Вадим молча вешает пальто.", "line": "Добрый вечер. Как обычно", "lineNote": "тихо, после паузы", "chair": [{"who": "client", "note": "", "t": "Вадим. Коротко, аккуратно, виски прямые"}, {"who": "narr", "t": "Дальше молчит и смотрит в зеркало."}, {"who": "narr", "t": "Эрик не заполняет паузу и работает. Через десять минут Вадим сам нарушает тишину."}, {"who": "client", "note": "", "t": "Дочь сказала, что седина меня старит. У вас тут все молодые… Думаете, стоит что-то делать?"}], "fin": [{"who": "narr", "t": "Вадим долго смотрит в зеркало и едва заметно улыбается."}, {"who": "client", "t": "Спасибо, что не торопили. И за музыку. Подумаю про камуфляж"}], "ayaFin": "В шумном барбершопе тихий клиент ценит покой больше шуток. А о седине говорят как о выборе, а не как о недостатке", "w": 393, "h": 760, "d1": {"title": "тихий клиент в шумном зале", "opts": [{"ok": true, "t": "«Добрый вечер. Я Эрик. Как к вам обращаться? И покажите, что значит «как обычно». Музыку сделаю потише»", "pts": 12, "aya": "Спокойно, без суеты, и забота о тишине без лишних слов. «Как обычно» у нового мастера уточняют."}, {"ok": false, "t": "«Чё как, бро? Слышал, как вчера наши слили? Это же вообще!»", "pts": -7, "aya": "Для сдержанного человека после пятидесяти «бро» и футбол с порога — шум. Он замкнётся."}, {"ok": false, "t": "«Ок» — и стричь на своё усмотрение", "pts": -5, "aya": "Вы видите его впервые. Угадать «как обычно» нельзя."}]}, "d2": {"title": "деликатный вопрос", "intro": "", "opts": [{"ok": true, "t": "«Седина вам идёт — ровная, благородная. Я бы сам такую хотел, да мне до неё ещё лет двадцать. Если захотите — есть камуфляж седины: она станет мягче, но не исчезнет. Решать вам, и не сегодня обязательно»", "pts": 12, "aya": "Честно, бережно, с выбором и лёгкой самоиронией. Комплимент звучит искренне, а не как продажа."}, {"ok": false, "t": "«Да конечно! Закрасим — и лет на десять моложе, будете как мы»", "pts": -7, "aya": "Вы подтвердили, что он выглядит старо, и торопите. Для него это давление."}, {"ok": false, "t": "«Да забейте, дочки всегда придираются»", "pts": -5, "aya": "Оценивать его семью нельзя. И он спрашивал не о дочери, а о себе."}]}}, {"salon": "pijon", "master": "eric", "name": "Михаил", "age": 48, "title": "борода, сила Эрика", "img": "mikhail", "enter": "12:40. Коренастый мужчина в оливковой рубашке, рукава закатаны, на пальцах следы мазута. Густая борода с сединой. Первым делом замечает шатающийся подлокотник кресла.", "line": "Здравствуй. Подстричься и бороду в порядок. А у вас тут винт разболтался, могу подтянуть", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Михаил. Бороду покороче и чтобы форма была, а то жена говорит — как лесник. Вот с такой окантовкой, как у вас на плакате"}, {"who": "eric", "note": "", "t": "Сделаем. Борода — это моё, тут я уверен. А вы чем занимаетесь? Руки рабочие"}, {"who": "client", "note": "улыбка появляется постепенно", "t": "Автосервис свой. Сейчас через одного китайцы. Да и сам на «Хавейле» езжу — честная машина"}, {"who": "eric", "note": "", "t": "Зачётная тачка! А я пока на самокате — зато парковка всегда бесплатная"}], "fin": [{"who": "narr", "t": "Михаил трогает бороду, смотрит в зеркало."}, {"who": "client", "t": "Вот теперь собрано точно по чертежу"}, {"who": "narr", "t": "По пути к выходу всё-таки подтягивает винт на подлокотнике."}, {"who": "eric", "t": "Михаил, с вас скидка на ремонт — шучу, скидок не дают никому, но спасибо от души"}], "ayaFin": "То, что для Киры предел, для Эрика — сила. А уход продаётся одним точным средством под проблему клиента", "w": 404, "h": 760, "d1": {"title": "забота делом", "opts": [{"ok": true, "t": "«Здравствуйте! Я Эрик. Вот спасибо — я неделю на него смотрю и делаю вид, что так задумано. Как к вам обращаться?»", "pts": 10, "aya": "Самоирония плюс благодарность. Практичный человек проявил заботу делом — заметьте это."}, {"ok": false, "t": "«Да ладно, батя, садись, не заморачивайся»", "pts": -6, "aya": "Он предложил помощь — а его отмахнули и назвали «батей». Двойное обесценивание."}, {"ok": false, "t": "«Не трогайте, у нас мастер есть. Садитесь»", "pts": -4, "aya": "Вежливо, но помощь отвергнута. Для мастера на все руки это холодно."}]}, "d2": {"title": "уход за бородой", "intro": "Борода сделана, Михаил доволен, но чешет щеку: «Чешется вечно. Да ладно, перетерплю».", "opts": [{"ok": true, "t": "«Не надо терпеть. Кожа под бородой сохнет — как механизм без смазки. Две-три капли масла вечером — и тишина. Попробуйте прямо сейчас»", "pts": 12, "aya": "Объяснение на его языке и проба на месте. Так уход продаётся без давления."}, {"ok": false, "t": "«Берите масло, бальзам, шампунь для бороды и расчёску — комплектом выгоднее»", "pts": -7, "aya": "Практичный человек берёт одно нужное, а не корзину. Комплект звучит как развод."}, {"ok": false, "t": "«Да, борода всегда чешется, привыкнете»", "pts": -5, "aya": "Клиент сам назвал проблему. У барбера есть решение — молчать о нём нельзя."}]}}, {"salon": "pijon", "master": "eric", "name": "Роман", "age": 38, "title": "Здесь уже дышать нечем", "img": "roman", "enter": "19:05. У Эрика затянулся предыдущий клиент с бородой. Роман — загорелый, в белой льняной рубашке — ждёт пятнадцать минут и нарезает круги между диваном и дверью.", "line": "Слушай, я записан на семь! Завтра в шесть самолёт, а я тут стою как дурак!", "lineNote": "громко, всплескивая руками", "chair": [{"who": "client", "note": "уже теплее", "t": "Роман. Извини, перегнул. День сумасшедший. Лечу на море, там байк возьму — и вдоль побережья!"}, {"who": "eric", "note": "", "t": "Вот это план. Я бы тоже укатил, но меня тут бороды держат в заложниках"}, {"who": "client", "note": "смеётся, потом вдруг проводит ладонью по волосам", "t": "А знаешь что? Давай под ноль! Шлем всё равно. Режь всё!"}], "fin": [{"who": "narr", "t": "Роман смеётся и трясёт головой."}, {"who": "client", "t": "Слушай, ты прав. Я бы в самолёте уже пожалел. Вернусь — сразу к тебе, фотки с байка покажу!"}], "ayaFin": "Вспышку гасят признанием и действием, а импульсивное «режь всё» — повод на секунду остановиться. В мужском зале помогает и шутка", "w": 372, "h": 760, "d1": {"title": "вспышка из-за ожидания", "opts": [{"ok": true, "t": "«Ты прав, извини — борода перед тобой оказалась с характером. Я Эрик. Падай — и за сорок минут соберём тебя в отпуск. Как зовут?»", "pts": 12, "aya": "Признать, извиниться, пошутить и сразу дать действие. На «ты» — потому что он сам так начал, но без «бро»: «бро» — для молодых."}, {"ok": false, "t": "«Расслабься, бро, не кипи. Не я же виноват, что клиент затянулся»", "pts": -7, "aya": "«Не кипи» и оправдание — бензин в огонь. Неформальный тон не спасает, если смысл обесценивает."}, {"ok": false, "t": "Молча показать на кресло", "pts": -5, "aya": "Взрывному человеку нужен отклик. Молчание он прочитает как равнодушие."}]}, "d2": {"title": "импульсивное решение", "intro": "", "opts": [{"ok": true, "t": "«Могу, машинка заряжена. Но секунду: под ноль на южном солнце макушка сгорит в первый же день, и будешь красный, как твой байк. Предлагаю фейд по бокам и волну оставить сверху. Захочешь короче — после отпуска, резать не отращивать»", "pts": 12, "aya": "Факт, шутка и вариант вместо запрета. Импульсивному клиенту дают паузу, а решение оставляют ему."}, {"ok": false, "t": "«Под ноль так под ноль, бро!» — и включить машинку", "pts": -8, "aya": "Завтра он пожалеет — и виноватым будет мастер, который не остановил."}, {"ok": false, "t": "«Нет, брат, так не будет. Тут решаю я»", "pts": -4, "aya": "Запрет без объяснения для свободолюбивого человека — давление. Он вспыхнет снова."}]}}, {"salon": "family", "master": "kira", "name": "Алексей", "age": 30, "title": "Что мы знаем точно?", "img": "aleksey", "enter": "10:00. Стройный блондин в бежевом бомбере достаёт телефон с фото.", "line": "Добрый день. Вот фото моей стрижки на третий день. Нужно именно так. В прошлый раз виски были на полсантиметра короче, чем надо", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Алексей. Я аналитик, привык к точности. Извините, если дотошный"}, {"who": "kira", "note": "", "t": "Это только помогает. На фото третий день — значит, сегодня делаем чуть короче, оно дорастёт"}, {"who": "client", "note": "касается подбородка", "t": "Интересно. А на сколько короче?"}], "fin": [{"who": "narr", "t": "Алексей сравнивает с фото, делает паузу и мягко улыбается."}, {"who": "client", "t": "Точно. Запишите меня ровно через четыре недели"}], "ayaFin": "Точному клиенту — цифры и план. Покажите в зеркале до того, как резать, и спора не будет", "w": 296, "h": 760, "d1": {"title": "точный клиент", "opts": [{"ok": true, "t": "«Добрый день! Меня зовут Кира, я парикмахер третьего разряда. Как к вам обращаться? И давайте разберём фото вместе»", "pts": 12, "aya": "Эталон плюс работа с его фактами. Рациональному клиенту важнее всего, что его поняли."}, {"ok": false, "t": "«Да не волнуйтесь, сделаю красиво!»", "pts": -7, "aya": "«Красиво» — не факт. Такой клиент слышит: «Вас не слушают»."}, {"ok": false, "t": "«Хорошо, поняла» — и сразу за ножницы", "pts": -5, "aya": "Нет имени и нет проверки понимания. Потом спор будет слово против слова."}]}, "d2": {"title": "консультация фактами", "intro": "", "opts": [{"ok": true, "t": "«Волосы растут примерно на сантиметр в месяц. Виски оставлю как на фото, а сверху сниму три миллиметра. Покажу в зеркале перед тем, как резать. Согласны?»", "pts": 12, "aya": "Цифры, план и проверка перед действием. Для аналитика это и есть доверие."}, {"ok": false, "t": "«Ну, на глаз сделаю, у меня рука набита»", "pts": -7, "aya": "«На глаз» — именно то, чего он боится. В прошлый раз он уже получил лишние полсантиметра."}, {"ok": false, "t": "«Может, попробуем что-то новое? Сейчас модна текстура»", "pts": -5, "aya": "Он пришёл за предсказуемостью. Новое предлагают в конце и как вариант, а не вместо запроса."}]}}, {"salon": "family", "master": "kira", "name": "Вадим", "age": 55, "title": "Не торопись", "img": "vadim", "enter": "17:20. Худощавый мужчина в сером пальто, волосы с заметной сединой. Он молча вешает пальто и смотрит на Киру.", "line": "Добрый вечер. Как обычно", "lineNote": "тихо, после паузы", "chair": [{"who": "client", "note": "", "t": "Вадим. Коротко, аккуратно, виски прямые"}, {"who": "narr", "t": "Дальше он молчит и смотрит в зеркало."}, {"who": "narr", "t": "Кира не заполняет паузу и работает. Через десять минут Вадим сам нарушает тишину."}, {"who": "client", "note": "", "t": "Дочь сказала, что седина меня старит. Думаете, стоит что-то делать?"}], "fin": [{"who": "narr", "t": "Вадим долго смотрит в зеркало и едва заметно улыбается."}, {"who": "client", "t": "Спасибо, что не торопили. Подумаю про тонирование. Запишите к вам"}], "ayaFin": "Молчаливый клиент заговорит сам, если не давить. А о седине говорят как о выборе, не как о недостатке", "w": 393, "h": 760, "d1": {"title": "молчаливый клиент", "opts": [{"ok": true, "t": "«Добрый вечер. Я Кира, сегодня вас постригу я. Как к вам обращаться? И покажите, что значит «как обычно» — я запишу»", "pts": 12, "aya": "Спокойно, без суеты. «Как обычно» у нового мастера обязательно уточняют."}, {"ok": false, "t": "«Здравствуйте-здравствуйте! Как день прошёл? Погода сегодня жуть какая!»", "pts": -7, "aya": "Поток слов для сдержанного человека — шум. Он замкнётся ещё сильнее."}, {"ok": false, "t": "«Хорошо» — и стричь на своё усмотрение", "pts": -5, "aya": "Вы его видите впервые. Угадать «как обычно» нельзя."}]}, "d2": {"title": "деликатный вопрос", "intro": "", "opts": [{"ok": true, "t": "«Седина вам идёт — она ровная и благородная. Если захотите, есть мягкое тонирование: седина станет менее заметной, но не исчезнет. Решать вам, и не обязательно сегодня»", "pts": 12, "aya": "Честно, бережно, с выбором и без давления. Вы уважаете его границы."}, {"ok": false, "t": "«Да, конечно! Давайте прямо сейчас закрасим, станете лет на десять моложе!»", "pts": -7, "aya": "Вы подтвердили, что он выглядит старо, и торопите. Для него это давление."}, {"ok": false, "t": "«Да не слушайте дочь, ерунда это»", "pts": -5, "aya": "Оценивать его семью нельзя. И он спрашивал не о дочери, а о себе."}]}}, {"salon": "family", "master": "kira", "name": "Михаил", "age": 48, "title": "предел Киры", "img": "mikhail", "enter": "12:40. Коренастый мужчина в оливковой рубашке с закатанными рукавами, густая борода с сединой. Сразу замечает, что у кресла шатается подлокотник.", "line": "Здравствуйте. Подстричься и бороду в порядок. А у вас тут винт разболтался, могу подтянуть", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Михаил. Бороду хочу покороче и чтобы форма была, а то жена говорит — как лесник. С окантовкой, как у барберов"}, {"who": "kira", "note": "про себя", "t": "стрижка — да. А форма бороды и окантовка бритвой — в Академии этого было чуть-чуть."}, {"who": "client", "note": "", "t": "Ну что, поправите?"}], "fin": [{"who": "narr", "t": "Михаил проводит ладонью по затылку и постепенно улыбается."}, {"who": "client", "t": "Правильно. У меня в мастерской так же: не своё — не бери. А винт я всё-таки подтяну"}], "ayaFin": "У парикмахера тоже есть границы. Форма бороды — отдельный навык, и в Академии его можно доучить", "w": 404, "h": 760, "d1": {"title": "забота делом", "opts": [{"ok": true, "t": "«Добрый день! Я Кира, парикмахер третьего разряда. Спасибо, что заметили! Передам директору. Как к вам обращаться?»", "pts": 10, "aya": "Практичный человек проявил заботу делом. Заметить и поблагодарить — лучший контакт."}, {"ok": false, "t": "«Не надо, у нас есть мастер по ремонту. Садитесь»", "pts": -6, "aya": "Он предложил помощь, а вы её отвергли. Для него это обесценивание."}, {"ok": false, "t": "«Ой, да тут всё разваливается… Директор ничего не чинит»", "pts": -4, "aya": "Жалобы на салон при клиенте роняют доверие и к салону, и к вам."}]}, "d2": {"title": "честность про границы", "intro": "", "opts": [{"ok": true, "t": "«Стрижку сделаю хорошо. Бороду сделаю под насадку, а форму с окантовкой лучше делать у барбера — там и бритва, и опыт. Подскажу хороший барбершоп»", "pts": 12, "aya": "Честно: что сделаю, что нет и куда пойти. Клиент уходит с решением, а не с испорченной бородой."}, {"ok": false, "t": "«Конечно!» — и взять бритву", "pts": -8, "aya": "Бритва без навыка — риск пореза и кривой линии. Борода растёт неделями."}, {"ok": false, "t": "«Бороды мы не делаем»", "pts": -4, "aya": "Честно, но бороду под насадку вы сделать можете. И клиент остался без подсказки."}]}}, {"salon": "family", "master": "kira", "name": "Роман", "age": 38, "title": "Здесь уже дышать нечем", "img": "roman", "enter": "19:05. У Киры задержалась предыдущая клиентка. Роман — загорелый, в белой льняной рубашке — ждёт уже пятнадцать минут и ходит по залу.", "line": "Я записан на семь! Завтра в шесть утра самолёт, а я тут стою как дурак!", "lineNote": "громко, всплескивая руками", "chair": [{"who": "client", "note": "уже теплее", "t": "Роман. Извини, перегнул. День сумасшедший. Лечу на море на две недели!"}, {"who": "kira", "note": "", "t": "Здорово! Волна у вас красивая, от солёной воды ещё сильнее завьётся"}, {"who": "client", "note": "вдруг, проводя ладонью по волосам", "t": "А знаешь что? Давай под ноль! Надоело. Режь всё!"}], "fin": [{"who": "narr", "t": "Роман смеётся и трясёт головой."}, {"who": "client", "t": "Слушай, ты права. Хорошо, что остановила — я бы в самолёте уже пожалел. Вернусь — сразу к тебе!"}], "ayaFin": "Вспышку гасят признанием и действием. А импульсивное «режь всё» — повод на секунду остановиться и предложить вариант", "w": 372, "h": 760, "d1": {"title": "вспышка из-за ожидания", "opts": [{"ok": true, "t": "«Вы правы, извините за ожидание. Я Кира. Садитесь — и за сорок минут соберём вас в отпуск. Как вас зовут?»", "pts": 12, "aya": "Признать чувство, извиниться и сразу дать действие. Вспышка гаснет."}, {"ok": false, "t": "«Не кричите, пожалуйста. У нас клиентка задержалась, я не виновата»", "pts": -7, "aya": "Замечание и оправдание — бензин в огонь. Клиенту неважно, кто виноват."}, {"ok": false, "t": "Молча показать на кресло", "pts": -5, "aya": "Взрывному человеку нужен отклик. Молчание он прочитает как равнодушие."}]}, "d2": {"title": "импульсивное решение", "intro": "", "opts": [{"ok": true, "t": "«Могу. Но давайте секунду: под ноль на южном солнце голова сгорит в первый день. Предлагаю коротко по бокам и оставить волну сверху — легко и свежо. Если всё-таки захотите короче — после отпуска»", "pts": 12, "aya": "Импульсивному клиенту дают факт и паузу, а не запрет. Решение остаётся за ним."}, {"ok": false, "t": "«Под ноль так под ноль!» — и взять машинку", "pts": -8, "aya": "Завтра он пожалеет — и виноватым будет мастер, который не остановил."}, {"ok": false, "t": "«Нет, это плохая идея, я так делать не буду»", "pts": -4, "aya": "Запрет без объяснения для свободолюбивого человека — давление. Он вспыхнет снова."}]}}];
+const MEN = [{"salon": "pijon", "master": "eric", "name": "Артём", "age": 27, "title": "Скажи прямо", "img": "artem", "enter": "18:40. Дверь распахивается. Массивный парень в чёрном бомбере, над бровью шрам. За окном — чёрная «бэха» с тонировкой.", "line": "Здарова. Мне коротко. Сколько ждать?", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Тёма. По бокам в ноль, сверху сантиметр. У меня в семь треня"}, {"who": "eric", "note": "", "t": "Успеем. Зачётная бэха, кстати. Твоя? Сам тонировал?"}, {"who": "client", "note": "впервые улыбается", "t": "Сам. А шрам — не от тачки, от бокса. Только не задень"}, {"who": "eric", "note": "", "t": "Расслабься. Я тут самый безопасный человек с бритвой"}], "fin": [{"who": "narr", "t": "Артём крутит головой у зеркала."}, {"who": "client", "t": "Чётко. В следующий раз — сразу к тебе, бро"}, {"who": "eric", "t": "Давай. И за наших болей там"}], "ayaFin": "Прямому клиенту — прямые слова и чёткие цифры. А лёгкая шутка делает из случайного клиента своего", "w": 327, "h": 760, "d1": {"title": "первый контакт", "opts": [{"ok": true, "t": "«Хай, бро! Нисколько — кресло твоё. Я Эрик. А тебя как?»", "pts": 12, "aya": "Он сам задал тон: «здарова». В мужском зале можно ответить на его языке — имя и вопрос всё равно на месте."}, {"ok": false, "t": "«Добрый вечер! Меня зовут Эрик, я барбер, окончил курсы, мои сильные стороны — фейды…»", "pts": -5, "aya": "Длинно и официально. Он спросил одно: сколько ждать."}, {"ok": false, "t": "«Видишь, я занят. Сядь, подожди»", "pts": -7, "aya": "Резкость на резкость. Неформально — не значит грубо."}]}, "d2": {"title": "клиент дёргается", "intro": "Во время фейда Артём крутит головой к телефону: там матч. «Слушай, а быстрее нельзя? Там наши проигрывают».", "opts": [{"ok": true, "t": "«Давай так: десять минут голова неподвижно — и ты свободен к второму тайму. А наши как раз во втором и отыгрываются, традиция»", "pts": 12, "aya": "Прямой договор с цифрой и шутка про футбол. Нетерпение снято и без спора."}, {"ok": false, "t": "Молча придержать голову рукой", "pts": -4, "aya": "Без слов он примет жест за вызов. Скажите, зачем."}, {"ok": false, "t": "«Быстро — это криво. Сиди и не дёргайся»", "pts": -8, "aya": "Смысл верный, форма — приказ. С боксёром в кресле так не разговаривают."}]}}, {"salon": "pijon", "master": "eric", "name": "Виктор Павлович", "age": 58, "title": "Решение принято", "img": "viktor", "enter": "11:00, запись. Тёмно-синий костюм, густая седая борода. Осматривает кирпичные стены, полку с банками, татуировки Эрика. За окном водитель паркует чёрный «Мерседес». Выдерживает паузу.", "line": "Виктор Павлович. Я записан. Вы, стало быть, мастер? Выглядите скорее как охранник ночного клуба", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Бороду — короче и квадратом. Как у меня было двадцать лет назад"}, {"who": "eric", "note": "", "t": "Двадцать лет назад я детский сад возглавлял, так что покажите фото, если есть. А я посмотрю линию скул и плотность"}, {"who": "client", "note": "уголок рта дрогнул", "t": "Фото нет. Делайте, как я сказал"}], "fin": [{"who": "narr", "t": "Виктор Павлович долго смотрит в зеркало и едва заметно кивает."}, {"who": "client", "t": "Дельно. Для охранника — вовсе неплохо. Запишите меня через три недели"}], "ayaFin": "В барбершопе можно на «ты» — но не со всеми. С руководителем не спорят: дают факты и оставляют решение за ним", "w": 274, "h": 760, "d1": {"title": "проверка авторитета", "opts": [{"ok": true, "t": "«Добрый день, Виктор Павлович. Эрик, барбер. С охраной у меня только ножницы, а бороды — моё дело. Расскажите, какой нужен результат»", "pts": 12, "aya": "Лёгкая самоирония снимает укол, а имя-отчество и «вы» показывают уважение. И сразу к делу."}, {"ok": false, "t": "«Хай! Да ладно, батя, всё будет пушка»", "pts": -7, "aya": "«Батя» и «хай» для руководителя сорока лет стажа — фамильярность. Неформал в барбершопе — не для всех."}, {"ok": false, "t": "«Ну, опыт у меня небольшой, но я стараюсь…»", "pts": -5, "aya": "Неуверенность для руководителя — сигнал к контролю каждого движения."}]}, "d2": {"title": "клиент ошибается", "intro": "На щеках борода поредела: жёсткий квадрат откроет просветы. Мягкий квадрат их скроет.", "opts": [{"ok": true, "t": "«Виктор Павлович, решать вам. Один факт: на щеках борода стала реже, жёсткий квадрат покажет просветы. Мягкий квадрат даст ту же строгость. Как делаем?»", "pts": 14, "aya": "Факт без спора, решение за ним. Авторитет цел, а вы — профессионал."}, {"ok": false, "t": "Молча сделать жёсткий квадрат", "pts": -6, "aya": "Просветы он увидит и спросит с мастера, а не с себя."}, {"ok": false, "t": "«Да бросьте, квадрат нынче не носят. Доверьтесь профи»", "pts": -8, "aya": "Публичное «вы не правы» для руководителя — вызов. Он сделает назло."}]}}, {"salon": "pijon", "master": "eric", "name": "Марк", "age": 33, "title": "Есть ещё один вариант", "img": "mark", "enter": "14:15. Платиновый блондин в сером костюме выходит из белой «Камри» и заканчивает разговор по телефону: «…да, брат, сегодня же подпишем».", "line": "Хай, бро! У меня через час переговоры. Сделаешь из меня миллионера? И скидочку новому клиенту, а? Я же вам полгорода приведу", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Марк. Слушай, а свой барбершоп не думал открыть? Я бы вошёл в долю…"}, {"who": "eric", "note": "", "t": "Камри у входа твоя? Зачётная — на такой переговоры сами выигрываются. А про барбершоп — сначала дай себя постричь без сделки, а то вдруг я в пай зайду только фейдами. Волосы у тебя тонкие и осветлённые — аккуратнее с длиной"}, {"who": "client", "note": "", "t": "Вот! Укладка к вечеру разваливается. На утренних встречах я бог, на вечерних — одуванчик"}], "fin": [{"who": "narr", "t": "Марк поправляет манжету и усмехается."}, {"who": "client", "t": "Ладно, бро, ты меня переиграл. Глину беру. И визитку дай — приведу партнёров"}, {"who": "eric", "t": "Приводи. Им тоже без скидки"}], "ayaFin": "Договорщику не сдают цену — ему показывают ценность. Один точный совет продаёт лучше десяти баночек", "w": 254, "h": 760, "d1": {"title": "просьба о скидке", "opts": [{"ok": true, "t": "«Хай! Я Эрик. Миллионера — за сорок минут, по прайсу. Скидки не дам, зато вид будет такой, что скидку дадут тебе. Как зовут?»", "pts": 12, "aya": "Цена остаётся, а шутка переводит разговор на ценность. Переговорщик оценит ход."}, {"ok": false, "t": "«Ну давай десять процентов…»", "pts": -4, "aya": "Уступка с порога дешевит работу. В следующий раз он попросит двадцать."}, {"ok": false, "t": "«Скидок нет. Садись»", "pts": -8, "aya": "Правда, но холодно. Контактный клиент ждёт контакта в ответ."}]}, "d2": {"title": "продажа ухода", "intro": "Клиент сам назвал проблему. На полке — матовая глина и спрей для объёма.", "opts": [{"ok": true, "t": "«Держи сделку: спрей на корни, потом глина с горошину. Одуванчик отменяется. Сделаю прямо сейчас — проверишь на переговорах»", "pts": 12, "aya": "Продажа через демонстрацию и на его языке — «сделка». Клиент видит результат на себе."}, {"ok": false, "t": "«Бери всё: глину, спрей, шампунь и масло для бороды»", "pts": -7, "aya": "Бороды у него нет. Впаривание договорщик чувствует лучше всех."}, {"ok": false, "t": "Ничего не предлагать — вдруг опять попросит скидку", "pts": -5, "aya": "Клиент сам пожаловался. Молчание — упущенная забота и упущенная продажа."}]}}, {"salon": "pijon", "master": "eric", "name": "Денис", "age": 24, "title": "предел барбера", "img": "denis", "enter": "16:30. Рыжие кудри, сливовая рубашка. Денис заходит с улыбкой и сразу нюхает банки на полке.", "line": "Ой, как у вас атмосферно! Кирпич, лампочки… Слушайте, я хочу отрастить кудри до плеч. Надо как-то правильно подрезать, чтобы не было треугольника", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Денис. У меня выставка через месяц, хочу образ как у художников Возрождения!"}, {"who": "eric", "note": "", "t": "Мой образ Возрождения — это когда после курсов заказал новую машинку"}, {"who": "narr", "t": "Эрик про себя: кудри, длина, расчёт под форму… Этого на курсах не было."}, {"who": "client", "note": "смеётся", "t": "Ты ведь справишься? Я тебе доверяю!"}], "fin": [{"who": "narr", "t": "Денис на секунду стихает, потом улыбается."}, {"who": "client", "t": "Знаешь, это даже приятно. Мне обычно обещают всё, а потом… Давай окантовку — и скинь имя того мастера"}, {"who": "narr", "t": "Эрик чешет затылок."}, {"who": "eric", "t": "Второй раз за неделю… Кажется, машинка — это ещё не вся профессия"}], "ayaFin": "Честное «не мой профиль» сохраняет клиента лучше испорченной стрижки. А удлинённые мужские стрижки даст повышение квалификации", "w": 350, "h": 760, "d1": {"title": "приветствие", "opts": [{"ok": true, "t": "«Хай! Атмосфера — это наше всё, стрижки так, приложение. Я Эрик. А ты? Покажи, как кудри лежат сейчас»", "pts": 10, "aya": "Тепло в ответ на тепло, шутка про себя и сразу внимание к его волосам."}, {"ok": false, "t": "«Кудри? Да давай фейд жахнем, сейчас все так ходят»", "pts": -6, "aya": "Вы навязываете своё и обесцениваете его идею. Для чувствительного клиента это отвержение."}, {"ok": false, "t": "«Садись, разберёмся»", "pts": -4, "aya": "Нейтрально, но без имени и без контакта — а ему важнее всего отклик."}]}, "d2": {"title": "честность про границы", "intro": "", "opts": [{"ok": true, "t": "«Ден, скажу честно: удлинённые стрижки на кудрях — не мой профиль. Сегодня сделаю окантовку на шее, а форму под длину посоветую у мастера-парикмахера. Хочу, чтобы на выставке смотрели на картины, а не на твой треугольник»", "pts": 12, "aya": "Эталон Академии: честно про границы и совет коллеги. И с юмором — отказ не звучит как отвержение."}, {"ok": false, "t": "«Конечно, бро, дела на пять минут!» — и взяться за ножницы", "pts": -8, "aya": "Кудри после стрижки сокращаются. Без расчёта формы будет тот самый «треугольник»."}, {"ok": false, "t": "«Длинные кудри — вчерашний день. Может, всё-таки коротко?»", "pts": -4, "aya": "Отговаривать от мечты, потому что сам не умеешь, — нечестно."}]}}, {"salon": "pijon", "master": "eric", "name": "Алексей", "age": 30, "title": "Что мы знаем точно?", "img": "aleksey", "enter": "10:00. Стройный блондин в бежевом бомбере осторожно смотрит на барберский столб и на татуировки Эрика. Достаёт телефон с фото.", "line": "Добрый день. Вот фото моей стрижки на третий день. Нужно именно так. В прошлый раз виски были на полсантиметра короче, чем надо", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Алексей. Я аналитик, привык к точности. Извините, если дотошный"}, {"who": "eric", "note": "", "t": "Дотошный клиент — мечта барбера. Худшее — когда говорят «ну, как-нибудь», а потом оказывается не как-нибудь"}, {"who": "client", "note": "мягко улыбается", "t": "Интересное наблюдение. Так на сколько короче сегодня?"}], "fin": [{"who": "narr", "t": "Алексей сравнивает с фото, делает паузу."}, {"who": "client", "t": "Точно. Знаете, я думал, что барбершоп — это про бороды и рок. А тут линейка"}, {"who": "eric", "t": "Рок — по пятницам. Записать через четыре недели?"}], "ayaFin": "Не каждый мужчина в барбершопе ждёт «бро». Точному клиенту — цифры, план и немного лёгкой иронии в свой адрес", "w": 296, "h": 760, "d1": {"title": "точный клиент в мужском зале", "opts": [{"ok": true, "t": "«Добрый день! Я Эрик, барбер. Не пугайтесь татуировок, линейкой я пользуюсь точнее, чем рисую. Как к вам обращаться? И давайте фото разберём»", "pts": 12, "aya": "Самоирония снимает его настороженность, а «вы» и работа с его фото показывают: его услышали."}, {"ok": false, "t": "«Хай, бро! Да не парься ты с фотками, сделаю кайфово»", "pts": -7, "aya": "Для аналитика «не парься» значит «тебя не слушают». Неформал с порога ему чужд."}, {"ok": false, "t": "«Понял» — и сразу за машинку", "pts": -5, "aya": "Нет имени и нет проверки понимания. Потом спор будет слово против слова."}]}, "d2": {"title": "консультация фактами", "intro": "", "opts": [{"ok": true, "t": "«Волосы растут примерно на сантиметр в месяц. Виски — насадка на полсантиметра длиннее прошлой, сверху почти не снимаю длину. Покажу в зеркале до того, как резать. Принимается?»", "pts": 12, "aya": "Цифры, насадка и проверка перед действием. Для аналитика это и есть доверие."}, {"ok": false, "t": "«Да на глаз сделаю, рука набита»", "pts": -7, "aya": "«На глаз» — именно то, чего он боится. В прошлый раз он уже получил лишние полсантиметра."}, {"ok": false, "t": "«А давайте лучше скин-фейд! Вообще другой человек будете»", "pts": -5, "aya": "Он пришёл за предсказуемость, а не за новой личностью. Новое предлагают в конце и как вариант."}]}}, {"salon": "pijon", "master": "eric", "name": "Вадим", "age": 55, "title": "Не торопись", "img": "vadim", "enter": "17:20. Худощавый мужчина в сером пальто, волосы с сединой. В зале играет рок, соседний барбер громко обсуждает матч. Вадим молча вешает пальто.", "line": "Добрый вечер. Как обычно", "lineNote": "тихо, после паузы", "chair": [{"who": "client", "note": "", "t": "Вадим. Коротко, аккуратно, виски прямые"}, {"who": "narr", "t": "Дальше молчит и смотрит в зеркало."}, {"who": "narr", "t": "Эрик не заполняет паузу и работает. Через десять минут Вадим сам нарушает тишину."}, {"who": "client", "note": "", "t": "Дочь сказала, что седина меня старит. У вас тут все молодые… Думаете, стоит что-то делать?"}], "fin": [{"who": "narr", "t": "Вадим долго смотрит в зеркало и едва заметно улыбается."}, {"who": "client", "t": "Спасибо, что не торопили. И за музыку. Подумаю про камуфляж"}], "ayaFin": "В шумном барбершопе тихий клиент ценит покой больше шуток. А о седине говорят как о выборе, а не как о недостатке", "w": 393, "h": 760, "d1": {"title": "тихий клиент в шумном зале", "opts": [{"ok": true, "t": "«Добрый вечер. Я Эрик. Как к вам обращаться? И покажите, что значит «как обычно». Музыку сделаю потише»", "pts": 12, "aya": "Спокойно, без суеты, и забота о тишине без лишних слов. «Как обычно» у нового мастера уточняют."}, {"ok": false, "t": "«Чё как, бро? Слышал, как вчера наши слили? Это же вообще!»", "pts": -7, "aya": "Для сдержанного человека после пятидесяти «бро» и футбол с порога — шум. Он замкнётся."}, {"ok": false, "t": "«Ок» — и стричь на своё усмотрение", "pts": -5, "aya": "Вы видите его впервые. Угадать «как обычно» нельзя."}]}, "d2": {"title": "деликатный вопрос", "intro": "", "opts": [{"ok": true, "t": "«Седина вам идёт — ровная, благородная. Я бы сам такую хотел, да мне до неё ещё лет двадцать. Если захотите — есть камуфляж седины: она станет мягче, но не исчезнет. Решать вам, и не сегодня обязательно»", "pts": 12, "aya": "Честно, бережно, с выбором и лёгкой самоиронией. Комплимент звучит искренне, а не как продажа."}, {"ok": false, "t": "«Да конечно! Закрасим — и лет на десять моложе, будете как мы»", "pts": -7, "aya": "Вы подтвердили, что он выглядит старо, и торопите. Для него это давление."}, {"ok": false, "t": "«Да забейте, дочки всегда придираются»", "pts": -5, "aya": "Оценивать его семью нельзя. И он спрашивал не о дочери, а о себе."}]}}, {"salon": "pijon", "master": "eric", "name": "Михаил", "age": 48, "title": "борода, сила Эрика", "img": "mikhail", "enter": "12:40. Коренастый мужчина в оливковой рубашке, рукава закатаны, на пальцах следы мазута. Густая борода с сединой. Первым делом замечает шатающийся подлокотник кресла.", "line": "Здравствуй. Подстричься и бороду в порядок. А у вас тут винт разболтался, могу подтянуть", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Михаил. Бороду покороче и чтобы форма была, а то жена говорит — как лесник. Вот с такой окантовкой, как у вас на плакате"}, {"who": "eric", "note": "", "t": "Сделаем. Борода — это моё, тут я уверен. А вы чем занимаетесь? Руки рабочие"}, {"who": "client", "note": "улыбка появляется постепенно", "t": "Автосервис свой. Сейчас через одного китайцы. Да и сам на «Хавейле» езжу — честная машина"}, {"who": "eric", "note": "", "t": "Зачётная тачка! А я пока на самокате — зато парковка всегда бесплатная"}], "fin": [{"who": "narr", "t": "Михаил трогает бороду, смотрит в зеркало."}, {"who": "client", "t": "Вот теперь собрано точно по чертежу"}, {"who": "narr", "t": "По пути к выходу всё-таки подтягивает винт на подлокотнике."}, {"who": "eric", "t": "Михаил, с вас скидка на ремонт — шучу, скидок не дают никому, но спасибо от души"}], "ayaFin": "То, что для Киры предел, для Эрика — сила. А уход продаётся одним точным средством под проблему клиента", "w": 404, "h": 760, "d1": {"title": "забота делом", "opts": [{"ok": true, "t": "«Здравствуйте! Я Эрик. Вот спасибо — я неделю на него смотрю и делаю вид, что так задумано. Как к вам обращаться?»", "pts": 10, "aya": "Самоирония плюс благодарность. Практичный человек проявил заботу делом — заметьте это."}, {"ok": false, "t": "«Да ладно, батя, садись, не заморачивайся»", "pts": -6, "aya": "Он предложил помощь — а его отмахнули и назвали «батей». Двойное обесценивание."}, {"ok": false, "t": "«Не трогайте, у нас мастер есть. Садитесь»", "pts": -4, "aya": "Вежливо, но помощь отвергнута. Для мастера на все руки это холодно."}]}, "d2": {"title": "уход за бородой", "intro": "Борода сделана, Михаил доволен, но чешет щеку: «Чешется вечно. Да ладно, перетерплю».", "opts": [{"ok": true, "t": "«Не надо терпеть. Кожа под бородой сохнет — как механизм без смазки. Две-три капли масла вечером — и тишина. Попробуйте прямо сейчас»", "pts": 12, "aya": "Объяснение на его языке и проба на месте. Так уход продаётся без давления."}, {"ok": false, "t": "«Берите масло, бальзам, шампунь для бороды и расчёску — комплектом выгоднее»", "pts": -7, "aya": "Практичный человек берёт одно нужное, а не корзину. Комплект звучит как развод."}, {"ok": false, "t": "«Да, борода всегда чешется, привыкнете»", "pts": -5, "aya": "Клиент сам назвал проблему. У барбера есть решение — молчать о нём нельзя."}]}}, {"salon": "pijon", "master": "eric", "name": "Роман", "age": 38, "title": "Здесь уже дышать нечем", "img": "roman", "enter": "19:05. У Эрика затянулся предыдущий клиент с бородой. Роман — загорелый, в белой льняной рубашке — ждёт пятнадцать минут и нарезает круги между диваном и дверью.", "line": "Слушай, я записан на семь! Завтра в шесть самолёт, а я тут стою как дурак!", "lineNote": "громко, всплескивая руками", "chair": [{"who": "client", "note": "уже теплее", "t": "Роман. Извини, перегнул. День сумасшедший. Лечу на море, там байк возьму — и вдоль побережья!"}, {"who": "eric", "note": "", "t": "Вот это план. Я бы тоже укатил, но меня тут бороды держат в заложниках"}, {"who": "client", "note": "смеётся, потом вдруг проводит ладонью по волосам", "t": "А знаешь что? Давай под ноль! Шлем всё равно. Режь всё!"}], "fin": [{"who": "narr", "t": "Роман смеётся и трясёт головой."}, {"who": "client", "t": "Слушай, ты прав. Я бы в самолёте уже пожалел. Вернусь — сразу к тебе, фотки с байка покажу!"}], "ayaFin": "Вспышку гасят признанием и действием, а импульсивное «режь всё» — повод на секунду остановиться. В мужском зале помогает и шутка", "w": 372, "h": 760, "d1": {"title": "вспышка из-за ожидания", "opts": [{"ok": true, "t": "«Ты прав, извини — борода перед тобой оказалась с характером. Я Эрик. Падай — и за сорок минут соберём тебя в отпуск. Как зовут?»", "pts": 12, "aya": "Признать, извиниться, пошутить и сразу дать действие. На «ты» — потому что он сам так начал, но без «бро»: «бро» — для молодых."}, {"ok": false, "t": "«Расслабься, бро, не кипи. Не я же виноват, что клиент затянулся»", "pts": -7, "aya": "«Не кипи» и оправдание — бензин в огонь. Неформальный тон не спасает, если смысл обесценивает."}, {"ok": false, "t": "Молча показать на кресло", "pts": -5, "aya": "Взрывному человеку нужен отклик. Молчание он прочитает как равнодушие."}]}, "d2": {"title": "импульсивное решение", "intro": "", "opts": [{"ok": true, "t": "«Могу, машинка заряжена. Но секунду: под ноль на южном солнце макушка сгорит в первый же день, и будешь красный, как твой байк. Предлагаю фейд по бокам и волну оставить сверху. Захочешь короче — после отпуска, резать не отращивать»", "pts": 12, "aya": "Факт, шутка и вариант вместо запрета. Импульсивному клиенту дают паузу, а решение оставляют ему."}, {"ok": false, "t": "«Под ноль так под ноль, бро!» — и включить машинку", "pts": -8, "aya": "Завтра он пожалеет — и виноватым будет мастер, который не остановил."}, {"ok": false, "t": "«Нет, брат, так не будет. Тут решаю я»", "pts": -4, "aya": "Запрет без объяснения для свободолюбивого человека — давление. Он вспыхнет снова."}]}}, {"salon": "family", "master": "kira", "name": "Алексей", "age": 30, "title": "Что мы знаем точно?", "img": "aleksey", "enter": "10:00. Стройный блондин в бежевом бомбере достаёт телефон с фото.", "line": "Добрый день. Вот фото моей стрижки на третий день. Нужно именно так. В прошлый раз виски были на полсантиметра короче, чем надо", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Алексей. Я аналитик, привык к точности. Извините, если дотошный"}, {"who": "kira", "note": "", "t": "Это только помогает. Давайте сверимся с фото: на нём третий день после стрижки, так и будем держать форму"}, {"who": "client", "note": "касается подбородка", "t": "Интересно. А на сколько короче?"}], "fin": [{"who": "narr", "t": "Алексей сравнивает с фото, делает паузу и мягко улыбается."}, {"who": "client", "t": "Точно. Запишите меня ровно через четыре недели"}], "ayaFin": "Точному клиенту — цифры и план. Покажите в зеркале до того, как резать, и спора не будет", "w": 296, "h": 760, "d1": {"title": "точный клиент", "opts": [{"ok": true, "t": "«Добрый день! Меня зовут Кира, я парикмахер третьего разряда. Как к вам обращаться? И давайте разберём фото вместе»", "pts": 12, "aya": "Эталон плюс работа с его фактами. Рациональному клиенту важнее всего, что его поняли."}, {"ok": false, "t": "«Да не волнуйтесь, сделаю красиво!»", "pts": -7, "aya": "«Красиво» — не факт. Такой клиент слышит: «Вас не слушают»."}, {"ok": false, "t": "«Хорошо, поняла» — и сразу за ножницы", "pts": -5, "aya": "Нет имени и нет проверки понимания. Потом спор будет слово против слова."}]}, "d2": {"title": "консультация фактами", "intro": "", "opts": [{"ok": true, "t": "«Волосы растут примерно на сантиметр в месяц. Виски — насадка на полсантиметра длиннее прошлой, сверху почти не снимаю длину. Покажу в зеркале до того, как резать. Принимается?»", "pts": 12, "aya": "Цифры, план и проверка перед действием. Для аналитика это и есть доверие."}, {"ok": false, "t": "«Ну, на глаз сделаю, у меня рука набита»", "pts": -7, "aya": "«На глаз» — именно то, чего он боится. В прошлый раз он уже получил лишние полсантиметра."}, {"ok": false, "t": "«Может, попробуем что-то новое? Сейчас модна текстура»", "pts": -5, "aya": "Он пришёл за предсказуемостью. Новое предлагают в конце и как вариант, а не вместо запроса."}]}}, {"salon": "family", "master": "kira", "name": "Вадим", "age": 55, "title": "Не торопись", "img": "vadim", "enter": "17:20. Худощавый мужчина в сером пальто, волосы с заметной сединой. Он молча вешает пальто и смотрит на Киру.", "line": "Добрый вечер. Как обычно", "lineNote": "тихо, после паузы", "chair": [{"who": "client", "note": "", "t": "Вадим. Коротко, аккуратно, виски прямые"}, {"who": "narr", "t": "Дальше он молчит и смотрит в зеркало."}, {"who": "narr", "t": "Кира не заполняет паузу и работает. Через десять минут Вадим сам нарушает тишину."}, {"who": "client", "note": "", "t": "Дочь сказала, что седина меня старит. Думаете, стоит что-то делать?"}], "fin": [{"who": "narr", "t": "Вадим долго смотрит в зеркало и едва заметно улыбается."}, {"who": "client", "t": "Спасибо, что не торопили. Подумаю про тонирование. Запишите к вам"}], "ayaFin": "Молчаливый клиент заговорит сам, если не давить. А о седине говорят как о выборе, не как о недостатке", "w": 393, "h": 760, "d1": {"title": "молчаливый клиент", "opts": [{"ok": true, "t": "«Добрый вечер. Я Кира, сегодня вас постригу я. Как к вам обращаться? И покажите, что значит «как обычно» — я запишу»", "pts": 12, "aya": "Спокойно, без суеты. «Как обычно» у нового мастера обязательно уточняют."}, {"ok": false, "t": "«Здравствуйте-здравствуйте! Как день прошёл? Погода сегодня жуть какая!»", "pts": -7, "aya": "Поток слов для сдержанного человека — шум. Он замкнётся ещё сильнее."}, {"ok": false, "t": "«Хорошо» — и стричь на своё усмотрение", "pts": -5, "aya": "Вы его видите впервые. Угадать «как обычно» нельзя."}]}, "d2": {"title": "деликатный вопрос", "intro": "", "opts": [{"ok": true, "t": "«Седина вам идёт — она ровная и благородная. Если захотите, есть мягкое тонирование: седина станет менее заметной, но не исчезнет. Решать вам, и не обязательно сегодня»", "pts": 12, "aya": "Честно, бережно, с выбором и без давления. Вы уважаете его границы."}, {"ok": false, "t": "«Да, конечно! Давайте прямо сейчас закрасим, станете лет на десять моложе!»", "pts": -7, "aya": "Вы подтвердили, что он выглядит старо, и торопите. Для него это давление."}, {"ok": false, "t": "«Да не слушайте дочь, ерунда это»", "pts": -5, "aya": "Оценивать его семью нельзя. И он спрашивал не о дочери, а о себе."}]}}, {"salon": "family", "master": "kira", "name": "Михаил", "age": 48, "title": "предел Киры", "img": "mikhail", "enter": "12:40. Коренастый мужчина в оливковой рубашке с закатанными рукавами, густая борода с сединой. Сразу замечает, что у кресла шатается подлокотник.", "line": "Здравствуйте. Подстричься и бороду в порядок. А у вас тут винт разболтался, могу подтянуть", "lineNote": "", "chair": [{"who": "client", "note": "", "t": "Михаил. Бороду хочу покороче и чтобы форма была, а то жена говорит — как лесник. С окантовкой, как у барберов"}, {"who": "kira", "note": "про себя", "t": "стрижка — да. А форма бороды и окантовка бритвой — в Академии этого было чуть-чуть."}, {"who": "client", "note": "", "t": "Ну что, поправите?"}], "fin": [{"who": "narr", "t": "Михаил проводит ладонью по затылку и постепенно улыбается."}, {"who": "client", "t": "Правильно. У меня в мастерской так же: не своё — не бери. А винт я всё-таки подтяну"}], "ayaFin": "У парикмахера тоже есть границы. Форма бороды — отдельный навык, и в Академии его можно доучить", "w": 404, "h": 760, "d1": {"title": "забота делом", "opts": [{"ok": true, "t": "«Добрый день! Я Кира, парикмахер третьего разряда. Спасибо, что заметили! Передам директору. Как к вам обращаться?»", "pts": 10, "aya": "Практичный человек проявил заботу делом. Заметить и поблагодарить — лучший контакт."}, {"ok": false, "t": "«Не надо, у нас есть мастер по ремонту. Садитесь»", "pts": -6, "aya": "Он предложил помощь, а вы её отвергли. Для него это обесценивание."}, {"ok": false, "t": "«Ой, да тут всё разваливается… Директор ничего не чинит»", "pts": -4, "aya": "Жалобы на салон при клиенте роняют доверие и к салону, и к вам."}]}, "d2": {"title": "честность про границы", "intro": "", "opts": [{"ok": true, "t": "«Стрижку сделаю хорошо. Бороду сделаю под насадку, а форму с окантовкой лучше делать у барбера — там и бритва, и опыт. Подскажу хороший барбершоп»", "pts": 12, "aya": "Честно: что сделаю, что нет и куда пойти. Клиент уходит с решением, а не с испорченной бородой."}, {"ok": false, "t": "«Конечно!» — и взять бритву", "pts": -8, "aya": "Бритва без навыка — риск пореза и кривой линии. Борода растёт неделями."}, {"ok": false, "t": "«Бороды мы не делаем»", "pts": -4, "aya": "Честно, но бороду под насадку вы сделать можете. И клиент остался без подсказки."}]}}, {"salon": "family", "master": "kira", "name": "Роман", "age": 38, "title": "Здесь уже дышать нечем", "img": "roman", "enter": "19:05. У Киры задержалась предыдущая клиентка. Роман — загорелый, в белой льняной рубашке — ждёт уже пятнадцать минут и ходит по залу.", "line": "Я записан на семь! Завтра в шесть утра самолёт, а я тут стою как дурак!", "lineNote": "громко, всплескивая руками", "chair": [{"who": "client", "note": "уже теплее", "t": "Роман. Извини, перегнул. День сумасшедший. Лечу на море на две недели!"}, {"who": "kira", "note": "", "t": "Здорово! Волна у вас красивая, от солёной воды ещё сильнее завьётся"}, {"who": "client", "note": "вдруг, проводя ладонью по волосам", "t": "А знаешь что? Давай под ноль! Надоело. Режь всё!"}], "fin": [{"who": "narr", "t": "Роман смеётся и трясёт головой."}, {"who": "client", "t": "Слушай, ты права. Хорошо, что остановила — я бы в самолёте уже пожалел. Вернусь — сразу к тебе!"}], "ayaFin": "Вспышку гасят признанием и действием. А импульсивное «режь всё» — повод на секунду остановиться и предложить вариант", "w": 372, "h": 760, "d1": {"title": "вспышка из-за ожидания", "opts": [{"ok": true, "t": "«Вы правы, извините за ожидание. Я Кира. Садитесь — и за сорок минут соберём вас в отпуск. Как вас зовут?»", "pts": 12, "aya": "Признать чувство, извиниться и сразу дать действие. Вспышка гаснет."}, {"ok": false, "t": "«Не кричите, пожалуйста. У нас клиентка задержалась, я не виновата»", "pts": -7, "aya": "Замечание и оправдание — бензин в огонь. Клиенту неважно, кто виноват."}, {"ok": false, "t": "Молча показать на кресло", "pts": -5, "aya": "Взрывному человеку нужен отклик. Молчание он прочитает как равнодушие."}]}, "d2": {"title": "импульсивное решение", "intro": "", "opts": [{"ok": true, "t": "«Могу. Но давайте секунду: под ноль на южном солнце голова сгорит в первый день. Предлагаю коротко по бокам и оставить волну сверху — легко и свежо. Если всё-таки захотите короче — после отпуска»", "pts": 12, "aya": "Импульсивному клиенту дают факт и паузу, а не запрет. Решение остаётся за ним."}, {"ok": false, "t": "«Под ноль так под ноль!» — и взять машинку", "pts": -8, "aya": "Завтра он пожалеет — и виноватым будет мастер, который не остановил."}, {"ok": false, "t": "«Нет, это плохая идея, я так делать не буду»", "pts": -4, "aya": "Запрет без объяснения для свободолюбивого человека — давление. Он вспыхнет снова."}]}}];
 /* ================= МУЖСКОЙ ЗАЛ: Эрик в «Пижоне» (8 клиентов), Кира в «Семейной» (4 клиента) ================= */
 const MEN_SEC = 30;
 let MV = null;
+/* цены и время: «Пижон» — средний сегмент, «Семейная» — эконом; мастеру 50% услуги, 10% с продажи ухода */
+const MEN_PRICE = {pijon:{cut:1800, beard:800, norm:40, beardMin:20}, family:{cut:600, beard:200, norm:40, beardMin:10}};
+const MEN_BEARD = {viktor:true, mikhail:true};                       // в визите есть борода
+const MEN_RETAIL = {mark:['матовая глина', 1200], mikhail:['масло для бороды', 1100]};   // продажа при лучшем втором ответе (только у Эрика)
+const MEN_SCALE = {artem:0.9};                                          // Артём нарисован крупнее остальных
+const MEN_PHOTO = {aleksey:'man_aleksey_photo'};                        // фото стрижки на телефоне клиента
 function menHead(title, n, total){ const h = el('div','head'); h.append(el('h1', null, title), el('span','step', n ? 'Клиент ' + n + ' из ' + total : 'Мужской зал')); return h; }
-/* картинка клиента: если человек нарисован по пояс (низ картинки «обрезан»), он стоит ближе к зрителю, низ уходит за кадр.
-   Пришлёте Михаила в полный рост — достаточно заменить файл assets/man_mikhail_stand.webp, код менять не нужно. */
+function imgSize(n){
+  return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = IMG(n); });
+}
+/* картинки клиента: стоя (обязательно), без верхней одежды и в кресле (если положить файлы в assets — подхватятся сами):
+   assets/man_ИМЯ_stand.webp, assets/man_ИМЯ_nocoat.webp, assets/man_ИМЯ_sit.webp */
 async function menSprite(v){
-  const n = 'man_' + v.img + '_stand';
+  const n = 'man_' + v.img + '_stand', k = MEN_SCALE[v.img] || 1;
   let w = v.w, h = v.h, half = false;
-  try {
-    const im = new Image(); im.src = IMG(n); await im.decode();
+  const im = await imgSize(n);
+  if (im){
     w = im.naturalWidth; h = im.naturalHeight; NAT[n] = [w, h];
-    const cv = document.createElement('canvas'); cv.width = w; cv.height = 1;
-    const g = cv.getContext('2d'); g.drawImage(im, 0, h - 3, w, 1, 0, 0, w, 1);
-    const d = g.getImageData(0, 0, w, 1).data; let on = 0;
-    for (let i = 3; i < d.length; i += 4) if (d[i] > 128) on++;
-    half = on > w * 0.4;
-  } catch(e){}
-  SP.client = {stand:[n, w, h, 440, 1, half ? 'half' : '']};
+    try {                                              // по пояс? (низ картинки обрезан)
+      const cv = document.createElement('canvas'); cv.width = w; cv.height = 1;
+      const g = cv.getContext('2d'); g.drawImage(im, 0, h - 3, w, 1, 0, 0, w, 1);
+      const d = g.getImageData(0, 0, w, 1).data; let on = 0;
+      for (let i = 3; i < d.length; i += 4) if (d[i] > 128) on++;
+      half = on > w * 0.4;
+    } catch(e){}
+  }
+  SP.client = {stand:[n, w, h, 440 * k, 1, half ? 'half' : '']};
+  const nc = await imgSize('man_' + v.img + '_nocoat');
+  if (nc){ SP.client.nocoat = ['man_' + v.img + '_nocoat', nc.naturalWidth, nc.naturalHeight, 440 * k, 1, '']; NAT['man_' + v.img + '_nocoat'] = [nc.naturalWidth, nc.naturalHeight]; }
+  const st = await imgSize('man_' + v.img + '_sit');
+  if (st){ SP.client.sit = ['man_' + v.img + '_sit', st.naturalWidth, st.naturalHeight, 360 * k, -1, '']; NAT['man_' + v.img + '_sit'] = [st.naturalWidth, st.naturalHeight]; }
   NAMES.client = v.name;
   MV.clientY = half ? 762 : 690;
 }
@@ -2353,11 +2427,17 @@ function menPick(){
   const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
   panel.append(grid, c, menu); fitStage();
 }
+/* «← Сменить мастера»: доступна, пока на экране выбор ответа или итог визита */
+function menBack(){
+  const b = el('button','backBtn','← Сменить мастера или салон'); b.type = 'button';
+  b.onclick = () => { stopTimer(); clearHeld(); stopVoice(); hideDlg(); svcTime(null); if (MV && MV.career) { MV = null; prChoose(); } else { MV = null; menPick(); } };
+  return b;
+}
 async function menStart(master, fromCareer){
   track('men_start_' + master);
   S = fresh(); resetScene(); hud(); stopVoice();
   const salon = master === 'eric' ? 'pijon' : 'family';
-  MV = {master, list:MEN.filter(v => v.salon === salon), i:0, log:[], happy:0, career:!!fromCareer, clientY:690};
+  MV = {master, salon, list:MEN.filter(v => v.salon === salon), i:0, log:[], happy:0, career:!!fromCareer, clientY:690, money:0};
   MASTER = master; HERO = master;
   setLocation2(master === 'eric' ? 'barber_pijon' : 'salon_econom'); clips(false);
   ['kira','eric','tamara','narc'].forEach(x => vis(x, false));
@@ -2373,10 +2453,14 @@ async function menRound(){
   panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','Смотрите сцену…'));
   await camWide(); camSet(800);
   C[m].pose = 'stand'; setPos(m, 960, 690); face(m, -1); mood(m, 'neutral');
+  const P0 = MEN_PRICE[MV.salon];
+  MV.norm = P0.norm + (MEN_BEARD[v.img] ? P0.beardMin : 0); MV.over = 0;
+  svcTime(null);
   if (MV.i === 0) await say(m, MEN_INTRO[m], {narr:true});
   C.client.pose = 'stand'; setPos('client', P.door[0], MV.clientY); face('client', 1); vis('client', true); mood('client', 'neutral');
   await say(m, v.enter, {narr:true});
   await walk('client', 650, MV.clientY, {face:1});
+  svcTime(0, MV.norm);
   await menAsk(v, 1);
 }
 const noteLine = (note, t) => note ? '(' + note + ') ' + t : t;
@@ -2388,7 +2472,7 @@ function splitIntro(t){
 async function menAsk(v, step){
   const d = step === 1 ? v.d1 : v.d2;
   panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','Смотрите сцену…'));
-  let holdWho = 'client', holdText = '', holdNarr = false;
+  let holdText = '', holdNarr = false;
   if (step === 1) holdText = noteLine(v.lineNote, v.line);
   else {
     const it = splitIntro(d.intro || '');
@@ -2399,7 +2483,8 @@ async function menAsk(v, step){
   }
   panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length));
   const sub = el('p','menStep'); sub.textContent = 'Решение ' + step + ' — ' + d.title; panel.append(sub);
-  if (holdText) say(holdWho, holdText, {hold:true, narr:holdNarr});
+  const photo = step === 1 && MEN_PHOTO[v.img] && /фото/i.test(v.line) ? MEN_PHOTO[v.img] : null;
+  if (holdText) say('client', holdText, {hold:true, narr:holdNarr, photo});
   const list = el('div','choices'); list.setAttribute('role','group'); list.setAttribute('aria-label','Варианты ответа');
   shuffle(d.opts).forEach(c => {
     const b = el('button','choice'); b.type = 'button';
@@ -2407,7 +2492,7 @@ async function menAsk(v, step){
     b.onclick = () => menChoose(v, d, c, b, list, step);
     list.append(b);
   });
-  panel.append(list);
+  panel.append(list, menBack());
   startTimer(MEN_SEC, wrap => {
     S.meter = clamp(S.meter - 5, -100, 100); hud(); mood('client','doubt');
     MV.log.push({title:v.name + ' · решение ' + step, picked:'Слишком долгая пауза с ответом', ok:false, d:-5, aya:'Клиент ждёт реакции сразу. Пауза выглядит как безразличие.', best:null});
@@ -2421,7 +2506,10 @@ async function menChoose(v, d, c, btn, list, step){
   stopTimer(); clearHeld();
   [...list.children].forEach(x => x.disabled = true); btn.classList.add('picked');
   const tm = panel.querySelector('.timer'); if (tm) tm.remove();
-  S.meter = clamp(S.meter + c.pts, -100, 100); hud();
+  const bk = panel.querySelector('.backBtn'); if (bk) bk.remove();
+  S.meter = clamp(S.meter + c.pts, -100, 100);
+  if (c.ok) S.xPts = (S.xPts || 0) + 2; else MV.over += Math.min(8, Math.abs(c.pts));   // ошибка = лишние минуты
+  hud();
   const best = d.opts.find(x => x.ok);
   MV.log.push({title:v.name + ' · ' + d.title, picked:c.t, ok:!!c.ok, d:c.ok ? 0 : c.pts, aya:c.aya, best:c.ok ? null : best.t});
   if (step === 2) MV.ok2 = !!c.ok;
@@ -2433,38 +2521,62 @@ async function menChoose(v, d, c, btn, list, step){
   else await say(m, 'Действие: ' + c.t.charAt(0).toLowerCase() + c.t.slice(1) + '.', {narr:true});
   if (quotes.length && rest) await say(m, 'Действие: ' + rest.replace(/^и\s+/, '') + '.', {narr:true});
   mood('client', moodFor(S.meter));
+  svcAdd(step === 1 ? 3 : 4);
   const fb = el('div','chips');
   fb.append(el('span', 'chip ' + (c.pts >= 0 ? 'plus' : 'minus'), 'Настроение ' + (c.pts >= 0 ? '+' + c.pts : String(c.pts).replace('-','−'))));
+  if (c.ok) fb.append(el('span','chip plus','+2 балла'));
   panel.append(fb);
-  ayaState(c.ok ? 'praise' : 'warn'); await say('aya', c.aya);
+  ayaTail(c.aya, c.ok ? 'praise' : 'warn');
   const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(c.aya)); panel.append(h);
   if (!c.ok){ const b = el('div','hint best','<b>Лучше:</b>&nbsp;'); b.append(document.createTextNode(best.t)); panel.append(b); }
   busy = false;
-  const last = MV.i + 1 >= MV.list.length;
-  const nx = el('button','next', step === 1 ? 'Дальше' : 'Финал визита'); nx.type = 'button';
+  const nx = el('button','next', step === 1 ? 'В кресло' : 'Финал визита'); nx.type = 'button';
   nx.onclick = async () => {
-    nx.disabled = true;
+    nx.disabled = true; stopVoice(); hideDlg();
     if (step === 1) return menChair(v);
     await menFinal(v);
   };
   panel.append(nx); fitStage(); nx.focus({preventScroll:true});
 }
+/* клиент снимает верхнюю одежду и садится в кресло; мастер работает у головы */
+const CHAIR = {x:760, y:690};
+async function menSeat(v){
+  const m = MV.master, sp = SP.client;
+  await camWide();
+  if (sp.nocoat){
+    await say(m, v.name + ' снимает ' + ({vadim:'пальто', viktor:'пиджак', mark:'пиджак', aleksey:'бомбер'}[v.img] || 'куртку') + ', ' + NAMES[m] + ' вешает на плечики.', {narr:true});
+    C.client.pose = 'nocoat'; place('client');
+  }
+  if (sp.sit){
+    await walk('client', CHAIR.x - 60, MV.clientY, {cam:narrow()});
+    C.client.pose = 'sit'; setPos('client', CHAIR.x, CHAIR.y); face('client', -1);
+    C[m].pose = 'cut'; setPos(m, CHAIR.x + 140, 690); face(m, -1);
+    return true;
+  }
+  /* картинок «в кресле» пока нет: клиент остаётся рядом, мастер разговаривает, а не машет ножницами */
+  await walk(m, 900, 690, {face:-1, cam:narrow()});
+  return false;
+}
 async function menChair(v){
   const m = MV.master;
   panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','В кресле…'));
-  C[m].pose = 'cut'; place(m);
-  for (const c of v.chair){
+  const seated = await menSeat(v);
+  if (seated) camSet(CHAIR.x + 80);
+  const n = v.chair.length, target = Math.round(MV.norm * 0.7);
+  for (let i = 0; i < n; i++){
+    const c = v.chair[i];
     if (c.who === 'narr') await say(m, c.t, {narr:true});
     else if (c.who === 'client') await say('client', noteLine(c.note, c.t));
     else if (c.note === 'про себя') await say(m, NAMES[m] + ' про себя: ' + c.t, {narr:true});
     else await say(m, noteLine(c.note, c.t));
+    svcTime(Math.min(target, svcMin + Math.round((target - svcMin) / (n - i))));
   }
   await menAsk(v, 2);
 }
 async function menFinal(v){
-  const m = MV.master, val = S.meter;
+  const m = MV.master, val = S.meter, P0 = MEN_PRICE[MV.salon];
   panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','Финал визита…'));
-  C[m].pose = 'stand'; place(m);
+  svcTime(MV.norm + MV.over);
   if (MV.ok2 && val > 0){
     mood('client', moodFor(val)); mood(m, 'happy');
     for (const c of v.fin){
@@ -2475,31 +2587,48 @@ async function menFinal(v){
     mood('client', val >= 0 ? 'neutral' : 'upset'); mood(m, 'upset');
     await say(m, val >= 0 ? v.name + ' смотрит в зеркало, кивает без улыбки и молча расплачивается. Вернётся ли — неизвестно.' : v.name + ' расплачивается молча и уходит, не попрощавшись. Похоже, больше не придёт.', {narr:true});
   }
-  if (val >= 20) MV.happy++;
-  ayaState(val >= 20 ? 'praise' : 'explain'); await say('aya', v.ayaFin);
-  await camWide();
-  await walk('client', P.door[0], MV.clientY, {cam:narrow()}); vis('client', false);
-  face(m, -1); mood(m, 'neutral');
+  /* деньги мастера за визит */
+  const rows = [], price = P0.cut + (MEN_BEARD[v.img] ? P0.beard : 0);
+  rows.push([(MEN_BEARD[v.img] ? 'Стрижка + борода ' : 'Стрижка ') + rub(price) + ', 50% мастеру', price / 2]);
+  if (m === 'eric' && MV.ok2 && MEN_RETAIL[v.img]){ const r = MEN_RETAIL[v.img]; rows.push(['Продажа: ' + r[0] + ' ' + rub(r[1]) + ', 10%', r[1] * 0.1]); }
+  if (val >= 20) rows.push(['Чаевые', MV.salon === 'pijon' ? 200 : 100]);
+  const earned = rows.reduce((a, r) => a + r[1], 0);
+  S.xMoney = (S.xMoney || 0) + earned; MV.money += earned;
+  if (val >= 20){ MV.happy++; S.xPts = (S.xPts || 0) + 5; }
+  hud();
+  ayaTail(v.ayaFin, val >= 20 ? 'praise' : 'explain');
+  /* клиент встаёт и уходит */
+  if (C.client.pose === 'sit' || C.client.pose === 'nocoat'){ C.client.pose = 'stand'; setPos('client', CHAIR.x - 60, MV.clientY); face('client', -1); }
+  C[m].pose = 'stand'; place(m);
   MV.i++;
-  if (MV.i < MV.list.length){
-    panel.innerHTML = ''; panel.append(menHead('Визит окончен', MV.i, MV.list.length));
-    const c = el('div','card'); c.append(el('h2', null, v.name + ': настроение ' + (val > 0 ? '+' : val < 0 ? '−' : '') + Math.abs(val)), el('p', null, val >= 20 ? 'Клиент доволен и вернётся.' : val >= 0 ? 'Без восторга, но и без обиды.' : 'Клиент ушёл недовольным.'));
-    const nx = el('button','next','Следующий клиент'); nx.type = 'button'; nx.onclick = () => { nx.disabled = true; menRound(); };
-    const menu = el('button','next alt','Закончить смену'); menu.type = 'button'; menu.onclick = () => { menu.disabled = true; menSummary(); };
-    const row = el('div','btnrow'); row.append(menu, nx); panel.append(c, row); fitStage(); nx.focus({preventScroll:true});
-    return;
-  }
-  menSummary();
+  panel.innerHTML = ''; panel.append(menHead('Визит окончен', MV.i, MV.list.length));
+  const c = el('div','card');
+  c.append(el('h2', null, v.name + ': настроение ' + (val > 0 ? '+' : val < 0 ? '−' : '') + Math.abs(val)),
+    el('p', null, (val >= 20 ? 'Клиент доволен и вернётся.' : val >= 0 ? 'Без восторга, но и без обиды.' : 'Клиент ушёл недовольным.') + ' Время визита: ' + svcMin + ' мин при норме ' + MV.norm + '.'));
+  const ul = el('ul','money'); rows.forEach(r => { const li = el('li'); li.append(el('span', null, r[0]), el('b', null, '+' + rub(r[1]))); ul.append(li); }); c.append(ul);
+  const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(v.ayaFin));
+  const last = MV.i >= MV.list.length;
+  const nx = el('button','next', last ? 'Итог смены' : 'Следующий клиент'); nx.type = 'button';
+  nx.onclick = async () => {
+    nx.disabled = true; stopVoice(); hideDlg(); svcTime(null);
+    await camWide(); await walk('client', P.door[0], MV.clientY, {cam:narrow()}); vis('client', false); face(m, -1); mood(m, 'neutral');
+    if (last) menSummary(); else menRound();
+  };
+  const row = el('div','btnrow');
+  if (!last){ const end = el('button','next alt','Закончить смену'); end.type = 'button'; end.onclick = () => { end.disabled = true; stopVoice(); svcTime(null); vis('client', false); menSummary(); }; row.append(end); }
+  row.append(nx);
+  panel.append(c, h, row, menBack()); fitStage(); nx.focus({preventScroll:true});
 }
 async function menSummary(){
   track('men_finish_' + MV.master);
-  hideDlg(); bust.className = 'bust'; vis('client', false);
+  hideDlg(); bust.className = 'bust'; vis('client', false); svcTime(null);
   const m = MV.master, n = MV.i;
   panel.innerHTML = ''; panel.append(menHead('Итог смены', 0));
   const picks = MV.log.filter(r => r.picked !== 'Слишком долгая пауза с ответом');
   const okN = picks.filter(r => r.ok).length;
   const c0 = el('div','card');
   c0.innerHTML = '<h2>' + (m === 'eric' ? 'Эрик · «Пижон»' : 'Кира · «Семейная»') + '</h2><p>Довольных клиентов: <b>' + MV.happy + ' из ' + n + '</b>. Лучших ответов: <b>' + okN + ' из ' + picks.length + '</b> (' + Math.round(okN / Math.max(1, picks.length) * 100) + '%).</p>'
+    + '<p>Заработано за смену: <b>' + rub(MV.money) + '</b>. Баллы мастерства: <b>' + (S.xPts || 0) + '</b>.</p>'
     + (m === 'eric' ? '<p>Удлинённые стрижки (Денис) — предел барбера. Повышение квалификации в Академии откроет и их, и женский зал.</p>' : '<p>Форма бороды с окантовкой (Михаил) — предел Киры. Это отдельный курс в Академии.</p>');
   const c1 = el('div','card'); c1.append(el('h2', null, 'Работа над ошибками'));
   const ul = el('ul','review');
@@ -2508,7 +2637,7 @@ async function menSummary(){
     const h = el('div','rt'); h.textContent = (r.ok ? '✓ ' : '✗ ') + r.title + (r.d ? ' · настроение ' + String(r.d).replace('-','−') : ''); li.append(h);
     const p = el('div','rp'); p.textContent = (r.ok ? 'Вы: ' : 'Вы сказали: ') + r.picked; li.append(p);
     if (!r.ok && r.best){ const b = el('div','rb'); b.textContent = 'Лучше: ' + r.best; li.append(b); }
-    if (!r.ok && r.aya){ const a = el('div','ra'); a.textContent = 'Айя: ' + r.aya; li.append(a); }
+    if (r.aya){ const a = el('div','ra'); a.textContent = 'Айя: ' + r.aya; li.append(a); }
     ul.append(li);
   });
   c1.append(ul);
@@ -2516,7 +2645,7 @@ async function menSummary(){
   const perfect = n === MV.list.length && okN === picks.length && picks.length === MV.log.length;
   C[m].pose = 'stand'; setPos(m, 900, 690); face(m, -1); mood(m, perfect ? 'happy' : 'smile'); camSet(800);
   if (m === 'eric') await say('eric', perfect ? 'Мужской зал — мой. А дальше — повышение квалификации, чтобы и Денис ушёл с кудрями.' : 'Барбер — это не только машинка. Разберу ошибки — и завтра лучше.', {mood: perfect ? 'happy' : 'smile'});
-  ayaState(perfect ? 'praise' : 'cheer'); await say('aya', perfect ? 'Чистый визит без ошибок. Так держать!' : 'Ошибаться — нормально. Перечитайте мои подсказки и попробуйте ещё раз.');
+  ayaTail(perfect ? 'Чистый визит без ошибок. Так держать!' : 'Ошибаться — нормально. Перечитайте мои подсказки и попробуйте ещё раз.', perfect ? 'praise' : 'cheer');
   const again = el('button','next','Ещё раз'); again.type = 'button'; again.onclick = () => menStart(m, MV.career);
   const other = el('button','next alt', m === 'eric' ? 'За Киру' : 'За Эрика'); other.type = 'button'; other.onclick = () => menStart(m === 'eric' ? 'kira' : 'eric');
   const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
