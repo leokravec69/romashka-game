@@ -360,6 +360,40 @@ table.offer td:last-child{color:var(--muted);text-align:left;font-weight:400}
 ul.money{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:4px;font-size:14px}
 ul.money li{display:flex;justify-content:space-between;gap:10px;border-top:1px dashed rgba(0,0,0,.12);padding-top:4px}
 ul.money b{color:#1f7a45;white-space:nowrap}
+/* главное меню: большая кнопка «Выбор салона» + 4 режима */
+.mbSalon{display:flex;flex-direction:column;gap:4px;width:100%;text-transform:none;padding:16px 18px}
+.mbSalon .mbBig{font-size:22px;text-transform:uppercase}
+.mbSalon .mbS{font-family:var(--body,inherit);font-weight:600;font-size:13px;opacity:.8}
+.mbStory{all:unset;cursor:pointer;display:block;text-align:center;margin:8px auto 14px;font-size:13px;text-decoration:underline;opacity:.75}
+.mbStory:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.mbGrid.mb4{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:760px){.mbGrid.mb4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.mbGrid.mb4 > .mbBtn:last-child:nth-child(odd){grid-column:auto}
+/* персонажи */
+.chTabs{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chTab{all:unset;cursor:pointer;font-size:13px;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--ink);background:var(--surface);color:var(--ink)}
+.chTab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.chTab:focus-visible{outline:3px solid #ffbf00;outline-offset:2px}
+.chList{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:760px){.chList{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.chCard{display:flex;gap:12px;align-items:flex-start;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:10px}
+.chPh{flex:0 0 84px;width:84px;height:104px;border-radius:10px;overflow:hidden;background:linear-gradient(180deg,#eef3ea,#dfe8d8);border:2px solid var(--ink)}
+.chPh.round{height:84px;border-radius:50%}
+.chPh img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.chTx{min-width:0;display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.4}
+.chTx b{font-size:15px}
+.chSub{color:var(--muted)}
+.chWhere{font-size:12px;color:var(--muted)}
+.chD{margin:4px 0 0}
+.chT{margin:4px 0 0;font-size:12px;font-weight:600}
+.chTx .hsStats{margin-top:6px;color:var(--ink)}
+/* крупный план: кружок Айи не закрывает персонажей */
+#stage.zoomed #aya{opacity:0;pointer-events:none}
+.chTx .hsStats{max-width:240px}
+.mbStory{color:#fff}
+
+.chTx .hsStat b{background:var(--surface-2);border-color:var(--line)}
+.chTx .hsStat b.on{background:#ffd21f;border-color:#111}
 </style>
 </head>
 <body>
@@ -617,10 +651,36 @@ const VOICE = {
 "В барбершопе можно на «ты» — но не со всеми. С руководителем не спорят: дают факты и оставляют решение за ним": "audio/aya_149.mp3",
 "Эрик, добро пожаловать на экзамен. Пятнадцать заданий: общение, колористика, время и нормы, продажи. Чтобы получить новый ранг, нужно восемьдесят процентов верных ответов.": "audio/aya_220.mp3",
 "Поздравляю, Эрик! Экзамен сдан.": "audio/aya_221.mp3",
+"Клиентка хочет стрижку без укладки. Узнай, как она живёт, и подбери форму.": "audio/aya_222.mp3",
+"Ты узнала главное — её утро. Практичную стрижку подбирают под жизнь клиента, а не под картинку.": "audio/aya_223.mp3",
+"Каре просит укладки каждый день. Сначала спроси, сколько у неё времени по утрам.": "audio/aya_224.mp3",
+"Без вопросов о её дне ты угадываешь. «Короче» — не всегда проще.": "audio/aya_225.mp3",
+"Решение под её быт: своя волна, без фена и с запасным вариантом. Такую стрижку носят, а не терпят.": "audio/aya_226.mp3",
+"Короткую стрижку нужно часто обновлять и укладывать. Резкая смена длины без запроса — это риск.": "audio/aya_227.mp3",
+"Она пришла именно за тем, чтобы не укладывать. Это ответ мимо запроса.": "audio/aya_228.mp3",
+"Практичная стрижка — это стрижка под жизнь клиента. Спроси про утро, и ответ подскажет форму.": "audio/aya_229.mp3",
+"Клиентка жалуется на сухие кончики. Помоги ей не только стрижкой — подумай, как ей сохранить результат дома.": "audio/aya_230.mp3",
+"Ты не согласилась с «просто такие волосы» и спросила про уход. Так появляется повод для совета, а не для продажи в лоб.": "audio/aya_231.mp3",
+"Ты закрыла тему. Клиентка уйдёт с той же проблемой и через месяц снова будет недовольна кончиками.": "audio/aya_232.mp3",
+"Продажа до того, как ты узнала, что у неё дома. Это выглядит как навязывание.": "audio/aya_233.mp3",
+"Ты связала средство с её утром, назвала цену и срок и дала попробовать. Решение остаётся за ней — это честная продажа.": "audio/aya_234.mp3",
+"Совет, который она не выполнит. Ты же знаешь, что у неё нет времени по утрам.": "audio/aya_235.mp3",
+"Дорогая услуга без связи с её проблемой и бюджетом. Для этого салона и для учительницы это мимо.": "audio/aya_236.mp3",
+"Уход продают через проблему клиента: спроси, что у неё дома, покажи, где проблема, дай попробовать. Тогда покупка — её решение, а не твоё давление.": "audio/aya_237.mp3",
+"Клиентка просит повторить стрижку, которую делала не ты. Не угадывай — уточни.": "audio/aya_238.mp3",
+"«Короче» — это не размер. Ты попросила показать зону и длину. Бухгалтер оценит точность.": "audio/aya_239.mp3",
+"Ты не знаешь, что значит «как в прошлый раз» и «короче». Это угадывание, а на асимметрии ошибка видна сразу.": "audio/aya_240.mp3",
+"Честность — это хорошо, но ты отказалась, даже не выяснив, что нужно. Сначала уточни, потом решай.": "audio/aya_241.mp3",
+"Не знаешь — спроси того, кто знает. Это не слабость, а уважение к клиентке. Минута на вопрос дешевле переделки.": "audio/aya_242.mp3",
+"«Примерно» на асимметрии — это лотерея. Угол не тот, и клиентка увидит это первой.": "audio/aya_243.mp3",
+"Она просила как в прошлый раз. Менять форму без её согласия — риск потерять клиентку.": "audio/aya_244.mp3",
+"Он не дал готовый ответ — он заставил тебя посмотреть. В следующий раз ты увидишь это сама.": "audio/aya_245.mp3",
+"«Как в прошлый раз» — это не инструкция, а повод уточнить. Спроси зону и длину, а если не знаешь техники — спроси мастера. Угадывать нельзя.": "audio/aya_246.mp3",
+"Смена окончена. Давай посмотрим, что получилось.": "audio/aya_247.mp3",
 "__silent": "audio/silent.mp3"
 };
 const MUSIC = "audio/music.mp3";
-const ASSET_LIST = ["academy_entrance", "kira_diploma", "aya_c3", "aya_e3", "kira_e4", "academy", "admin_b0", "admin_b1", "admin_b2", "admin_b3", "admin_b4", "admin_stand", "andrey_e0", "andrey_e1", "andrey_e2", "andrey_e3", "andrey_e4", "andrey_stand", "andrey_walk", "aya_c0", "aya_c1", "aya_c2", "aya_e0", "aya_e1", "aya_e2", "barber_buxme", "barber_pijon", "desk", "eric_b0", "eric_b1", "eric_b2", "eric_b3", "eric_b4", "eric_cut", "eric_diploma", "eric_e0", "eric_e1", "eric_e2", "eric_e3", "eric_e4", "eric_greet", "eric_phone", "eric_stand", "eric_think", "eric_walk", "galina_e0", "galina_e1", "galina_e2", "galina_e3", "galina_e4", "galina_stand", "galina_walk", "kira_booking", "kira_coat", "kira_cut", "kira_e0", "kira_e1", "kira_e2", "kira_e3", "kira_greet", "kira_invite", "kira_mirror", "kira_phone", "kira_product", "kira_sit", "kira_stand", "kira_standp", "kira_style", "kira_sweep", "kira_think", "kira_walk", "kira_wash", "man_aleksey_angry", "man_aleksey_angry_bust", "man_aleksey_e0", "man_aleksey_happy", "man_aleksey_happy_bust", "man_aleksey_nocoat", "man_aleksey_phone", "man_aleksey_phone_bust", "man_aleksey_photo", "man_aleksey_sad", "man_aleksey_sad_bust", "man_aleksey_sit", "man_aleksey_skeptic", "man_aleksey_skeptic_bust", "man_aleksey_stand", "man_artem_angry_bust", "man_artem_e0", "man_artem_happy_bust", "man_artem_nocoat", "man_artem_phone_bust", "man_artem_sad_bust", "man_artem_sit", "man_artem_skeptic_bust", "man_artem_stand", "man_denis_angry", "man_denis_angry_bust", "man_denis_e0", "man_denis_happy", "man_denis_happy_bust", "man_denis_phone", "man_denis_phone_bust", "man_denis_sad", "man_denis_sad_bust", "man_denis_sit", "man_denis_skeptic", "man_denis_skeptic_bust", "man_denis_stand", "man_mark_angry", "man_mark_angry_bust", "man_mark_e0", "man_mark_happy", "man_mark_happy_bust", "man_mark_nocoat", "man_mark_phone", "man_mark_phone_bust", "man_mark_sad", "man_mark_sad_bust", "man_mark_sit", "man_mark_skeptic", "man_mark_skeptic_bust", "man_mark_stand", "man_mikhail_angry", "man_mikhail_angry_bust", "man_mikhail_e0", "man_mikhail_happy", "man_mikhail_happy_bust", "man_mikhail_phone", "man_mikhail_phone_bust", "man_mikhail_sad", "man_mikhail_sad_bust", "man_mikhail_sit", "man_mikhail_skeptic", "man_mikhail_skeptic_bust", "man_mikhail_stand", "man_roman_angry", "man_roman_angry_bust", "man_roman_e0", "man_roman_happy", "man_roman_happy_bust", "man_roman_phone", "man_roman_phone_bust", "man_roman_sad", "man_roman_sad_bust", "man_roman_sit", "man_roman_skeptic", "man_roman_skeptic_bust", "man_roman_stand", "man_vadim_angry", "man_vadim_angry_bust", "man_vadim_e0", "man_vadim_happy", "man_vadim_happy_bust", "man_vadim_nocoat", "man_vadim_phone", "man_vadim_phone_bust", "man_vadim_sad", "man_vadim_sad_bust", "man_vadim_sit", "man_vadim_skeptic", "man_vadim_skeptic_bust", "man_vadim_stand", "man_viktor_angry", "man_viktor_angry_bust", "man_viktor_e0", "man_viktor_happy", "man_viktor_happy_bust", "man_viktor_nocoat", "man_viktor_phone", "man_viktor_phone_bust", "man_viktor_sad", "man_viktor_sad_bust", "man_viktor_sit", "man_viktor_skeptic", "man_viktor_skeptic_bust", "man_viktor_stand", "marina_cape", "marina_coat", "marina_coatoff", "marina_dress", "marina_e0", "marina_e1", "marina_e2", "marina_e3", "marina_e4", "marina_mirror", "marina_pay", "marina_phone", "marina_photo", "marina_sit", "marina_walk", "marina_walkd", "marina_wash", "marina_wave", "narc_b0", "narc_b1", "narc_b2", "narc_b3", "narc_b4", "narc_stand", "salon", "salon_econom", "salon_econom_plus", "salon_premium", "salon_super_econom", "salon_super_premium", "sonya_e0", "sonya_e1", "sonya_e2", "sonya_e3", "sonya_e4", "sonya_stand", "sonya_walk", "tamara_b0", "tamara_b1", "tamara_b2", "tamara_b3", "tamara_b4", "tamara_sit", "tamara_stand", "viktoria_e0", "viktoria_e1", "viktoria_e2", "viktoria_e3", "viktoria_e4", "viktoria_stand", "viktoria_walk"];
+const ASSET_LIST = ["academy_entrance", "kira_diploma", "aya_c3", "kira_e4", "ab_approve", "ab_approve_bust", "ab_ask", "ab_calm", "ab_calm_bust", "ab_cross", "ab_cut", "ab_explain", "ab_explain_bust", "ab_skeptic", "ab_skeptic_bust", "ab_stand", "ab_think", "ab_think_bust", "ab_walk", "academy", "admin_b0", "admin_b1", "admin_b2", "admin_b3", "admin_b4", "admin_stand", "andrey_e0", "andrey_e1", "andrey_e2", "andrey_e3", "andrey_e4", "andrey_stand", "andrey_walk", "aya_c0", "aya_c1", "aya_c2", "barber_buxme", "barber_pijon", "desk", "eric_b0", "eric_b1", "eric_b2", "eric_b3", "eric_b4", "eric_cut", "eric_diploma", "eric_e0", "eric_e1", "eric_e2", "eric_e3", "eric_e4", "eric_greet", "eric_phone", "eric_stand", "eric_think", "eric_walk", "galina_e0", "galina_e1", "galina_e2", "galina_e3", "galina_e4", "galina_stand", "galina_walk", "kira_booking", "kira_coat", "kira_cut", "kira_e0", "kira_e1", "kira_e2", "kira_e3", "kira_greet", "kira_invite", "kira_mirror", "kira_phone", "kira_product", "kira_sit", "kira_stand", "kira_style", "kira_sweep", "kira_think", "kira_walk", "kira_wash", "man_aleksey_angry", "man_aleksey_angry_bust", "man_aleksey_e0", "man_aleksey_happy", "man_aleksey_happy_bust", "man_aleksey_nocoat", "man_aleksey_phone", "man_aleksey_phone_bust", "man_aleksey_photo", "man_aleksey_sad", "man_aleksey_sad_bust", "man_aleksey_sit", "man_aleksey_skeptic", "man_aleksey_skeptic_bust", "man_aleksey_stand", "man_artem_angry_bust", "man_artem_e0", "man_artem_happy_bust", "man_artem_nocoat", "man_artem_phone_bust", "man_artem_sad_bust", "man_artem_sit", "man_artem_skeptic_bust", "man_artem_stand", "man_denis_angry", "man_denis_angry_bust", "man_denis_e0", "man_denis_happy", "man_denis_happy_bust", "man_denis_phone", "man_denis_phone_bust", "man_denis_sad", "man_denis_sad_bust", "man_denis_sit", "man_denis_skeptic", "man_denis_skeptic_bust", "man_denis_stand", "man_mark_angry", "man_mark_angry_bust", "man_mark_e0", "man_mark_happy", "man_mark_happy_bust", "man_mark_nocoat", "man_mark_phone", "man_mark_phone_bust", "man_mark_sad", "man_mark_sad_bust", "man_mark_sit", "man_mark_skeptic", "man_mark_skeptic_bust", "man_mark_stand", "man_mikhail_angry", "man_mikhail_angry_bust", "man_mikhail_e0", "man_mikhail_happy", "man_mikhail_happy_bust", "man_mikhail_phone", "man_mikhail_phone_bust", "man_mikhail_sad", "man_mikhail_sad_bust", "man_mikhail_sit", "man_mikhail_skeptic", "man_mikhail_skeptic_bust", "man_mikhail_stand", "man_roman_angry", "man_roman_angry_bust", "man_roman_e0", "man_roman_happy", "man_roman_happy_bust", "man_roman_phone", "man_roman_phone_bust", "man_roman_sad", "man_roman_sad_bust", "man_roman_sit", "man_roman_skeptic", "man_roman_skeptic_bust", "man_roman_stand", "man_vadim_angry", "man_vadim_angry_bust", "man_vadim_e0", "man_vadim_happy", "man_vadim_happy_bust", "man_vadim_nocoat", "man_vadim_phone", "man_vadim_phone_bust", "man_vadim_sad", "man_vadim_sad_bust", "man_vadim_sit", "man_vadim_skeptic", "man_vadim_skeptic_bust", "man_vadim_stand", "man_viktor_angry", "man_viktor_angry_bust", "man_viktor_e0", "man_viktor_happy", "man_viktor_happy_bust", "man_viktor_nocoat", "man_viktor_phone", "man_viktor_phone_bust", "man_viktor_sad", "man_viktor_sad_bust", "man_viktor_sit", "man_viktor_skeptic", "man_viktor_skeptic_bust", "man_viktor_stand", "marina_cape", "marina_coat", "marina_coatoff", "marina_dress", "marina_e0", "marina_e1", "marina_e2", "marina_e3", "marina_e4", "marina_mirror", "marina_pay", "marina_phone", "marina_sit", "marina_walk", "marina_walkd", "marina_wash", "marina_wave", "narc_b0", "narc_b1", "narc_b2", "narc_b3", "narc_b4", "narc_stand", "salon", "salon_econom", "salon_econom_plus", "salon_premium", "salon_super_econom", "salon_super_premium", "sonya_e0", "sonya_e1", "sonya_e2", "sonya_e3", "sonya_e4", "sonya_stand", "sonya_walk", "tamara_b0", "tamara_b1", "tamara_b2", "tamara_b3", "tamara_b4", "tamara_sit", "tamara_stand", "viktoria_e0", "viktoria_e1", "viktoria_e2", "viktoria_e3", "viktoria_e4", "viktoria_stand", "viktoria_walk", "woman_irina_after", "woman_irina_angry", "woman_irina_angry_bust", "woman_irina_happy", "woman_irina_happy_bust", "woman_irina_nocoat", "woman_irina_phone", "woman_irina_phone_bust", "woman_irina_sad", "woman_irina_sad_bust", "woman_irina_sit", "woman_irina_skeptic", "woman_irina_skeptic_bust", "woman_irina_stand", "woman_irina_walk", "woman_olga_after", "woman_olga_angry", "woman_olga_angry_bust", "woman_olga_happy", "woman_olga_happy_bust", "woman_olga_nocoat", "woman_olga_phone", "woman_olga_phone_bust", "woman_olga_sad", "woman_olga_sad_bust", "woman_olga_sit", "woman_olga_skeptic", "woman_olga_skeptic_bust", "woman_olga_stand", "woman_olga_walk", "woman_tanya_after", "woman_tanya_angry", "woman_tanya_angry_bust", "woman_tanya_happy", "woman_tanya_happy_bust", "woman_tanya_nocoat", "woman_tanya_phone", "woman_tanya_phone_bust", "woman_tanya_sad", "woman_tanya_sad_bust", "woman_tanya_sit", "woman_tanya_skeptic", "woman_tanya_skeptic_bust", "woman_tanya_stand", "woman_tanya_walk"];
 </script>
 <script>
 (function(){
@@ -650,6 +710,7 @@ const SP = {
   admin:{stand:['admin_stand',162,720,330*K,1]},
   tamara:{stand:['tamara_stand',280,760,410,-1], sit:['tamara_sit',369,760,330,-1]},
   client:{stand:['man_aleksey_stand',296,760,440,1]},
+  ab:{stand:['ab_stand',245,753,428,1], walk:['ab_walk',368,738,420,1], cut:['ab_cut',294,755,430,1], ask:['ab_ask',302,753,428,1], cross:['ab_cross',240,760,432,1]},
   eric:{stand:['eric_stand',252,760,440,1], walk:['eric_walk',460,760,432,1], diploma:['eric_diploma',338,760,440,1], greet:['eric_greet',357,760,440,1], cut:['eric_cut',349,760,440,1], phone:['eric_phone',293,760,440,1], think:['eric_think',294,760,440,1]}
 };
 const AV = {
@@ -661,8 +722,8 @@ const AV = {
   tamara:{neutral:0, ok:1, doubt:2, angry:3, warm:4},
   eric:{neutral:0, smile:1, doubt:2, upset:3, happy:4}
 };
-const NAMES = {client:'Клиент', kira:'Кира', marina:'Марина', admin:'Алёна', narc:'Нарцисс', aya:'Айя', galina:'Галина Сергеевна', andrey:'Андрей', sonya:'Соня', viktoria:'Виктория', tamara:'Тамара Петровна', eric:'Эрик'};
-const ACTORS = ['kira','marina','galina','andrey','sonya','viktoria','eric','client'];   // говорят на сцене, крупным планом
+const NAMES = {ab:'Александр Борисович', client:'Клиент', kira:'Кира', marina:'Марина', admin:'Алёна', narc:'Нарцисс', aya:'Айя', galina:'Галина Сергеевна', andrey:'Андрей', sonya:'Соня', viktoria:'Виктория', tamara:'Тамара Петровна', eric:'Эрик'};
+const ACTORS = ['ab','kira','marina','galina','andrey','sonya','viktoria','eric','client'];   // говорят на сцене, крупным планом
 let MASTER = 'kira';                                                     // чей крупный план вместе с собеседником
 let PARTNER = 'marina';                                                   // собеседник Киры в текущей сцене
 const C = {};
@@ -674,7 +735,7 @@ function makeChar(id, layer){
     x:0, y:0, face:1, pose:'stand', vis:true, mood:'neutral'};
 }
 makeChar('admin','layer-admin');
-['kira','marina','narc','galina','andrey','sonya','viktoria','tamara','eric','client'].forEach(id => makeChar(id,'layer-chars'));
+['kira','marina','narc','galina','andrey','sonya','viktoria','tamara','eric','client','ab'].forEach(id => makeChar(id,'layer-chars'));
 
 function spec(id){ const c = C[id]; return SP[id][c.pose] || SP[id].stand || SP[id].dress; }
 function place(id){
@@ -724,7 +785,7 @@ function walk(id, x, y, opt = {}){
 const ZH = 450;                       // высота кадра на крупном плане
 let cam = {x:0, y:VY, w:W, h:VH}, camTarget = 900, zoomed = false, camTok = 0;
 function aspect(){ const r = stage.getBoundingClientRect(); return r.width / Math.max(1, r.height); }
-function setVB(v){ cam = v; svg.setAttribute('viewBox', `${v.x.toFixed(1)} ${v.y.toFixed(1)} ${v.w.toFixed(1)} ${v.h.toFixed(1)}`); }
+function setVB(v){ cam = v; stage.classList.toggle('zoomed', zoomed); svg.setAttribute('viewBox', `${v.x.toFixed(1)} ${v.y.toFixed(1)} ${v.w.toFixed(1)} ${v.h.toFixed(1)}`); }
 function wideRect(x){
   const w = Math.min(W, VH * aspect());
   return {x:Math.max(0, Math.min(W - w, x - w/2)), y:VY, w, h:VH};
@@ -849,7 +910,8 @@ soundBtn();
 let skipFn = null, holdOn = false;
 const bust = document.getElementById('bust'), bustImg = document.getElementById('bustImg');
 function portraitSrc(id){
-  if (id === 'client'){ const e = MEN_EMO[C.client.mood], b = e && SP.client.busts && SP.client.busts[e]; return IMG(b || SP.client.stand[0].replace('_stand', '_e0')); }
+  if (id === 'client'){ const bs = SP.client.busts || {}, e = MEN_EMO[C.client.mood], b = (e && bs[e]) || (SP.client.stand[0].startsWith('woman_') && bs.happy); return IMG(b || SP.client.stand[0].replace('_stand', '_e0')); }
+  if (id === 'ab') return IMG('ab_' + (AB_EMO[C.ab.mood] || 'calm') + '_bust');
   const i = AV[id] ? (AV[id][C[id].mood] ?? 0) : 0;
   return IMG(id + '_e' + i);
 }
@@ -896,7 +958,9 @@ async function say(id, text, opt = {}){
   const onStage = !opt.narr && (id === 'narc' || id === 'tamara') && C[id] && C[id].vis;
   if (onStage) opt = Object.assign({}, opt, {stage:true});
   if (id !== 'aya') stopVoice();
-  showBust(opt.narr || onStage ? null : id);
+  const onDesk = !opt.narr && id === 'admin' && C.admin.vis;            // Алёна стоит за стойкой — говорит со сцены, без всплывающего портрета
+  if (onDesk){ opt = Object.assign({}, opt, {stage:true}); await camTo(C.admin.x + 200); }
+  showBust(opt.narr || onStage || onDesk ? null : id);
   if (actor) await camClose(id);
   showDlg(id, text, opt);
   const talker = actor ? id : null;
@@ -1424,8 +1488,9 @@ async function summary(){
     : S.mistakes === 0 ? 'Чистый визит без ошибок. Так держать!'
     : 'Посмотрите, где я подсказывала, и пройдите визит без них.';
   ayaState(S.mistakes === 0 || S.end === 'ref' ? 'praise' : 'cheer'); await say('aya', tip);
-  const r = el('button','next','Сыграть визит снова'); r.type = 'button'; r.onclick = () => restart(true);
-  panel.append(r);
+  const r = el('button','next alt','Сыграть визит снова'); r.type = 'button'; r.onclick = () => restart(true);
+  const cont = el('button','next','Дальше по смене: Таня, Ольга, Ирина'); cont.type = 'button'; cont.onclick = () => { cont.disabled = true; romStart(); };
+  const rowE = el('div','btnrow'); rowE.append(r, cont); panel.append(rowE);
 }
 
 function resetScene(){
@@ -1436,7 +1501,7 @@ function resetScene(){
   ['walking','busy','talking'].forEach(k => cls('kira', k, false));
   C.marina.pose = 'coat'; setPos('marina', P.door[0], P.door[1]); face('marina', 1); vis('marina', false); mood('marina','neutral');
   C.narc.pose = 'stand'; setPos('narc', 1570, 600); face('narc', -1); vis('narc', false); mood('narc','grumble');
-  ['galina','andrey','sonya','viktoria','tamara','eric','client'].forEach(id => { C[id].pose = 'stand'; setPos(id, P.door[0], P.door[1]); vis(id, false); mood(id,'neutral'); });
+  ['galina','andrey','sonya','viktoria','tamara','eric','client','ab'].forEach(id => { C[id].pose = 'stand'; setPos(id, P.door[0], P.door[1]); vis(id, false); mood(id,'neutral'); });
   setLocation('salon');
   clips(true); clock('', false); camSet(1100); ayaState('cheer');
 }
@@ -1447,31 +1512,27 @@ function intro(){
   pose('kira','diploma'); setPos('kira', 1000, 700); face('kira', 1); mood('kira','happy'); camSet(900);
   const all = [], box = el('div','menuBS');
   box.append(el('div','hsTitle','Симулятор парикмахера'), el('div','mbSub','Академия Льва Кравца'));
-  const start = el('button','hsPlay mbStart','▶ Начать с выхода из Академии'); start.type = 'button';
-  start.onclick = () => { all.forEach(x => x.disabled = true); QUICK = false; heroSelect(); };
-  const lead = el('p','mbLead','<b>Первый раз? Начните отсюда.</b> Выберите героя — Киру или Эрика. Вместе с Айей герой выберет салон, пройдёт собеседование и выйдет на первую смену.');
+  const start = el('button','hsPlay mbStart mbSalon'); start.type = 'button';
+  start.append(el('span','mbBig','🏪 Выбор салона'), el('span','mbS','Выберите героя — Киру или Эрика — и салон, где он будет работать'));
+  start.onclick = () => { all.forEach(x => x.disabled = true); QUICK = true; heroSelect(); };
+  const story = el('button','mbStory','или пройти сюжет с самого начала: выход из Академии'); story.type = 'button';
+  story.onclick = () => { all.forEach(x => x.disabled = true); QUICK = false; heroSelect(); };
   const mk = (ico, title, sub, fn) => { const x = el('button','mbBtn'); x.type = 'button'; x.append(el('span','mbIco', ico), el('b', null, title), el('span','mbS', sub)); x.onclick = () => { all.forEach(y => y.disabled = true); fn(); }; all.push(x); return x; };
-  const grid = el('div','mbGrid');
+  const grid = el('div','mbGrid mb4');
   grid.append(
-    mk('🏪', 'Выбор салона', 'Сразу к 8 салонам и барбершопам', () => { QUICK = true; heroSelect(); }),
-    mk('✂', 'Смена в «Ромашке»', 'Полный визит клиентки Марины', async () => {
-      resetScene(); hud();
-      if (soundOn && VO['Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.']) await say('aya', 'Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.');
-      track('visit_start'); enter('s0');
-    }),
-    mk('💈', 'Мужской зал', 'Эрик и Кира: 12 визитов мужчин', () => menPick()),
     mk('👋', 'Тренажёр приветствия', '5 клиентов, первая минута', () => drillStart()),
-    mk('🎓', 'Экзамен в Академии', 'Кира или Эрик: 80% — новый ранг', () => examPick0()),
-    mk('⏱', 'Нормы времени', 'Сколько минут на услугу: справочник', () => { location.href = 'normy.html'; }));
-  all.unshift(start);
+    mk('⏱', 'Нормы времени', 'Сколько минут на услугу', () => { location.href = 'normy.html'; }),
+    mk('🎓', 'Экзамен', 'Кира или Эрик: 80% — новый ранг', () => examPick0()),
+    mk('👥', 'Персонажи', 'С кем вы встретитесь в игре', () => charsShow()));
+  all.unshift(start, story);
   const rk = el('div','mbRank'); rk.append(el('span', null, 'Ваш ранг:'), el('b', null, RANKS[getRank()]));
-  box.append(start, lead, el('div','mbModes','Другие режимы'), grid, rk);
+  box.append(start, story, grid, rk);
   const c = el('div','card','<ul><li>Выбирайте реплики и действия — персонажи разыгрывают их на сцене.</li><li>Плашка с настроением сверху — как себя чувствует клиент. Если упадёт до −80, клиент уйдёт.</li><li>Нажмите на сцену или на реплику, чтобы ускорить её.</li><li>Айя подсказывает голосом: 🔊 — голос, 🎵 — громкость музыки.</li></ul>');
   panel.append(box, c);
   stopVoice(); hideDlg(); bust.className = 'bust';
-  if (!introSaid){ introSaid = true; say('aya', 'Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.', {hold:true}); }
+  if (!introSaid){ introSaid = true; try { sessionStorage.setItem('aya_hi', '1'); } catch(e){} say('aya', 'Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.', {hold:true}); }
 }
-let introSaid = false;
+let introSaid = (() => { try { return sessionStorage.getItem('aya_hi') === '1'; } catch(e){ return false; } })();   // приветствие Айи — один раз за сессию, даже после «Сначала»
 /* ================= ТРЕНАЖЁР ПРИВЕТСТВИЯ: 5 клиентов, 5 ситуаций, по 2 решения ================= */
 const DRILL_SEC = 30;
 const DRILL = [
@@ -1923,6 +1984,8 @@ const ERIC_TXT = {
 };
 const KIRA_BARBER_LOCK = 'В барбершоп берут тех, кто уверенно стрижёт мужчин. Отметь мужские стрижки — или подучись.';
 function segLocked(s){
+  if (s.id === 'buxme') return '🔒 Откроется позже';
+  if (HERO === 'eric' && !s.barber) return '🔒 Женский зал — после повышения квалификации';
   if (s.barber && PR.skills && !PR.skills.some(x => /Мужские|мужские/.test(x))) return '🔒 нужны мужские стрижки';
   return '';
 }
@@ -1936,7 +1999,7 @@ function segGrid(onPick, mark, lockOn){
     if (mark === i) b.classList.add('rec');
     b.append(pic, el('b', null, s.name), el('span', 'lv', s.lvl + (mark === i ? ' · совет Айи' : '')), el('span', 'ds', lock || s.desc));
     if (lock){ b.classList.add('locked'); b.disabled = true; b.setAttribute('aria-label', s.name + ': ' + lock); }
-    else if (lockOn && HERO === 'eric' && !s.barber){ b.classList.add('warn'); b.lastChild.textContent = '⚠ Женский зал и удлинённые стрижки'; }
+    else if (lockOn && HERO === 'kira' && s.barber){ b.classList.add('warn'); b.lastChild.textContent = '⚠ Можно попробовать, но будет тяжело'; }
     b.onclick = () => { [...g.children].forEach(x => x.disabled = true); b.classList.add('picked'); onPick(i); };
     g.append(b);
   });
@@ -2073,9 +2136,10 @@ function prTalon(){
   const row = el('div','btnrow'); row.append(own, go); panel.append(row); fitStage();
 }
 function prChoose(){
-  panel.innerHTML = ''; panel.append(prHead('Куда пойдёшь?'));
-  if (HERO === 'eric') panel.append(el('p','note','В салонах нужны женские и удлинённые стрижки. Можно сходить и попробовать.'));
+  panel.innerHTML = ''; panel.append(prHead('Куда пойдёшь?', QUICK ? 'Выбор салона' : undefined));
+  if (HERO === 'eric') panel.append(el('p','note','Эрику открыты барбершопы. Женский зал — после повышения квалификации в Академии.'));
   else if (!PR.skills.some(x => /Мужские|мужские/.test(x))) panel.append(el('p','note','Барбершопы закрыты: в анкете не отмечены мужские стрижки.'));
+  else panel.append(el('p','note','Кире открыты женские салоны. В барбершоп «Пижон» можно сходить попробовать — но там тяжело.'));
   panel.append(segGrid(i => prPicked(i), PR.adv, true));
   const back = el('button','backBtn','← Сменить героя'); back.type = 'button'; back.onclick = () => { stopVoice(); hideDlg(); heroSelect(); };
   panel.append(back); fitStage();
@@ -2104,6 +2168,7 @@ async function prGo(i){
   if (SEG[i].id === 'econom') return ecoStart();
   if (SEG[i].id === 'eplus') return midStart();
   if (HERO === 'eric' && SEG[i].id === 'pijon') return menStart('eric', true);
+  if (HERO === 'kira' && SEG[i].id === 'pijon') return menStart('kira', true, 'pijon');
   await heroEnter(i);
   panel.innerHTML = ''; panel.append(prHead('«' + SEG[i].name + '»'));
   const ready = HERO === 'eric' ? 'Пока можно пройти пролог за Киру — у неё открыты «Семейная парикмахерская» и «Ромашка».' : 'Сейчас можно пройти собеседование в «Семейной парикмахерской» или в «Ромашке».';
@@ -2380,19 +2445,21 @@ const MEN_SEC = 30;
 let MV = null;
 /* цены и время: «Пижон» — средний сегмент, «Семейная» — эконом; мастеру 50% услуги, 10% с продажи ухода */
 /* эталон времени = норма Росбытсоюза × 1,3: «Пижон» мытьё 5 + модельная 22 (+ борода 17); «Семейная» мытьё 5 + простая 16 (+ борода 17) */
-const MEN_PRICE = {pijon:{cut:1800, beard:800, norm:27, beardMin:17}, family:{cut:600, beard:200, norm:21, beardMin:17}};
+const MEN_PRICE = {romashka:{cut:900, beard:0, norm:44, beardMin:0}, pijon:{cut:1800, beard:800, norm:27, beardMin:17}, family:{cut:600, beard:200, norm:21, beardMin:17}};
 const MEN_BEARD = {viktor:true, mikhail:true};                       // в визите есть борода
 const MEN_RETAIL = {mark:['матовая глина', 1200], mikhail:['масло для бороды', 1100]};   // продажа при лучшем втором ответе (только у Эрика)
 const MEN_SCALE = {artem:0.9};                                          // Артём нарисован крупнее остальных
 const MEN_PHOTO = {aleksey:'man_aleksey_photo'};                        // фото стрижки на телефоне клиента
-function menHead(title, n, total){ const h = el('div','head'); h.append(el('h1', null, title), el('span','step', n ? 'Клиент ' + n + ' из ' + total : 'Мужской зал')); return h; }
+function menHead(title, n, total){ const h = el('div','head'); h.append(el('h1', null, title), el('span','step', n ? (MV && MV.salon === 'romashka' ? 'Клиентка ' : 'Клиент ') + n + ' из ' + total : (MV && MV.salon === 'romashka' ? '«Ромашка»' : 'Мужской зал'))); return h; }
 function imgSize(n){
   return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = IMG(n); });
 }
 /* картинки клиента: стоя (обязательно), без верхней одежды и в кресле (если положить файлы в assets — подхватятся сами):
    assets/man_ИМЯ_stand.webp, assets/man_ИМЯ_nocoat.webp, assets/man_ИМЯ_sit.webp */
 async function menSprite(v){
-  const n = 'man_' + v.img + '_stand', k = MEN_SCALE[v.img] || 1;
+  const pre = v.pre || 'man_', W8 = pre === 'woman_';
+  const n = pre + v.img + '_stand', k = MEN_SCALE[v.img] || 1;
+  const hs = (im, def) => W8 ? 425 * im.naturalHeight / 760 : def;   // женщины: высота на сцене по высоте картинки (лист нормирован на 760)
   let w = v.w, h = v.h, half = false;
   const im = await imgSize(n);
   if (im){
@@ -2405,27 +2472,35 @@ async function menSprite(v){
       half = on > w * 0.4;
     } catch(e){}
   }
-  SP.client = {stand:[n, w, h, 440 * k, 1, half ? 'half' : '']};
-  const nc = await imgSize('man_' + v.img + '_nocoat');
-  if (nc){ SP.client.nocoat = ['man_' + v.img + '_nocoat', nc.naturalWidth, nc.naturalHeight, 440 * k, 1, '']; NAT['man_' + v.img + '_nocoat'] = [nc.naturalWidth, nc.naturalHeight]; }
-  const st = await imgSize('man_' + v.img + '_sit');
-  if (st){ SP.client.sit = ['man_' + v.img + '_sit', st.naturalWidth, st.naturalHeight, 360 * k, -1, '']; NAT['man_' + v.img + '_sit'] = [st.naturalWidth, st.naturalHeight]; }
+  SP.client = {stand:[n, w, h, im ? hs(im, 440 * k) : 440 * k, 1, half ? 'half' : '']};
+  const extra = async (key, def, dir) => {
+    const f = pre + v.img + '_' + key, x = await imgSize(f);
+    if (x){ SP.client[key] = [f, x.naturalWidth, x.naturalHeight, hs(x, def), dir, '']; NAT[f] = [x.naturalWidth, x.naturalHeight]; }
+  };
+  await extra('nocoat', 440 * k, 1);
+  await extra('sit', 360 * k, W8 ? 1 : -1);
+  if (W8){ await extra('walk', 425, 1); await extra('after', 425, 1); }
   /* эмоции: в полный рост man_ИМЯ_happy … и бюсты man_ИМЯ_happy_bust … — подхватываются, если файлы есть */
   SP.client.busts = {};
   await Promise.all(MEN_EMOS.map(async e => {
-    const b = await imgSize('man_' + v.img + '_' + e + '_bust'); if (b) SP.client.busts[e] = 'man_' + v.img + '_' + e + '_bust';
+    const b = await imgSize(pre + v.img + '_' + e + '_bust'); if (b) SP.client.busts[e] = pre + v.img + '_' + e + '_bust';
     if (half) return;                                 // по пояс — только бюсты
-    const f = await imgSize('man_' + v.img + '_' + e);
-    if (f){ SP.client[e] = ['man_' + v.img + '_' + e, f.naturalWidth, f.naturalHeight, 440 * k, 1, '']; NAT['man_' + v.img + '_' + e] = [f.naturalWidth, f.naturalHeight]; }
+    const f = await imgSize(pre + v.img + '_' + e);
+    if (f){ SP.client[e] = [pre + v.img + '_' + e, f.naturalWidth, f.naturalHeight, hs(f, 440 * k), 1, '']; NAT[pre + v.img + '_' + e] = [f.naturalWidth, f.naturalHeight]; }
   }));
   NAMES.client = v.name;
-  MV.clientY = half ? 762 : 690;
+  MV.clientY = half ? 762 : MV.salon === 'romashka' ? 672 : 690;
 }
 const MEN_EMOS = ['happy','phone','angry','skeptic','sad'];
+const AB_EMO = {neutral:'calm', calm:'calm', think:'think', smile:'approve', happy:'approve', approve:'approve', doubt:'skeptic', skeptic:'skeptic', explain:'explain'};
 const MEN_EMO = {happy:'happy', smile:'happy', doubt:'skeptic', skeptic:'skeptic', upset:'angry', angry:'angry', sad:'sad', phone:'phone'};
 /* стоящий клиент меняет позу под настроение; в кресле и без куртки — не трогаем */
 function clientPose(){
   const c = C.client; if (!c || !SP.client) return;
+  if (MV && MV.salon === 'romashka'){                 // у женщин эмоции нарисованы без верхней одежды
+    if (!MV.coatOff || !(c.pose === 'nocoat' || MEN_EMOS.includes(c.pose))) return;
+    const e = MEN_EMO[c.mood]; c.pose = e && SP.client[e] ? e : 'nocoat'; place('client'); return;
+  }
   if (!(c.pose === 'stand' || MEN_EMOS.includes(c.pose))) return;
   const e = MEN_EMO[c.mood]; c.pose = e && SP.client[e] ? e : 'stand'; place('client');
 }
@@ -2446,37 +2521,53 @@ function menPick(){
 }
 /* «← Сменить мастера»: доступна, пока на экране выбор ответа или итог визита */
 function menBack(){
-  const b = el('button','backBtn','← Сменить мастера или салон'); b.type = 'button';
-  b.onclick = () => { stopTimer(); clearHeld(); stopVoice(); hideDlg(); svcTime(null); if (MV && MV.career) { MV = null; prChoose(); } else { MV = null; menPick(); } };
+  const b = el('button','backBtn', MV && MV.salon === 'romashka' ? '← В меню' : '← Сменить мастера или салон'); b.type = 'button';
+  b.onclick = () => { stopTimer(); clearHeld(); stopVoice(); hideDlg(); svcTime(null); const rom = MV && MV.salon === 'romashka'; if (MV && MV.career && !rom) { MV = null; prChoose(); } else { MV = null; if (rom) restart(false); else menPick(); } };
   return b;
 }
-async function menStart(master, fromCareer){
-  track('men_start_' + master);
+async function menStart(master, fromCareer, salonArg){
+  const salon = salonArg || (master === 'eric' ? 'pijon' : 'family'), rom = salon === 'romashka';
+  const hard = master === 'kira' && salon === 'pijon';               // Кира пробует себя в барбершопе: те же клиенты, строже время
+  track((rom ? 'rom_start_' : 'men_start_') + master);
   S = fresh(); resetScene(); hud(); stopVoice();
-  const salon = master === 'eric' ? 'pijon' : 'family';
-  MV = {master, salon, list:MEN.filter(v => v.salon === salon), i:0, log:[], happy:0, career:!!fromCareer, clientY:690, money:0};
+  MV = {master, salon, hard, list:rom ? ROM : MEN.filter(v => v.salon === (hard ? 'family' : salon)), i:0, log:[], happy:0, career:!!fromCareer, clientY:rom ? 672 : 690, money:0};
   MASTER = master; HERO = master;
-  setLocation2(master === 'eric' ? 'barber_pijon' : 'salon_econom'); clips(false);
-  ['kira','eric','tamara','narc'].forEach(x => vis(x, false));
-  C[master].pose = 'stand'; setPos(master, 960, 690); face(master, -1); vis(master, true); mood(master, 'neutral');
-  camSet(800);
+  ['kira','eric','tamara','narc','ab'].forEach(x => vis(x, false));
+  if (rom){
+    setLocation('salon'); clips(false);
+    C.admin.pose = 'stand'; setPos('admin', P.admin[0], P.admin[1]); face('admin', 1); vis('admin', true);
+    C.ab.pose = 'cross'; setPos('ab', 1420, 668); face('ab', -1); vis('ab', true); mood('ab', 'calm');
+    C.kira.pose = 'stand'; setPos('kira', P.showK[0], P.showK[1]); face('kira', -1); vis('kira', true); mood('kira', 'neutral');
+    camSet(700);
+  } else {
+    setLocation2(salon === 'pijon' ? 'barber_pijon' : 'salon_econom'); clips(false);
+    C[master].pose = 'stand'; setPos(master, 960, 690); face(master, -1); vis(master, true); mood(master, 'neutral');
+    camSet(800);
+  }
   menRound();
 }
 const MEN_INTRO = {eric:'«Пижон», вечерняя смена. Музыка, кирпич, полка с глиной и маслами. Эрик точит бритву и ждёт клиентов.',
-                   kira:'«Семейная парикмахерская», обычный день. Кира готовит место: сегодня в записи мужчины.'};
+                   kira:'«Семейная парикмахерская», обычный день. Кира готовит место: сегодня в записи мужчины.',
+                   kiraPijon:'«Пижон», вечерняя смена. Кира — единственная девушка в зале. Клиенты ждут барберской подачи, цены выше, а на ответ здесь только 20 секунд.'};
 async function menRound(){
   const v = MV.list[MV.i], m = MV.master;
   await menSprite(v); PARTNER = 'client'; S.meter = 0; hud(); stopTimer(); hideDlg(); bust.className = 'bust';
   panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','Смотрите сцену…'));
-  await camWide(); camSet(800);
-  C[m].pose = 'stand'; setPos(m, 960, 690); face(m, -1); mood(m, 'neutral');
+  const rom = MV.salon === 'romashka';
+  await camWide(); camSet(rom ? 700 : 800);
+  if (rom){ C[m].pose = 'stand'; setPos(m, P.showK[0], P.showK[1]); face(m, -1); mood(m, 'neutral'); }
+  else { C[m].pose = 'stand'; setPos(m, 960, 690); face(m, -1); mood(m, 'neutral'); }
   const P0 = MEN_PRICE[MV.salon];
-  MV.norm = P0.norm + (MEN_BEARD[v.img] ? P0.beardMin : 0); MV.over = 0;
+  MV.norm = P0.norm + (MEN_BEARD[v.img] ? P0.beardMin : 0); MV.over = 0; MV.coatOff = false; MV.ok2 = false;
   svcTime(null);
-  if (MV.i === 0) await say(m, MEN_INTRO[m], {narr:true});
+  if (MV.i === 0) await say(m, rom ? ROM_INTRO : MV.hard ? MEN_INTRO.kiraPijon : MEN_INTRO[m], {narr:true});
   C.client.pose = 'stand'; setPos('client', P.door[0], MV.clientY); face('client', 1); vis('client', true); mood('client', v.img === 'mark' ? 'phone' : 'neutral');
   await say(m, v.enter, {narr:true});
-  await walk('client', 650, MV.clientY, {face:1}); clientPose();
+  await walk('client', rom ? P.showM[0] : 650, MV.clientY, {face:1}); clientPose();
+  if (rom){
+    if (v.admin) await say('admin', v.admin);
+    if (v.task){ ayaState('explain'); await say('aya', v.task); }
+  }
   svcTime(0, MV.norm);
   await menAsk(v, 1);
 }
@@ -2510,7 +2601,7 @@ async function menAsk(v, step){
     list.append(b);
   });
   panel.append(list, menBack());
-  startTimer(MEN_SEC, wrap => {
+  startTimer(MV.hard ? 20 : MEN_SEC, wrap => {
     S.meter = clamp(S.meter - 5, -100, 100); hud(); mood('client','doubt');
     MV.log.push({title:v.name + ' · решение ' + step, picked:'Слишком долгая пауза с ответом', ok:false, d:-5, aya:'Клиент ждёт реакции сразу. Пауза выглядит как безразличие.', best:null});
     panel.insertBefore(el('div','toast','Пауза затянулась: настроение −5.'), wrap);
@@ -2551,6 +2642,7 @@ async function menChoose(v, d, c, btn, list, step){
   nx.onclick = async () => {
     nx.disabled = true; stopVoice(); hideDlg();
     if (step === 1) return menChair(v);
+    if (v.mentor && MV.ok2) await romMentor();
     await menFinal(v);
   };
   panel.append(nx); fitStage(); nx.focus({preventScroll:true});
@@ -2560,6 +2652,17 @@ const CHAIR = {x:760, y:690};
 async function menSeat(v){
   const m = MV.master, sp = SP.client;
   await camWide();
+  if (MV.salon === 'romashka'){
+    if (sp.nocoat){
+      await say(m, v.name + ' снимает ' + (v.coat || 'куртку') + ', ' + NAMES[m] + ' вешает на плечики.', {narr:true});
+      MV.coatOff = true; C.client.pose = 'nocoat'; place('client');
+    }
+    await Promise.all([walk('client', P.chairStand[0], P.chairStand[1], {cam:narrow()}), walk(m, P.chairK[0], P.chairK[1])]);
+    if (sp.sit){ C.client.pose = 'sit'; setPos('client', P.chairSit[0], P.chairSit[1]); face('client', 1); }
+    else { C.client.pose = 'nocoat'; face('client', 1); place('client'); }
+    C[m].pose = 'cut'; setPos(m, P.cutK[0], P.cutK[1]); face(m, 1);
+    return 'rom';
+  }
   if (sp.nocoat){
     await say(m, v.name + ' снимает ' + ({vadim:'пальто', viktor:'пиджак', mark:'пиджак', aleksey:'бомбер'}[v.img] || 'куртку') + ', ' + NAMES[m] + ' вешает на плечики.', {narr:true});
     C.client.pose = 'nocoat'; place('client');
@@ -2578,12 +2681,13 @@ async function menChair(v){
   const m = MV.master;
   panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','В кресле…'));
   const seated = await menSeat(v);
-  if (seated) camSet(CHAIR.x + 80);
+  if (seated === 'rom') camSet(1080); else if (seated) camSet(CHAIR.x + 80);
   const n = v.chair.length, target = Math.round(MV.norm * 0.7);
   for (let i = 0; i < n; i++){
     const c = v.chair[i];
     if (c.who === 'narr') await say(m, c.t, {narr:true});
     else if (c.who === 'client') await say('client', noteLine(c.note, c.t));
+    else if (c.who === 'admin' || c.who === 'ab') await say(c.who, noteLine(c.note, c.t));
     else if (c.note === 'про себя') await say(m, NAMES[m] + ' про себя: ' + c.t, {narr:true});
     else await say(m, noteLine(c.note, c.t));
     svcTime(Math.min(target, svcMin + Math.round((target - svcMin) / (n - i))));
@@ -2593,11 +2697,13 @@ async function menChair(v){
 async function menFinal(v){
   const m = MV.master, val = S.meter, P0 = MEN_PRICE[MV.salon];
   panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','Финал визита…'));
-  svcTime(MV.norm + MV.over);
+  const rom = MV.salon === 'romashka';
+  svcTime(MV.norm + MV.over + (v.mentor && MV.ok2 ? v.extraMin || 0 : 0));
   if (MV.ok2 && val > 0){
     mood('client', moodFor(val)); mood(m, 'happy');
     for (const c of v.fin){
       if (c.who === 'narr') await say(m, c.t, {narr:true});
+      else if (c.who === 'admin' || c.who === 'ab') await say(c.who, c.t);
       else await say(c.who === 'client' ? 'client' : m, c.t);
     }
   } else {
@@ -2608,6 +2714,8 @@ async function menFinal(v){
   const rows = [], price = P0.cut + (MEN_BEARD[v.img] ? P0.beard : 0);
   rows.push([(MEN_BEARD[v.img] ? 'Стрижка + борода ' : 'Стрижка ') + rub(price) + ', 50% мастеру', price / 2]);
   if (m === 'eric' && MV.ok2 && MEN_RETAIL[v.img]){ const r = MEN_RETAIL[v.img]; rows.push(['Продажа: ' + r[0] + ' ' + rub(r[1]) + ', 10%', r[1] * 0.1]); }
+  if (v.retail && MV.ok2 && val > 0){ const r = v.retail; rows.push(['Продажа: ' + r[0] + ' ' + rub(r[1]) + ', 10%', r[1] * 0.1]); }
+  else if (v.retail) await say('client', 'Крем? Подумаю.');
   if (val >= 20) rows.push(['Чаевые', MV.salon === 'pijon' ? 200 : 100]);
   const earned = rows.reduce((a, r) => a + r[1], 0);
   S.xMoney = (S.xMoney || 0) + earned; MV.money += earned;
@@ -2615,17 +2723,18 @@ async function menFinal(v){
   hud();
   ayaTail(v.ayaFin, val >= 20 ? 'praise' : 'explain');
   /* клиент встаёт и уходит */
-  if (C.client.pose === 'sit' || C.client.pose === 'nocoat'){ C.client.pose = 'stand'; setPos('client', CHAIR.x - 60, MV.clientY); face('client', -1); }
+  if (rom){ C.client.pose = val >= 20 && SP.client.after ? 'after' : 'nocoat'; setPos('client', P.chairStand[0], P.chairStand[1]); face('client', -1); if (C.client.pose === 'nocoat') clientPose(); }
+  else if (C.client.pose === 'sit' || C.client.pose === 'nocoat'){ C.client.pose = 'stand'; setPos('client', CHAIR.x - 60, MV.clientY); face('client', -1); }
   C[m].pose = 'stand'; place(m);
   MV.i++;
   panel.innerHTML = ''; panel.append(menHead('Визит окончен', MV.i, MV.list.length));
   const c = el('div','card');
   c.append(el('h2', null, v.name + ': настроение ' + (val > 0 ? '+' : val < 0 ? '−' : '') + Math.abs(val)),
-    el('p', null, (val >= 20 ? 'Клиент доволен и вернётся.' : val >= 0 ? 'Без восторга, но и без обиды.' : 'Клиент ушёл недовольным.') + ' Время визита: ' + svcMin + ' мин при норме ' + MV.norm + '.'));
+    el('p', null, (val >= 20 ? (rom ? 'Клиентка довольна и записалась снова.' : 'Клиент доволен и вернётся.') : val >= 0 ? 'Без восторга, но и без обиды.' : (rom ? 'Клиентка ушла недовольной.' : 'Клиент ушёл недовольным.')) + ' Время визита: ' + svcMin + ' мин при норме ' + MV.norm + '.'));
   const ul = el('ul','money'); rows.forEach(r => { const li = el('li'); li.append(el('span', null, r[0]), el('b', null, '+' + rub(r[1]))); ul.append(li); }); c.append(ul);
   const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(v.ayaFin));
   const last = MV.i >= MV.list.length;
-  const nx = el('button','next', last ? 'Итог смены' : 'Следующий клиент'); nx.type = 'button';
+  const nx = el('button','next', last ? 'Итог смены' : (rom ? 'Следующая клиентка' : 'Следующий клиент')); nx.type = 'button';
   nx.onclick = async () => {
     nx.disabled = true; stopVoice(); hideDlg(); svcTime(null);
     await camWide(); await walk('client', P.door[0], MV.clientY, {cam:narrow()}); vis('client', false); face(m, -1); mood(m, 'neutral');
@@ -2637,16 +2746,17 @@ async function menFinal(v){
   panel.append(c, h, row, menBack()); fitStage(); nx.focus({preventScroll:true});
 }
 async function menSummary(){
-  track('men_finish_' + MV.master);
+  const rom = MV.salon === 'romashka';
+  track((rom ? 'rom_finish_' : 'men_finish_') + MV.master);
   hideDlg(); bust.className = 'bust'; vis('client', false); svcTime(null);
   const m = MV.master, n = MV.i;
   panel.innerHTML = ''; panel.append(menHead('Итог смены', 0));
   const picks = MV.log.filter(r => r.picked !== 'Слишком долгая пауза с ответом');
   const okN = picks.filter(r => r.ok).length;
   const c0 = el('div','card');
-  c0.innerHTML = '<h2>' + (m === 'eric' ? 'Эрик · «Пижон»' : 'Кира · «Семейная»') + '</h2><p>Довольных клиентов: <b>' + MV.happy + ' из ' + n + '</b>. Лучших ответов: <b>' + okN + ' из ' + picks.length + '</b> (' + Math.round(okN / Math.max(1, picks.length) * 100) + '%).</p>'
+  c0.innerHTML = '<h2>' + (rom ? 'Кира · «Ромашка»' : MV.hard ? 'Кира · «Пижон»' : m === 'eric' ? 'Эрик · «Пижон»' : 'Кира · «Семейная»') + '</h2><p>' + (rom ? 'Записались снова' : 'Довольных клиентов') + ': <b>' + MV.happy + ' из ' + n + '</b>. Лучших ответов: <b>' + okN + ' из ' + picks.length + '</b> (' + Math.round(okN / Math.max(1, picks.length) * 100) + '%).</p>'
     + '<p>Заработано за смену: <b>' + rub(MV.money) + '</b>. Баллы мастерства: <b>' + (S.xPts || 0) + '</b>.</p>'
-    + (m === 'eric' ? '<p>Удлинённые стрижки (Денис) — предел барбера. Повышение квалификации в Академии откроет и их, и женский зал.</p>' : '<p>Форма бороды с окантовкой (Михаил) — предел Киры. Это отдельный курс в Академии.</p>');
+    + (rom ? '<p>Практичная стрижка, честная продажа ухода и вопрос старшему мастеру вместо догадок — это и есть работа постоянного мастера.</p>' : m === 'eric' ? '<p>Удлинённые стрижки (Денис) — предел барбера. Повышение квалификации в Академии откроет и их, и женский зал.</p>' : '<p>Форма бороды с окантовкой (Михаил) — предел Киры. Это отдельный курс в Академии.</p>');
   const c1 = el('div','card'); c1.append(el('h2', null, 'Работа над ошибками'));
   const ul = el('ul','review');
   MV.log.forEach(r => {
@@ -2660,13 +2770,191 @@ async function menSummary(){
   c1.append(ul);
   panel.append(c0, c1); fitStage();
   const perfect = n === MV.list.length && okN === picks.length && picks.length === MV.log.length;
-  C[m].pose = 'stand'; setPos(m, 900, 690); face(m, -1); mood(m, perfect ? 'happy' : 'smile'); camSet(800);
-  if (m === 'eric') await say('eric', perfect ? 'Мужской зал — мой. А дальше — повышение квалификации, чтобы и Денис ушёл с кудрями.' : 'Барбер — это не только машинка. Разберу ошибки — и завтра лучше.', {mood: perfect ? 'happy' : 'smile'});
-  ayaTail(perfect ? 'Чистый визит без ошибок. Так держать!' : 'Ошибаться — нормально. Перечитайте мои подсказки и попробуйте ещё раз.', perfect ? 'praise' : 'cheer');
-  const again = el('button','next','Ещё раз'); again.type = 'button'; again.onclick = () => menStart(m, MV.career);
+  if (rom){ C[m].pose = 'stand'; setPos(m, P.showK[0], P.showK[1]); face(m, -1); mood(m, perfect ? 'happy' : 'smile'); camSet(700); ayaState('explain'); await say('aya', 'Смена окончена. Давай посмотрим, что получилось.'); }
+  else { C[m].pose = 'stand'; setPos(m, 900, 690); face(m, -1); mood(m, perfect ? 'happy' : 'smile'); camSet(800); }
+  if (rom) {}
+  else if (m === 'eric') await say('eric', perfect ? 'Мужской зал — мой. А дальше — повышение квалификации, чтобы и Денис ушёл с кудрями.' : 'Барбер — это не только машинка. Разберу ошибки — и завтра лучше.', {mood: perfect ? 'happy' : 'smile'});
+  if (!rom) ayaTail(perfect ? 'Чистый визит без ошибок. Так держать!' : 'Ошибаться — нормально. Перечитайте мои подсказки и попробуйте ещё раз.', perfect ? 'praise' : 'cheer');
+  const again = el('button','next','Ещё раз'); again.type = 'button'; again.onclick = () => menStart(m, MV.career, MV.salon);
   const other = el('button','next alt', m === 'eric' ? 'За Киру' : 'За Эрика'); other.type = 'button'; other.onclick = () => menStart(m === 'eric' ? 'kira' : 'eric');
+  if (rom || MV.hard) other.hidden = true;
   const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
   const row = el('div','btnrow'); row.append(menu, other, again); panel.append(row); fitStage();
+}
+
+/* ================= «РОМАШКА»: смена с постоянными клиентками (Таня, Ольга, Ирина) — тот же движок, что мужской зал ================= */
+const ROM = [
+{salon:'romashka', master:'kira', pre:'woman_', img:'tanya', name:'Таня', age:31, title:'Чтобы не укладывать',
+ admin:'Кира, к тебе Таня, она у нас была на укладке.',
+ task:'Клиентка хочет стрижку без укладки. Узнай, как она живёт, и подбери форму.',
+ enter:'11:00. Таня — мама в декрете, сыну год. Месяц назад была у Киры на укладке. Волосы густые, сами вьются, обычно — в хвосте.',
+ line:'Кира, привет! Вырвалась на полтора часа, муж с малышом. Хочу постричься так, чтобы утром расчесалась — и пошла.', lineNote:'',
+ coat:'куртку',
+ chair:[{who:'client', note:'', t:'Утром у меня пять минут. Фен — только если малыш спит. Волосы сами вьются, если не трогать.'},
+        {who:'kira', note:'', t:'Значит, работаем с вашей волной, а не против неё.'},
+        {who:'client', note:'смеётся', t:'Главное — чтобы не хвост каждый день. Я уже забыла, как выгляжу с распущенными.'}],
+ fin:[{who:'narr', t:'Таня встряхивает головой — волна ложится сама.'},
+      {who:'client', t:'Ой, это я? Мужу фото отправлю. Запишите меня через шесть недель.'},
+      {who:'admin', t:'Запись у нас через меня — суббота, 11:00, как раз малыш с папой.'}],
+ ayaFin:'Практичная стрижка — это стрижка под жизнь клиента. Спроси про утро, и ответ подскажет форму.',
+ d1:{title:'выявить потребность', opts:[
+  {ok:true, t:'«Таня, рада вас видеть! Полтора часа — успеем спокойно, стрижка с укладкой — 44 минуты. Расскажите, как проходит ваше утро: сколько минут есть на волосы, сушите ли феном?»', pts:12, aya:'Ты узнала главное — её утро. Практичную стрижку подбирают под жизнь клиента, а не под картинку.'},
+  {ok:false, t:'«Сделаем модное каре, сейчас все такое носят!»', pts:-7, aya:'Каре просит укладки каждый день. Сначала спроси, сколько у неё времени по утрам.'},
+  {ok:false, t:'«Хорошо, как скажете. Короче сделать?»', pts:-5, aya:'Без вопросов о её дне ты угадываешь. «Короче» — не всегда проще.'}]},
+ d2:{title:'предложить форму', intro:'', opts:[
+  {ok:true, t:'«Предлагаю каскад до плеч по вашей волне: высохнет сам, утром — расчесать пальцами. Покажу, как подсушить без фена. Длину оставлю, чтобы можно было собрать, если малыш капризничает»', pts:12, aya:'Решение под её быт: своя волна, без фена и с запасным вариантом. Такую стрижку носят, а не терпят.'},
+  {ok:false, t:'«Давайте коротко под мальчика — вообще никакой укладки!»', pts:-8, aya:'Короткую стрижку нужно часто обновлять и укладывать. Резкая смена длины без запроса — это риск.'},
+  {ok:false, t:'«Сделаю как обычно, а укладывать научитесь»', pts:-4, aya:'Она пришла именно за тем, чтобы не укладывать. Это ответ мимо запроса.'}]}},
+{salon:'romashka', master:'kira', pre:'woman_', img:'olga', name:'Ольга Николаевна', age:39, title:'Сухие кончики',
+ admin:'Кира, Ольга Николаевна, у неё подровнять кончики. Она у нас давно.',
+ task:'Клиентка жалуется на сухие кончики. Помоги ей не только стрижкой — подумай, как ей сохранить результат дома.',
+ enter:'14:00. Учительница начальных классов, стрижётся раз в два месяца — всегда одно и то же. Волосы ниже лопаток, кончики сухие и секутся.',
+ line:'Здравствуйте. Подровняйте, как обычно, сантиметра три. Кончики опять сухие, как солома. Наверное, просто такие волосы.', lineNote:'',
+ coat:'пальто', retail:['термозащитный крем', 800],
+ chair:[{who:'client', note:'', t:'Шампунь из супермаркета, бальзам — когда вспомню. Феном сушу каждый день, горячим, иначе в школу не успеваю.'},
+        {who:'kira', note:'проводит пальцами по длине', t:'Видите, сухость начинается примерно от плеч — там, где фен бьёт сильнее всего.'},
+        {who:'client', note:'', t:'И что мне, не сушить? Я же мокрая в школу не пойду.'}],
+ fin:[{who:'narr', t:'Кира наносит крем при укладке. Ольга трогает кончики.'},
+      {who:'client', t:'Мягкие… Ладно, беру. Только покажите ещё раз, сколько наносить.'},
+      {who:'admin', t:'Ольга Николаевна, через два месяца, как всегда?'}],
+ ayaFin:'Уход продают через проблему клиента: спроси, что у неё дома, покажи, где проблема, дай попробовать. Тогда покупка — её решение, а не твоё давление.',
+ d1:{title:'выяснить причину', opts:[
+  {ok:true, t:'«Здравствуйте, Ольга Николаевна! Три сантиметра уберём. А расскажите, чем вы ухаживаете дома: какой шампунь, бальзам, сушите ли феном? Сухость часто идёт не от волос, а от ухода»', pts:12, aya:'Ты не согласилась с «просто такие волосы» и спросила про уход. Так появляется повод для совета, а не для продажи в лоб.'},
+  {ok:false, t:'«Да, волосы у вас такие, ничего не поделаешь»', pts:-6, aya:'Ты закрыла тему. Клиентка уйдёт с той же проблемой и через месяц снова будет недовольна кончиками.'},
+  {ok:false, t:'«Вам срочно нужен уход, у нас есть маска за 800, возьмёте?»', pts:-6, aya:'Продажа до того, как ты узнала, что у неё дома. Это выглядит как навязывание.'}]},
+ d2:{title:'предложить уход', intro:'', opts:[
+  {ok:true, t:'«Сушить можно, просто с защитой. Вот термозащитный крем с витрины — 800 ₽, хватает месяца на три. Капля на длину перед феном, и кончики продержатся до следующей стрижки. Давайте я нанесу его сейчас при укладке — посмотрите, как волосы себя ведут, и решите»', pts:12, aya:'Ты связала средство с её утром, назвала цену и срок и дала попробовать. Решение остаётся за ней — это честная продажа.'},
+  {ok:false, t:'«Перестаньте сушить феном, и всё пройдёт»', pts:-6, aya:'Совет, который она не выполнит. Ты же знаешь, что у неё нет времени по утрам.'},
+  {ok:false, t:'«Можно сделать ламинирование за 2 500, будет красота»', pts:-6, aya:'Дорогая услуга без связи с её проблемой и бюджетом. Для этого салона и для учительницы это мимо.'}]}},
+{salon:'romashka', master:'kira', pre:'woman_', img:'irina', name:'Ирина Павловна', age:50, title:'Как в прошлый раз, только короче',
+ admin:'Кира, Ирина Павловна. В прошлый раз была у Александра Борисовича, он сегодня тоже в смене.',
+ task:'Клиентка просит повторить стрижку, которую делала не ты. Не угадывай — уточни.',
+ enter:'16:30. Главный бухгалтер, точная и немногословная. Стрижётся здесь третий год, но Кира видит её впервые. Короткая асимметрия отросла.',
+ line:'Добрый день. Как в прошлый раз, только короче. Вы же видите, как было.', lineNote:'',
+ coat:'пальто', mentor:true, extraMin:1,
+ chair:[{who:'client', note:'показывает', t:'Затылок вот так, покороче. А длинную сторону… не знаю. Он её как-то срезал наискосок, мне нравилось.'},
+        {who:'kira', note:'', t:'А под каким углом, не помните?'},
+        {who:'client', note:'', t:'Откуда я знаю? Вы же мастер.'}],
+ fin:[{who:'narr', t:'Ирина смотрит в зеркало, поворачивает голову.'},
+      {who:'client', t:'Да. Вот так.'},
+      {who:'admin', t:'Ирина Павловна, следующую запись — к Кире или к Александру Борисовичу?'},
+      {who:'client', t:'К Кире.'}],
+ ayaFin:'«Как в прошлый раз» — это не инструкция, а повод уточнить. Спроси зону и длину, а если не знаешь техники — спроси мастера. Угадывать нельзя.',
+ d1:{title:'уточнить, а не угадать', opts:[
+  {ok:true, t:'«Добрый день, Ирина Павловна! Форму вижу, но хочу повторить точно. Покажите, пожалуйста, где короче: виски, затылок или длинная сторона? И на сколько — с палец или больше?»', pts:12, aya:'«Короче» — это не размер. Ты попросила показать зону и длину. Бухгалтер оценит точность.'},
+  {ok:false, t:'«Конечно, сейчас всё сделаю!»', pts:-7, aya:'Ты не знаешь, что значит «как в прошлый раз» и «короче». Это угадывание, а на асимметрии ошибка видна сразу.'},
+  {ok:false, t:'«А кто вас стриг? Я так не умею, лучше к нему»', pts:-5, aya:'Честность — это хорошо, но ты отказалась, даже не выяснив, что нужно. Сначала уточни, потом решай.'}]},
+ d2:{title:'что делать, если не знаешь', intro:'', opts:[
+  {ok:true, t:'«Затылок сделаю, как вы показали. А длинную сторону уточню у Александра Борисовича — он сегодня здесь, это минута. Хочу, чтобы было ровно как вам нравилось»', pts:12, aya:'Не знаешь — спроси того, кто знает. Это не слабость, а уважение к клиентке. Минута на вопрос дешевле переделки.'},
+  {ok:false, t:'«Сделаю наискосок, примерно так же»', pts:-7, aya:'«Примерно» на асимметрии — это лотерея. Угол не тот, и клиентка увидит это первой.'},
+  {ok:false, t:'«Давайте я сделаю по-своему, будет даже лучше!»', pts:-5, aya:'Она просила как в прошлый раз. Менять форму без её согласия — риск потерять клиентку.'}]}}
+];
+const ROM_INTRO = '«Ромашка», будний день. Алёна за ресепшеном, у дальнего кресла работает Александр Борисович. В записи у Киры — три постоянные клиентки.';
+function romStart(fromCareer){ return menStart('kira', fromCareer, 'romashka'); }
+/* Ирина: Кира идёт к Александру Борисовичу — он отвечает вопросом на вопрос */
+async function romMentor(){
+  const ab = C.ab;
+  C.kira.pose = 'stand'; place('kira');
+  await camWide();
+  await walk('kira', ab.x - 150, 668, {face:1, cam:narrow()});
+  PARTNER = 'ab'; ab.pose = 'stand'; face('ab', -1); place('ab');
+  await say('kira', 'Александр Борисович, Ирина Павловна просит как в прошлый раз. Под каким углом вы делали длинную сторону?');
+  await say('ab', 'А ты сама что заметила?', {mood:'think'});
+  await say('kira', 'Отросла неровно — длинная сторона ушла вперёд. Значит, угол шёл от затылка к лицу.');
+  await say('ab', 'Вот и ответ. Иди.', {mood:'approve'});
+  ayaState('praise'); await say('aya', 'Он не дал готовый ответ — он заставил тебя посмотреть. В следующий раз ты увидишь это сама.');
+  ab.pose = 'cross'; face('ab', -1); place('ab'); PARTNER = 'client';
+  await walk('kira', P.cutK[0], P.cutK[1], {face:1, cam:narrow()});
+  C.kira.pose = 'cut'; place('kira');
+}
+
+/* ================= ПЕРСОНАЖИ: кто есть кто в игре ================= */
+const CHARS = [
+ {g:'Игроки', items:[
+  {img:'kira_e1', name:'Кира', sub:'Парикмахер-универсал · около 22', where:'Все женские салоны; «Пижон» — попробовать',
+   d:'Выпускница Академии Льва Кравца (от 320 ак. ч, 3-й разряд). Дружелюбная, старательная, немного волнуется. Путь: стажёр → стилист → преподаватель.',
+   stats:[['Женские',4],['Мужские',3],['Цвет',3],['Общение',3]], lim:'Форма бороды с окантовкой бритвой — пока не её.'},
+  {img:'eric_e1', name:'Эрик', sub:'Барбер · 24', where:'Барбершопы',
+   d:'Курсы барберов, 80 ак. ч. Уверенный, чуть дерзкий, с самоиронией; любит футбол и машины. Сначала рад быть барбером, потом понимает, что нужно учиться всему.',
+   stats:[['Женские',0],['Мужские',4],['Бороды',5],['Общение',2]], lim:'Удлинённые стрижки и женский зал — после повышения квалификации.'}]},
+ {g:'Наставники и персонал', items:[
+  {img:'aya_c3', round:true, name:'Айя', sub:'Виртуальный технолог', where:'Везде',
+   d:'Комментирует каждый ответ, хвалит, предупреждает и подводит итог. Принимает экзамен. Не ругает, а объясняет, почему.'},
+  {img:'ab_calm_bust', name:'Александр Борисович', sub:'Старший мастер, преподаватель Академии · около 45', where:'Рядом с Кирой во всех салонах',
+   d:'Спокойный, говорит мало и точно. Отвечает вопросом на вопрос: «А ты сама что заметила?» Айя объясняет — он заставляет думать.'},
+  {img:'narc_b1', name:'Нарцисс', sub:'Директор «Ромашки» · около 60', where:'«Ромашка»',
+   d:'Кряхтит, успехи приписывает салону: «Двадцать лет работаем», «Клиенты-то мои». Не злодей. Проводит собеседование и смотрит работу на модели.'},
+  {img:'admin_b0', name:'Алёна', sub:'Администратор · около 30', where:'«Ромашка»',
+   d:'Приветливая, но формалистка: «Запись у нас через меня». Встречает клиенток и передаёт их мастеру.'},
+  {img:'tamara_b4', name:'Тамара Петровна', sub:'Владелица · около 54', where:'«Семейная парикмахерская»',
+   d:'Практичная и усталая, считает деньги и расходники, говорит на «ты». Звонок, собеседование и условия стажировки.'}]},
+ {g:'Клиентки', items:[
+  {img:'marina_e1', name:'Марина, 34', sub:'Новая, сомневающаяся', where:'«Ромашка», тренажёр',
+   d:'Зашла без записи по совету подруги, недовольна прошлым мастером, хочет каре по фото.', teach:'Первый визит, доверие, право на тишину'},
+  {img:'galina_e1', name:'Галина Сергеевна, 58', sub:'Постоянная, пунктуальная', where:'Тренажёр, экзамен',
+   d:'«Я, как всегда, минута в минуту». Серебристое каре, жемчуг.', teach:'Встреча у двери, имя-отчество, память о прошлом визите'},
+  {img:'sonya_e1', name:'Соня, 19', sub:'Студентка, стеснительная', where:'Тренажёр',
+   d:'Нашла салон по отзывам, пришла на укладку. «А вы давно этим занимаетесь?»', teach:'Полное приветствие по эталону, сильные стороны без оправданий'},
+  {img:'viktoria_e1', name:'Виктория, 42', sub:'Деловая, торопится', where:'Тренажёр',
+   d:'«У меня 50 минут, не больше». Телефон у уха, смарт-часы.', teach:'Сжатое приветствие, выбор и точное время окончания'},
+  {img:'woman_tanya_happy_bust', name:'Таня, 31', sub:'Мама в декрете', where:'«Ромашка»',
+   d:'Вырвалась на полтора часа: «чтобы утром расчесалась — и пошла».', teach:'Практичная стрижка под жизнь клиентки'},
+  {img:'woman_olga_happy_bust', name:'Ольга Николаевна, 39', sub:'Учительница', where:'«Ромашка»',
+   d:'Стрижётся раз в два месяца, жалуется на сухие кончики: «наверное, просто такие волосы».', teach:'Честная продажа ухода'},
+  {img:'woman_irina_happy_bust', name:'Ирина Павловна, 50', sub:'Главный бухгалтер', where:'«Ромашка»',
+   d:'«Как в прошлый раз, только короче» — хотя в прошлый раз её стриг другой мастер.', teach:'Уточнять, а не угадывать'}]},
+ {g:'Клиенты', items:[
+  {img:'andrey_e1', name:'Андрей, 38', sub:'Постоянный, добродушный, опаздывает', where:'Тренажёр',
+   d:'«Пробки жуткие!» Коротко по бокам и борода.', teach:'Опоздавшего — без упрёка: цифры и выбор'},
+  {img:'man_artem_happy_bust', name:'Артём, 27', sub:'Прямой, нетерпеливый, боксёр', where:'«Пижон»',
+   d:'Чёрная «бэха» с тонировкой, футбол. «Здарова, бро. Мне коротко».', teach:'Коротко и прямо, без резкости в ответ'},
+  {img:'man_viktor_happy_bust', name:'Виктор Павлович, 58', sub:'Руководитель, любит контроль', where:'«Пижон»',
+   d:'Мерс с водителем. Стрижка и борода «как я скажу».', teach:'Уважать авторитет и отстаивать мнение фактами'},
+  {img:'man_mark_happy_bust', name:'Марк, 33', sub:'Договорщик, торгуется', where:'«Пижон»',
+   d:'Стрижка к переговорам — и сразу про скидку.', teach:'Не демпинговать, а продать уход'},
+  {img:'man_denis_happy_bust', name:'Денис, 24', sub:'Творческий, чувствительный', where:'«Пижон»',
+   d:'Рыжие кудри, хочет отрастить до плеч к выставке.', teach:'Честное «не мой профиль»'},
+  {img:'man_aleksey_happy_bust', name:'Алексей, 30', sub:'Аналитик, точный', where:'«Пижон», «Семейная»',
+   d:'Показывает фото стрижки на третий день: «точно как здесь».', teach:'Цифры, насадки и проверка в зеркале'},
+  {img:'man_vadim_happy_bust', name:'Вадим, 55', sub:'Сдержанный, молчаливый', where:'«Пижон», «Семейная»',
+   d:'Дочь сказала, что седина старит. Коротко, виски прямые.', teach:'Уважать тишину, деликатно о седине'},
+  {img:'man_mikhail_happy_bust', name:'Михаил, 48', sub:'Практичный, мастер на все руки', where:'«Пижон», «Семейная»',
+   d:'Автосервис; подтягивает винт кресла. Стрижка и форма бороды.', teach:'Борода: сила Эрика и предел Киры'},
+  {img:'man_roman_happy_bust', name:'Роман, 38', sub:'Эмоциональный, импульсивный', where:'«Пижон», «Семейная»',
+   d:'Завтра самолёт на море: «Режь под ноль!»', teach:'Успокоить и не идти на поводу импульса'}]}
+];
+function charsShow(){
+  track('chars');
+  S = fresh(); resetScene(); hud(); stopVoice(); hideDlg(); setLocation2('entrance'); clips(false);
+  vis('marina', false); pose('kira','stand'); setPos('kira', 760, 700); face('kira', 1); vis('kira', true);
+  C.eric.pose = 'stand'; setPos('eric', 1120, 700); face('eric', -1); vis('eric', true); camSet(940);
+  panel.innerHTML = '';
+  const h = el('div','head'); h.append(el('h1', null, 'Персонажи'), el('span','step','Кто есть кто')); panel.append(h);
+  const tabs = el('div','chTabs'), list = el('div','chList');
+  const show = gi => {
+    [...tabs.children].forEach((t, k) => t.setAttribute('aria-selected', k === gi));
+    list.innerHTML = '';
+    CHARS[gi].items.forEach(p => {
+      const c = el('div','chCard');
+      const ph = el('div','chPh' + (p.round ? ' round' : '')); const im = el('img'); im.src = IMG(p.img); im.alt = p.name; im.loading = 'lazy'; ph.append(im);
+      const tx = el('div','chTx');
+      tx.append(el('b', null, p.name), el('span','chSub', p.sub), el('span','chWhere', '📍 ' + p.where));
+      const d = el('p','chD'); d.textContent = p.d; tx.append(d);
+      if (p.stats){
+        const st = el('div','hsStats');
+        p.stats.forEach(([k, v]) => { const r = el('div','hsStat'); r.append(el('span', null, k)); const bar = el('i'); for (let n = 0; n < 5; n++) bar.append(el('b', n < v ? 'on' : null)); r.append(bar); st.append(r); });
+        tx.append(st);
+      }
+      if (p.lim){ const l = el('p','chT'); l.textContent = 'Предел: ' + p.lim; tx.append(l); }
+      if (p.teach){ const l = el('p','chT'); l.textContent = 'Чему учит: ' + p.teach; tx.append(l); }
+      c.append(ph, tx); list.append(c);
+    });
+    fitStage();
+  };
+  CHARS.forEach((g, gi) => { const t = el('button','chTab', g.g + ' · ' + g.items.length); t.type = 'button'; t.setAttribute('role','tab'); t.onclick = () => show(gi); tabs.append(t); });
+  tabs.setAttribute('role','tablist');
+  const back = el('button','backBtn','← В меню'); back.type = 'button'; back.onclick = () => restart(false);
+  panel.append(tabs, list, back); show(0);
 }
 
 /* фоновая подгрузка всех картинок (по 4 одновременно), чтобы смена поз не мигала */
