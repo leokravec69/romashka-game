@@ -697,7 +697,7 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NS = 'http://www.w3.org/2000/svg';
 /* цели Яндекс Метрики (работают, только если счётчик подключён) */
 /* счётчик посещений GoatCounter: впишите имя сайта (например 'romashka-game') — и он заработает; пусто = выключен */
-const GC_CODE = '';
+const GC_CODE = 'romashka-game';
 (function(){ if (!GC_CODE) return; const sc = document.createElement('script'); sc.async = true; sc.src = 'https://gc.zgo.at/count.js'; sc.dataset.goatcounter = 'https://' + GC_CODE + '.goatcounter.com/count'; document.head.append(sc); })();
 function track(g){
   try { if (window.ym && window.YM_ID) window.ym(window.YM_ID, 'reachGoal', g); } catch(e){}
