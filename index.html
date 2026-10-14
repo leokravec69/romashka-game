@@ -394,6 +394,9 @@ ul.money b{color:#1f7a45;white-space:nowrap}
 
 .chTx .hsStat b{background:var(--surface-2);border-color:var(--line)}
 .chTx .hsStat b.on{background:#ffd21f;border-color:#111}
+/* продолжить игру и код сохранения */
+.mbCont{background:linear-gradient(180deg,#8be38f,#3fbf5a);margin-bottom:10px}
+.saveTa{width:100%;box-sizing:border-box;font:12px/1.4 ui-monospace,Menlo,monospace;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);resize:vertical;margin:6px 0 10px;word-break:break-all}
 </style>
 </head>
 <body>
@@ -693,7 +696,13 @@ const dlg = document.getElementById('dlg');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NS = 'http://www.w3.org/2000/svg';
 /* цели Яндекс Метрики (работают, только если счётчик подключён) */
-function track(g){ try { if (window.ym && window.YM_ID) window.ym(window.YM_ID, 'reachGoal', g); } catch(e){} }
+/* счётчик посещений GoatCounter: впишите имя сайта (например 'romashka-game') — и он заработает; пусто = выключен */
+const GC_CODE = '';
+(function(){ if (!GC_CODE) return; const sc = document.createElement('script'); sc.async = true; sc.src = 'https://gc.zgo.at/count.js'; sc.dataset.goatcounter = 'https://' + GC_CODE + '.goatcounter.com/count'; document.head.append(sc); })();
+function track(g){
+  try { if (window.ym && window.YM_ID) window.ym(window.YM_ID, 'reachGoal', g); } catch(e){}
+  try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path:'event/' + g, title:g, event:true}); } catch(e){}
+}
 const IMG = n => 'assets/' + n + '.webp';
 /* настоящие размеры картинок: заменили файл в папке assets — пропорции подхватятся сами */
 const NAT = {};
@@ -1489,7 +1498,8 @@ async function summary(){
     : 'Посмотрите, где я подсказывала, и пройдите визит без них.';
   ayaState(S.mistakes === 0 || S.end === 'ref' ? 'praise' : 'cheer'); await say('aya', tip);
   const r = el('button','next alt','Сыграть визит снова'); r.type = 'button'; r.onclick = () => restart(true);
-  const cont = el('button','next','Дальше по смене: Таня, Ольга, Ирина'); cont.type = 'button'; cont.onclick = () => { cont.disabled = true; romStart(); };
+  doneMark('marina'); savePut({kind:'shift', master:'kira', salon:'romashka', i:0, total:ROM.length, xPts:0, xMoney:e.total || 0, money:e.total || 0, happy:0, career:true});
+  const cont = el('button','next','Дальше по смене: Таня, Ольга, Ирина'); cont.type = 'button'; cont.onclick = () => { cont.disabled = true; saveResume(); };
   const rowE = el('div','btnrow'); rowE.append(r, cont); panel.append(rowE);
 }
 
@@ -1509,7 +1519,9 @@ function restart(go){ PARTNER = 'marina'; MASTER = 'kira'; S = fresh(); resetSce
 function intro(){
   panel.innerHTML = '';
   setLocation2('entrance'); clips(false);
-  pose('kira','diploma'); setPos('kira', 1000, 700); face('kira', 1); mood('kira','happy'); camSet(900);
+  pose('kira','diploma'); setPos('kira', 1000, 700); face('kira', 1); mood('kira','happy');
+  C.eric.pose = 'diploma'; setPos('eric', 720, 700); face('eric', 1); vis('eric', true); mood('eric','happy');   // Эрик с пальцем вверх слева от Киры
+  camSet(880);
   const all = [], box = el('div','menuBS');
   box.append(el('div','hsTitle','Симулятор парикмахера'), el('div','mbSub','Академия Льва Кравца'));
   const start = el('button','hsPlay mbStart mbSalon'); start.type = 'button';
@@ -1524,9 +1536,19 @@ function intro(){
     mk('⏱', 'Нормы времени', 'Сколько минут на услугу', () => { location.href = 'normy.html'; }),
     mk('🎓', 'Экзамен', 'Кира или Эрик: 80% — новый ранг', () => examPick0()),
     mk('👥', 'Персонажи', 'С кем вы встретитесь в игре', () => charsShow()));
-  all.unshift(start, story);
+  const sv = saveGet();
+  let cont = null;
+  if (sv && sv.kind === 'shift'){
+    cont = el('button','hsPlay mbStart mbSalon mbCont'); cont.type = 'button';
+    cont.append(el('span','mbBig','▶ Продолжить'), el('span','mbS', saveLabel(sv)));
+    cont.onclick = () => { all.forEach(x => x.disabled = true); saveResume(); };
+  }
+  const code = el('button','mbStory','Код сохранения: перенести прогресс на другое устройство'); code.type = 'button';
+  code.onclick = () => { all.forEach(x => x.disabled = true); saveScreen(); };
+  all.unshift(start, story, code); if (cont) all.unshift(cont);
   const rk = el('div','mbRank'); rk.append(el('span', null, 'Ваш ранг:'), el('b', null, RANKS[getRank()]));
-  box.append(start, story, grid, rk);
+  if (cont) box.append(cont);
+  box.append(start, story, grid, rk, code);
   const c = el('div','card','<ul><li>Выбирайте реплики и действия — персонажи разыгрывают их на сцене.</li><li>Плашка с настроением сверху — как себя чувствует клиент. Если упадёт до −80, клиент уйдёт.</li><li>Нажмите на сцену или на реплику, чтобы ускорить её.</li><li>Айя подсказывает голосом: 🔊 — голос, 🎵 — громкость музыки.</li></ul>');
   panel.append(box, c);
   stopVoice(); hideDlg(); bust.className = 'bust';
@@ -2525,13 +2547,15 @@ function menBack(){
   b.onclick = () => { stopTimer(); clearHeld(); stopVoice(); hideDlg(); svcTime(null); const rom = MV && MV.salon === 'romashka'; if (MV && MV.career && !rom) { MV = null; prChoose(); } else { MV = null; if (rom) restart(false); else menPick(); } };
   return b;
 }
-async function menStart(master, fromCareer, salonArg){
+async function menStart(master, fromCareer, salonArg, resume){
   const salon = salonArg || (master === 'eric' ? 'pijon' : 'family'), rom = salon === 'romashka';
   const hard = master === 'kira' && salon === 'pijon';               // Кира пробует себя в барбершопе: те же клиенты, строже время
   track((rom ? 'rom_start_' : 'men_start_') + master);
   S = fresh(); resetScene(); hud(); stopVoice();
   MV = {master, salon, hard, list:rom ? ROM : MEN.filter(v => v.salon === (hard ? 'family' : salon)), i:0, log:[], happy:0, career:!!fromCareer, clientY:rom ? 672 : 690, money:0};
   MASTER = master; HERO = master;
+  if (resume && resume.i >= 0 && resume.i < MV.list.length){ MV.i = resume.i; MV.money = resume.money || 0; MV.happy = resume.happy || 0; S.xPts = resume.xPts || 0; S.xMoney = resume.xMoney || 0; hud(); }
+  saveShift();
   ['kira','eric','tamara','narc','ab'].forEach(x => vis(x, false));
   if (rom){
     setLocation('salon'); clips(false);
@@ -2727,6 +2751,7 @@ async function menFinal(v){
   else if (C.client.pose === 'sit' || C.client.pose === 'nocoat'){ C.client.pose = 'stand'; setPos('client', CHAIR.x - 60, MV.clientY); face('client', -1); }
   C[m].pose = 'stand'; place(m);
   MV.i++;
+  if (MV.i < MV.list.length) saveShift();
   panel.innerHTML = ''; panel.append(menHead('Визит окончен', MV.i, MV.list.length));
   const c = el('div','card');
   c.append(el('h2', null, v.name + ': настроение ' + (val > 0 ? '+' : val < 0 ? '−' : '') + Math.abs(val)),
@@ -2749,6 +2774,7 @@ async function menSummary(){
   const rom = MV.salon === 'romashka';
   track((rom ? 'rom_finish_' : 'men_finish_') + MV.master);
   hideDlg(); bust.className = 'bust'; vis('client', false); svcTime(null);
+  saveClear(); doneMark(MV.salon + '_' + MV.master);
   const m = MV.master, n = MV.i;
   panel.innerHTML = ''; panel.append(menHead('Итог смены', 0));
   const picks = MV.log.filter(r => r.picked !== 'Слишком долгая пауза с ответом');
@@ -2782,6 +2808,55 @@ async function menSummary(){
   const row = el('div','btnrow'); row.append(menu, other, again); panel.append(row); fitStage();
 }
 
+/* ================= СОХРАНЕНИЕ ПРОГРЕССА: только на устройстве игрока (localStorage) ================= */
+const SAVE_KEY = 'romashka_save', DONE_KEY = 'romashka_done';
+function saveGet(){ try { const o = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); return o && o.v === 1 ? o : null; } catch(e){ return null; } }
+function savePut(o){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(Object.assign({v:1, t:Date.now()}, o))); } catch(e){} }
+function saveClear(){ try { localStorage.removeItem(SAVE_KEY); } catch(e){} }
+function doneGet(){ try { return JSON.parse(localStorage.getItem(DONE_KEY) || '{}') || {}; } catch(e){ return {}; } }
+function doneMark(k){ try { const d = doneGet(); d[k] = (d[k] || 0) + 1; localStorage.setItem(DONE_KEY, JSON.stringify(d)); } catch(e){} }
+function saveShift(){
+  if (!MV) return;
+  savePut({kind:'shift', master:MV.master, salon:MV.salon, i:MV.i, total:MV.list.length, xPts:S.xPts || 0, xMoney:S.xMoney || 0, money:MV.money, happy:MV.happy, career:MV.career});
+}
+const SALON_NAME = {romashka:'«Ромашка»', pijon:'«Пижон»', family:'«Семейная»'};
+function saveLabel(o){
+  const who = o.master === 'eric' ? 'Эрик' : 'Кира', noun = o.salon === 'romashka' ? 'клиентка' : 'клиент';
+  const d = new Date(o.t), dd = String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth() + 1).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  return who + ' · ' + (SALON_NAME[o.salon] || o.salon) + ' · ' + noun + ' ' + (o.i + 1) + ' из ' + o.total + ' · сохранено ' + dd;
+}
+function saveResume(){ const o = saveGet(); if (!o || o.kind !== 'shift') return restart(false); track('save_resume'); menStart(o.master, o.career, o.salon, o); }
+/* код сохранения: перенести прогресс на другое устройство без сервера */
+const SAVE_KEYS = [SAVE_KEY, DONE_KEY, 'romashka_rank', 'romashka_career'];
+function saveCode(){
+  const o = {}; SAVE_KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v !== null) o[k] = v; } catch(e){} });
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+}
+function saveLoadCode(code){
+  try {
+    const o = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+    if (!o || typeof o !== 'object') return false;
+    let n = 0; Object.keys(o).forEach(k => { if (SAVE_KEYS.includes(k)){ localStorage.setItem(k, o[k]); n++; } });
+    return n > 0;
+  } catch(e){ return false; }
+}
+function saveScreen(){
+  panel.innerHTML = '';
+  const h = el('div','head'); h.append(el('h1', null, 'Код сохранения'), el('span','step','Перенос прогресса')); panel.append(h);
+  const c1 = el('div','card'); c1.append(el('h2', null, 'Ваш код'), el('p', null, 'Прогресс хранится только на этом устройстве, в этом браузере. Скопируйте код и вставьте его на другом устройстве.'));
+  const ta = el('textarea','saveTa'); ta.readOnly = true; ta.value = saveCode(); ta.rows = 3; ta.setAttribute('aria-label','Код сохранения');
+  const cp = el('button','next','Скопировать'); cp.type = 'button';
+  cp.onclick = async () => { try { await navigator.clipboard.writeText(ta.value); cp.textContent = 'Скопировано'; } catch(e){ ta.select(); cp.textContent = 'Выделено — скопируйте вручную'; } };
+  c1.append(ta, cp);
+  const c2 = el('div','card'); c2.append(el('h2', null, 'Загрузить код'), el('p', null, 'Вставьте код с другого устройства. Текущий прогресс на этом устройстве заменится.'));
+  const inp = el('textarea','saveTa'); inp.rows = 3; inp.setAttribute('aria-label','Вставьте код сохранения');
+  const ld = el('button','next','Загрузить'); ld.type = 'button'; const msg = el('p','note');
+  ld.onclick = () => { if (saveLoadCode(inp.value)){ msg.textContent = 'Готово! Прогресс загружен.'; track('save_import'); setTimeout(() => restart(false), 900); } else msg.textContent = 'Код не подошёл. Проверьте, что он скопирован целиком.'; };
+  c2.append(inp, ld, msg);
+  const tip = el('p','note','На iPhone добавьте игру на экран «Домой» («Поделиться» → «На экран Домой») — так Safari не сотрёт прогресс, если долго не заходить.');
+  const back = el('button','backBtn','← В меню'); back.type = 'button'; back.onclick = () => restart(false);
+  panel.append(c1, c2, tip, back); fitStage();
+}
 /* ================= «РОМАШКА»: смена с постоянными клиентками (Таня, Ольга, Ирина) — тот же движок, что мужской зал ================= */
 const ROM = [
 {salon:'romashka', master:'kira', pre:'woman_', img:'tanya', name:'Таня', age:31, title:'Чтобы не укладывать',
