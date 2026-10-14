@@ -403,6 +403,22 @@ ul.money b{color:#1f7a45;white-space:nowrap}
 /* продолжить игру и код сохранения */
 .mbCont{background:linear-gradient(180deg,#8be38f,#3fbf5a);margin-bottom:10px}
 .saveTa{width:100%;box-sizing:border-box;font:12px/1.4 ui-monospace,Menlo,monospace;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);resize:vertical;margin:6px 0 10px;word-break:break-all}
+/* две кнопки «Продолжить» и прогресс */
+.mbConts{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px}
+@media (min-width:760px){.mbConts:has(> :nth-child(2)){grid-template-columns:1fr 1fr}}
+.mbConts .mbCont{margin:0}
+.mbCont-eric{background:linear-gradient(180deg,#ffb36b,#e9771f)}
+.mbRank{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;width:100%;padding:8px;border-radius:10px;color:#aebbe8;font-size:12px;font-weight:700}
+.mbRank:hover,.mbRank:focus-visible{background:rgba(255,255,255,.08)}
+.mbProg{color:#fff;text-decoration:underline;margin-left:6px}
+.prCard h2{margin-bottom:10px}
+.prGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:8px}
+@media (min-width:760px){.prGrid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.prCell{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column}
+.prCell b{font-family:var(--display);font-size:18px}
+.prCell span{font-size:12px;color:var(--muted)}
+.mbFeedback{display:block;text-align:center;margin:10px auto 0;padding:10px 16px;border-radius:12px;background:rgba(255,255,255,.12);color:#fff;font-weight:700;font-size:14px;text-decoration:none;border:1px solid rgba(255,255,255,.25)}
+.mbFeedback:hover,.mbFeedback:focus-visible{background:rgba(255,255,255,.2)}
 </style>
 </head>
 <body>
@@ -686,10 +702,94 @@ const VOICE = {
 "Он не дал готовый ответ — он заставил тебя посмотреть. В следующий раз ты увидишь это сама.": "audio/aya_245.mp3",
 "«Как в прошлый раз» — это не инструкция, а повод уточнить. Спроси зону и длину, а если не знаешь техники — спроси мастера. Угадывать нельзя.": "audio/aya_246.mp3",
 "Смена окончена. Давай посмотрим, что получилось.": "audio/aya_247.mp3",
+"Ты принял отзыв спокойно и сразу перешёл к делу. Похвалу не раздувают, претензию не оспаривают.": "audio/aya_248.mp3",
+"Самолюбование отталкивает даже довольного клиента. Скажи спасибо — и работай.": "audio/aya_249.mp3",
+"Оправдание звучит как «вы неправы». Признай, предложи, как исправить, — и клиент останется.": "audio/aya_250.mp3",
+"Ты записал друзей сразу и с точным временем. Постоянный клиент приводит новых, если с тобой просто договориться.": "audio/aya_251.mp3",
+"«Приходите, что-нибудь придумаем» — это не запись. А «всё занято» без проверки — потерянные клиенты.": "audio/aya_252.mp3",
+"Постоянный клиент приводит новых. Записывай сразу и с точным временем — слово «приходите» не запись.": "audio/aya_253.mp3",
+"Ты дал руководителю план и выбор: быстро сейчас, бороду — отдельно. Качество не принесено в жертву скорости.": "audio/aya_254.mp3",
+"Отказ без варианта — минус клиент. А «успею всё» на бегу — минус качество. Дай план.": "audio/aya_255.mp3",
+"Руководителю дают план и выбор. Качество не жертвуют скорости — его разбивают на два визита.": "audio/aya_256.mp3",
+"Скидки решает салон, а не мастер. Ты переадресовал вопрос и поблагодарил сервисом — честно и щедро.": "audio/aya_257.mp3",
+"Тайная скидка — это деньги салона в твоём кармане. А сухое «прайс есть прайс» обижает того, кто привёл клиентов.": "audio/aya_258.mp3",
+"Скидки решает салон, а не мастер. Но благодарность можно дать сервисом — и честно.": "audio/aya_259.mp3",
+"Ты не стал рисковать чужими кудрями ради доверия. Береги доверие — и ищи, кто сделает лучше.": "audio/aya_260.mp3",
+"«Что там сложного» — и клиент уходит с испорченной формой. А голое «не моё» оставляет его одного с проблемой.": "audio/aya_261.mp3",
+"Честно сказать «пока не умею» и пообещать вернуться — это сохраняет клиента лучше, чем обещание чуда.": "audio/aya_262.mp3",
+"Обещание, которое не выполнишь, или молчание — клиент запомнит и то, и другое.": "audio/aya_263.mp3",
+"Три клиента за месяц с одним и тем же запросом. Это не случайность, это рынок, который ты теряешь.": "audio/aya_264.mp3",
+"Ты разобрал ошибку по фото и предложил, как её не повторить. Точному клиенту нужны факты, а не утешения.": "audio/aya_265.mp3",
+"Ты расписал визиты на три месяца вперёд. Для мастера это гарантированная загрузка, для клиента — спокойствие.": "audio/aya_266.mp3",
+"Точный клиент хочет систему. «Потом решим» для него звучит как «мне всё равно».": "audio/aya_267.mp3",
+"Точному клиенту — система. Запись наперёд для мастера — загрузка, для клиента — спокойствие.": "audio/aya_268.mp3",
+"Ты запомнил, что ему важна тишина, и пообещал её без лишних слов. Так становятся «своим мастером».": "audio/aya_269.mp3",
+"Ты честно сказал, что длина пока не твоё, и предложил, что можешь сделать сейчас. Это уважение и к отцу, и к сыну.": "audio/aya_270.mp3",
+"Взяться за то, что не умеешь, или отказать с упрёком — оба пути закрывают дверь перед клиентом.": "audio/aya_271.mp3",
+"Ещё один запрос на длину. Твой предел — уже не случайность, а потерянные клиенты.": "audio/aya_272.mp3",
+"Ты разобрал, как он наносит масло, и показал правильно. Проблему решает не новый флакон, а точный совет.": "audio/aya_273.mp3",
+"Ты посчитал время и позвал коллегу. Бригада — это постоянный поток, и он должен быть удобен всем.": "audio/aya_274.mp3",
+"«Не успею» отказывает, «разберёмся» ничего не обещает. Большой заказ требует расчёта.": "audio/aya_275.mp3",
+"Бригада — это постоянный поток. Посчитай время и подключи коллегу — так растёт салон.": "audio/aya_276.mp3",
+"Ты признал ошибку прошлого раза и предложил план. Клиент вернулся — дай ему причину остаться.": "audio/aya_277.mp3",
+"Ты назвал реальный срок и план. Обещание чуда за неделю вернулось бы к тебе разочарованием.": "audio/aya_278.mp3",
+"Импульсивному клиенту — реальный срок и план. Обещание чуда вернётся к тебе разочарованием.": "audio/aya_279.mp3",
+"Клиент ушёл к коллеге, а ты рад за салон. Ревность к клиентам видна всем — и отталкивает.": "audio/aya_280.mp3",
+"Ты согласился на смелую идею и честно предупредил, сколько она продержится. Это и есть доверие.": "audio/aya_281.mp3",
+"Молча сделать или сразу отказать — оба варианта лишают клиента выбора.": "audio/aya_282.mp3",
+"Руководитель проверил границы. Ты остался на «вы» — с улыбкой, но без панибратства.": "audio/aya_283.mp3",
+"Фамильярность с руководителем разрушает то, что ты строил три визита.": "audio/aya_284.mp3",
+"Ты отказался от работы мимо салона — вежливо и с альтернативой. Клиента сохранил, репутацию тоже.": "audio/aya_285.mp3",
+"Работа мимо салона — это клиент, украденный у своих же. Гриша узнает, и доверие кончится.": "audio/aya_286.mp3",
+"Ты заметил молчаливого гостя и спросил его самого. У каждого клиента свой запрос, даже если за него говорят.": "audio/aya_287.mp3",
+"Стричь человека по чужому описанию — значит не услышать его вовсе.": "audio/aya_288.mp3",
+"Ты честно рассказал про акцию салона. Заработанная скидка — лучшая благодарность постоянному клиенту.": "audio/aya_289.mp3",
+"Скрыть акцию или дать скидку от себя — и то и другое ломает правила салона.": "audio/aya_290.mp3",
+"Ты опоздал — и сразу признал это с компенсацией. Точный клиент прощает ошибку, но не отговорки.": "audio/aya_291.mp3",
+"«Что там семь минут» для точного человека — неуважение. А свалить вину на другого клиента — ещё хуже.": "audio/aya_292.mp3",
+"Ты посчитал, сколько вырастет, и предложил план к дате. Цифры успокаивают лучше обещаний.": "audio/aya_293.mp3",
+"Прямо сейчас чудо не случится, а отправить к «нормальному мастеру» — значит отказаться от себя.": "audio/aya_294.mp3",
+"Ты вежливо, но твёрдо обозначил правило. Постоянный поток держится на договорённостях.": "audio/aya_295.mp3",
+"Терпеть молча или упрекать — оба варианта портят отношения с большим клиентом.": "audio/aya_296.mp3",
+"Ты не стал продавать дорогое, а научил пользоваться. Клиент, которому помогли, вернётся и купит сам.": "audio/aya_297.mp3",
+"Запугивать или продавать самое дорогое — так не советуют, так отталкивают.": "audio/aya_298.mp3",
+"Ты предложил свежую форму сейчас и радикальное решение позже. Импульс проходит — стрижка остаётся.": "audio/aya_299.mp3",
+"Под ноль на эмоциях — пожалеет завтра. А «это глупо» обесценивает его чувства.": "audio/aya_300.mp3",
+"Ты выслушал и при этом держал время. Тёплое внимание и чёткая работа совместимы.": "audio/aya_301.mp3",
+"Советы о личной жизни — не работа мастера. А оборвать человека, когда ему плохо, — жестоко.": "audio/aya_302.mp3",
+"Клиенты стали своими. Теперь важно не первое впечатление, а то, держишь ли ты слово.": "audio/aya_303.mp3",
+"Ты попросил подождать и дал что-то взамен. Чистое место и чистая машинка — это тоже разговор с клиентом.": "audio/aya_304.mp3",
+"Чужие волосы под ногами и необработанная машинка — первое, что замечает клиент. И это нарушение санитарных правил.": "audio/aya_305.mp3",
+"Уборка при госте выглядит небрежно. Место готовят до клиента.": "audio/aya_306.mp3",
+"Вопрос про чистоту — не недоверие, а забота о себе. Покажи процесс — это убедительнее слов.": "audio/aya_307.mp3",
+"Обида или «не переживайте» без дела — и клиент начинает сомневаться во всём остальном.": "audio/aya_308.mp3",
+"Одноразовое лезвие не обрабатывают — его меняют. Бритва с чужой кровью — риск для здоровья клиента и для салона.": "audio/aya_309.mp3",
+"Ты не стал рисковать и честно предложил вариант. Лучше пять минут ожидания, чем опасный порез.": "audio/aya_310.mp3",
+"Ты признал ошибку и вернул внимание клиенту. Но лучше не доводить до извинений.": "audio/aya_311.mp3",
+"Оправдание не исправляет ошибку. Клиент платит за ваше время.": "audio/aya_312.mp3",
+"Клиент всё видел. Молчание читается как «мне всё равно».": "audio/aya_313.mp3",
+"Пока клиент в кресле, всё ваше внимание — его. Звонок посреди стрижки обесценивает даже хорошую работу.": "audio/aya_314.mp3",
+"Не споришь и не оправдываешься — принимаешь замечание и действуешь.": "audio/aya_315.mp3",
+"Ответ по сути верный, но звучит как спор с руководителем. А личные подробности клиенту не нужны.": "audio/aya_316.mp3",
+"Уже лучше: разговора не было. Но клиент всё равно заметил звонок. Идеально — когда его не слышно вообще.": "audio/aya_317.mp3",
+"Вот это профессиональная привычка: вопрос решён до того, как он возник.": "audio/aya_318.mp3",
+"Стрижка, которую не умеешь, стоит дороже отказа. Теперь оба клиента не вернутся.": "audio/aya_319.mp3",
+"Честно — но в третий раз «не моё» уже звучит как «я не расту».": "audio/aya_320.mp3",
+"Когда никто в салоне не умеет, клиенты уходят туда, где умеют.": "audio/aya_321.mp3",
+"Ты сам принял решение учиться. Это и есть рост мастера.": "audio/aya_322.mp3",
+"Узкий специалист силён, пока клиент не захотел другого. А такие клиенты приходят всё чаще.": "audio/aya_323.mp3",
+"Ролик покажет, но не поставит руку. Удлинённым формам учатся у мастера, с практикой.": "audio/aya_324.mp3",
+"Узкий специалист силён, пока клиент не захотел другого. Учёба — это не слабость, а способ не терять людей.": "audio/aya_325.mp3",
+"Первый цикл позади. Через месяц они вернутся — и расскажут, что им понравилось, а что нет.": "audio/aya_326.mp3",
+"Второй цикл позади. Посмотри, кто вернулся, а кто нет, — это и есть твоя репутация.": "audio/aya_327.mp3",
+"Клиент не записался снова. Посмотри в работе над ошибками, где ты его потерял.": "audio/aya_328.mp3",
+"Три цикла пройдены, клиенты возвращаются, и ты знаешь свой предел. Пора на повышение квалификации.": "audio/aya_329.mp3",
+"Для перехода нужно, чтобы вернулись хотя бы шесть клиентов из восьми. Пройди цикл ещё раз.": "audio/aya_330.mp3",
+"Смена окончена. Убери место, обработай инструмент — завтра снова клиенты.": "audio/aya_331.mp3",
 "__silent": "audio/silent.mp3"
 };
 const MUSIC = "audio/music.mp3";
-const ASSET_LIST = ["academy_entrance", "kira_diploma", "aya_c3", "kira_e4", "ab_approve", "ab_approve_bust", "ab_ask", "ab_calm", "ab_calm_bust", "ab_cross", "ab_cut", "ab_explain", "ab_explain_bust", "ab_skeptic", "ab_skeptic_bust", "ab_stand", "ab_think", "ab_think_bust", "ab_walk", "academy", "admin_b0", "admin_b1", "admin_b2", "admin_b3", "admin_b4", "admin_stand", "andrey_e0", "andrey_e1", "andrey_e2", "andrey_e3", "andrey_e4", "andrey_stand", "andrey_walk", "aya_c0", "aya_c1", "aya_c2", "barber_buxme", "barber_pijon", "desk", "eric_b0", "eric_b1", "eric_b2", "eric_b3", "eric_b4", "eric_cut", "eric_diploma", "eric_e0", "eric_e1", "eric_e2", "eric_e3", "eric_e4", "eric_greet", "eric_phone", "eric_stand", "eric_think", "eric_walk", "galina_e0", "galina_e1", "galina_e2", "galina_e3", "galina_e4", "galina_stand", "galina_walk", "kira_booking", "kira_coat", "kira_cut", "kira_e0", "kira_e1", "kira_e2", "kira_e3", "kira_greet", "kira_invite", "kira_mirror", "kira_phone", "kira_product", "kira_sit", "kira_stand", "kira_style", "kira_sweep", "kira_think", "kira_walk", "kira_wash", "man_aleksey_angry", "man_aleksey_angry_bust", "man_aleksey_e0", "man_aleksey_happy", "man_aleksey_happy_bust", "man_aleksey_nocoat", "man_aleksey_phone", "man_aleksey_phone_bust", "man_aleksey_photo", "man_aleksey_sad", "man_aleksey_sad_bust", "man_aleksey_sit", "man_aleksey_skeptic", "man_aleksey_skeptic_bust", "man_aleksey_stand", "man_artem_angry_bust", "man_artem_e0", "man_artem_happy_bust", "man_artem_nocoat", "man_artem_phone_bust", "man_artem_sad_bust", "man_artem_sit", "man_artem_skeptic_bust", "man_artem_stand", "man_denis_angry", "man_denis_angry_bust", "man_denis_e0", "man_denis_happy", "man_denis_happy_bust", "man_denis_phone", "man_denis_phone_bust", "man_denis_sad", "man_denis_sad_bust", "man_denis_sit", "man_denis_skeptic", "man_denis_skeptic_bust", "man_denis_stand", "man_mark_angry", "man_mark_angry_bust", "man_mark_e0", "man_mark_happy", "man_mark_happy_bust", "man_mark_nocoat", "man_mark_phone", "man_mark_phone_bust", "man_mark_sad", "man_mark_sad_bust", "man_mark_sit", "man_mark_skeptic", "man_mark_skeptic_bust", "man_mark_stand", "man_mikhail_angry", "man_mikhail_angry_bust", "man_mikhail_e0", "man_mikhail_happy", "man_mikhail_happy_bust", "man_mikhail_phone", "man_mikhail_phone_bust", "man_mikhail_sad", "man_mikhail_sad_bust", "man_mikhail_sit", "man_mikhail_skeptic", "man_mikhail_skeptic_bust", "man_mikhail_stand", "man_roman_angry", "man_roman_angry_bust", "man_roman_e0", "man_roman_happy", "man_roman_happy_bust", "man_roman_phone", "man_roman_phone_bust", "man_roman_sad", "man_roman_sad_bust", "man_roman_sit", "man_roman_skeptic", "man_roman_skeptic_bust", "man_roman_stand", "man_vadim_angry", "man_vadim_angry_bust", "man_vadim_e0", "man_vadim_happy", "man_vadim_happy_bust", "man_vadim_nocoat", "man_vadim_phone", "man_vadim_phone_bust", "man_vadim_sad", "man_vadim_sad_bust", "man_vadim_sit", "man_vadim_skeptic", "man_vadim_skeptic_bust", "man_vadim_stand", "man_viktor_angry", "man_viktor_angry_bust", "man_viktor_e0", "man_viktor_happy", "man_viktor_happy_bust", "man_viktor_nocoat", "man_viktor_phone", "man_viktor_phone_bust", "man_viktor_sad", "man_viktor_sad_bust", "man_viktor_sit", "man_viktor_skeptic", "man_viktor_skeptic_bust", "man_viktor_stand", "marina_cape", "marina_coat", "marina_coatoff", "marina_dress", "marina_e0", "marina_e1", "marina_e2", "marina_e3", "marina_e4", "marina_mirror", "marina_pay", "marina_phone", "marina_sit", "marina_walk", "marina_walkd", "marina_wash", "marina_wave", "narc_b0", "narc_b1", "narc_b2", "narc_b3", "narc_b4", "narc_stand", "salon", "salon_econom", "salon_econom_plus", "salon_premium", "salon_super_econom", "salon_super_premium", "sonya_e0", "sonya_e1", "sonya_e2", "sonya_e3", "sonya_e4", "sonya_stand", "sonya_walk", "tamara_b0", "tamara_b1", "tamara_b2", "tamara_b3", "tamara_b4", "tamara_sit", "tamara_stand", "viktoria_e0", "viktoria_e1", "viktoria_e2", "viktoria_e3", "viktoria_e4", "viktoria_stand", "viktoria_walk", "woman_irina_after", "woman_irina_angry", "woman_irina_angry_bust", "woman_irina_happy", "woman_irina_happy_bust", "woman_irina_nocoat", "woman_irina_phone", "woman_irina_phone_bust", "woman_irina_sad", "woman_irina_sad_bust", "woman_irina_sit", "woman_irina_skeptic", "woman_irina_skeptic_bust", "woman_irina_stand", "woman_irina_walk", "woman_olga_after", "woman_olga_angry", "woman_olga_angry_bust", "woman_olga_happy", "woman_olga_happy_bust", "woman_olga_nocoat", "woman_olga_phone", "woman_olga_phone_bust", "woman_olga_sad", "woman_olga_sad_bust", "woman_olga_sit", "woman_olga_skeptic", "woman_olga_skeptic_bust", "woman_olga_stand", "woman_olga_walk", "woman_tanya_after", "woman_tanya_angry", "woman_tanya_angry_bust", "woman_tanya_happy", "woman_tanya_happy_bust", "woman_tanya_nocoat", "woman_tanya_phone", "woman_tanya_phone_bust", "woman_tanya_sad", "woman_tanya_sad_bust", "woman_tanya_sit", "woman_tanya_skeptic", "woman_tanya_skeptic_bust", "woman_tanya_stand", "woman_tanya_walk"];
+const ASSET_LIST = ["academy_entrance", "kira_diploma", "aya_c3", "kira_e4", "ab_approve", "ab_approve_bust", "ab_ask", "ab_calm", "ab_calm_bust", "ab_cross", "ab_cut", "ab_explain", "ab_explain_bust", "ab_skeptic", "ab_skeptic_bust", "ab_stand", "ab_think", "ab_think_bust", "ab_walk", "academy", "admin_b0", "admin_b1", "admin_b2", "admin_b3", "admin_b4", "admin_stand", "andrey_e0", "andrey_e1", "andrey_e2", "andrey_e3", "andrey_e4", "andrey_stand", "andrey_walk", "aya_c0", "aya_c1", "aya_c2", "barber_buxme", "barber_pijon", "den_angry", "den_angry_bust", "den_cheer", "den_cut", "den_happy", "den_happy_bust", "den_phone", "den_phone_bust", "den_sad", "den_sad_bust", "den_skeptic", "den_skeptic_bust", "den_stand", "den_walk", "desk", "eric_b0", "eric_b1", "eric_b2", "eric_b3", "eric_b4", "eric_blade", "eric_callcut", "eric_cut", "eric_diploma", "eric_e0", "eric_e1", "eric_e2", "eric_e3", "eric_e4", "eric_greet", "eric_handoff", "eric_jar", "eric_longhair", "eric_oil", "eric_phone", "eric_pocket", "eric_product", "eric_spray", "eric_stand", "eric_study", "eric_sweep", "eric_think", "eric_tired", "eric_walk", "eric_wipe", "galina_e0", "galina_e1", "galina_e2", "galina_e3", "galina_e4", "galina_stand", "galina_walk", "grisha_angry", "grisha_angry_bust", "grisha_coffee", "grisha_cross", "grisha_happy", "grisha_happy_bust", "grisha_laptop", "grisha_phone", "grisha_phone_bust", "grisha_sad", "grisha_sad_bust", "grisha_skeptic", "grisha_skeptic_bust", "grisha_stand", "grisha_walk", "kira_booking", "kira_coat", "kira_cut", "kira_e0", "kira_e1", "kira_e2", "kira_e3", "kira_greet", "kira_invite", "kira_mirror", "kira_phone", "kira_product", "kira_sit", "kira_stand", "kira_style", "kira_sweep", "kira_think", "kira_walk", "kira_wash", "man_aleksey_angry", "man_aleksey_angry_bust", "man_aleksey_e0", "man_aleksey_happy", "man_aleksey_happy_bust", "man_aleksey_nocoat", "man_aleksey_phone", "man_aleksey_phone_bust", "man_aleksey_photo", "man_aleksey_sad", "man_aleksey_sad_bust", "man_aleksey_sit", "man_aleksey_skeptic", "man_aleksey_skeptic_bust", "man_aleksey_stand", "man_arseny_happy", "man_arseny_happy_bust", "man_arseny_sad", "man_arseny_sad_bust", "man_arseny_sit", "man_arseny_stand", "man_arseny_walk", "man_artem_angry_bust", "man_artem_e0", "man_artem_happy_bust", "man_artem_nocoat", "man_artem_phone_bust", "man_artem_sad_bust", "man_artem_sit", "man_artem_skeptic_bust", "man_artem_stand", "man_denis_angry", "man_denis_angry_bust", "man_denis_e0", "man_denis_happy", "man_denis_happy_bust", "man_denis_phone", "man_denis_phone_bust", "man_denis_sad", "man_denis_sad_bust", "man_denis_sit", "man_denis_skeptic", "man_denis_skeptic_bust", "man_denis_stand", "man_mark_angry", "man_mark_angry_bust", "man_mark_e0", "man_mark_happy", "man_mark_happy_bust", "man_mark_nocoat", "man_mark_phone", "man_mark_phone_bust", "man_mark_sad", "man_mark_sad_bust", "man_mark_sit", "man_mark_skeptic", "man_mark_skeptic_bust", "man_mark_stand", "man_mikhail_angry", "man_mikhail_angry_bust", "man_mikhail_e0", "man_mikhail_happy", "man_mikhail_happy_bust", "man_mikhail_phone", "man_mikhail_phone_bust", "man_mikhail_sad", "man_mikhail_sad_bust", "man_mikhail_sit", "man_mikhail_skeptic", "man_mikhail_skeptic_bust", "man_mikhail_stand", "man_roman_angry", "man_roman_angry_bust", "man_roman_e0", "man_roman_happy", "man_roman_happy_bust", "man_roman_phone", "man_roman_phone_bust", "man_roman_sad", "man_roman_sad_bust", "man_roman_sit", "man_roman_skeptic", "man_roman_skeptic_bust", "man_roman_stand", "man_vadim_angry", "man_vadim_angry_bust", "man_vadim_e0", "man_vadim_happy", "man_vadim_happy_bust", "man_vadim_nocoat", "man_vadim_phone", "man_vadim_phone_bust", "man_vadim_sad", "man_vadim_sad_bust", "man_vadim_sit", "man_vadim_skeptic", "man_vadim_skeptic_bust", "man_vadim_stand", "man_viktor_angry", "man_viktor_angry_bust", "man_viktor_e0", "man_viktor_happy", "man_viktor_happy_bust", "man_viktor_nocoat", "man_viktor_phone", "man_viktor_phone_bust", "man_viktor_sad", "man_viktor_sad_bust", "man_viktor_sit", "man_viktor_skeptic", "man_viktor_skeptic_bust", "man_viktor_stand", "marina_cape", "marina_coat", "marina_coatoff", "marina_dress", "marina_e0", "marina_e1", "marina_e2", "marina_e3", "marina_e4", "marina_mirror", "marina_pay", "marina_phone", "marina_sit", "marina_walk", "marina_walkd", "marina_wash", "marina_wave", "narc_b0", "narc_b1", "narc_b2", "narc_b3", "narc_b4", "narc_stand", "salon", "salon_econom", "salon_econom_plus", "salon_premium", "salon_super_econom", "salon_super_premium", "sonya_e0", "sonya_e1", "sonya_e2", "sonya_e3", "sonya_e4", "sonya_stand", "sonya_walk", "tamara_b0", "tamara_b1", "tamara_b2", "tamara_b3", "tamara_b4", "tamara_sit", "tamara_stand", "viktoria_e0", "viktoria_e1", "viktoria_e2", "viktoria_e3", "viktoria_e4", "viktoria_stand", "viktoria_walk", "woman_irina_after", "woman_irina_angry", "woman_irina_angry_bust", "woman_irina_happy", "woman_irina_happy_bust", "woman_irina_nocoat", "woman_irina_phone", "woman_irina_phone_bust", "woman_irina_sad", "woman_irina_sad_bust", "woman_irina_sit", "woman_irina_skeptic", "woman_irina_skeptic_bust", "woman_irina_stand", "woman_irina_walk", "woman_olga_after", "woman_olga_angry", "woman_olga_angry_bust", "woman_olga_happy", "woman_olga_happy_bust", "woman_olga_nocoat", "woman_olga_phone", "woman_olga_phone_bust", "woman_olga_sad", "woman_olga_sad_bust", "woman_olga_sit", "woman_olga_skeptic", "woman_olga_skeptic_bust", "woman_olga_stand", "woman_olga_walk", "woman_tanya_after", "woman_tanya_angry", "woman_tanya_angry_bust", "woman_tanya_happy", "woman_tanya_happy_bust", "woman_tanya_nocoat", "woman_tanya_phone", "woman_tanya_phone_bust", "woman_tanya_sad", "woman_tanya_sad_bust", "woman_tanya_sit", "woman_tanya_skeptic", "woman_tanya_skeptic_bust", "woman_tanya_stand", "woman_tanya_walk"];
 </script>
 <script>
 (function(){
@@ -725,8 +825,10 @@ const SP = {
   admin:{stand:['admin_stand',162,720,330*K,1]},
   tamara:{stand:['tamara_stand',280,760,410,-1], sit:['tamara_sit',369,760,330,-1]},
   client:{stand:['man_aleksey_stand',296,760,440,1]},
+  grisha:{stand:['grisha_stand',317,753,436,1], walk:['grisha_walk',435,747,432,1], laptop:['grisha_laptop',374,745,431,1], coffee:['grisha_coffee',308,760,440,1], cross:['grisha_cross',317,757,438,1]},
+  den:{stand:['den_stand',304,752,435,1], walk:['den_walk',437,742,430,1], cut:['den_cut',347,760,440,-1], cheer:['den_cheer',432,756,438,1]},
   ab:{stand:['ab_stand',245,753,428,1], walk:['ab_walk',368,738,420,1], cut:['ab_cut',294,755,430,1], ask:['ab_ask',302,753,428,1], cross:['ab_cross',240,760,432,1]},
-  eric:{stand:['eric_stand',252,760,440,1], walk:['eric_walk',460,760,432,1], diploma:['eric_diploma',338,760,440,1], greet:['eric_greet',357,760,440,1], cut:['eric_cut',349,760,440,1], phone:['eric_phone',293,760,440,1], think:['eric_think',294,760,440,1]}
+  eric:{callcut:['eric_callcut',387,760,440,-1], pocket:['eric_pocket',323,756,438,1], handoff:['eric_handoff',558,757,438,1], sweep:['eric_sweep',407,756,438,-1], spray:['eric_spray',307,760,440,1], jar:['eric_jar',294,758,439,1], blade:['eric_blade',312,760,440,1], tired:['eric_tired',348,563,326,1], stand:['eric_stand',252,760,440,1], walk:['eric_walk',460,760,432,1], diploma:['eric_diploma',338,760,440,1], greet:['eric_greet',357,760,440,1], cut:['eric_cut',349,760,440,1], phone:['eric_phone',293,760,440,1], think:['eric_think',294,760,440,1]}
 };
 const AV = {
   galina:{neutral:0, smile:1, doubt:2, upset:3, happy:4}, andrey:{neutral:0, smile:1, doubt:2, upset:3, happy:4},
@@ -737,8 +839,8 @@ const AV = {
   tamara:{neutral:0, ok:1, doubt:2, angry:3, warm:4},
   eric:{neutral:0, smile:1, doubt:2, upset:3, happy:4}
 };
-const NAMES = {ab:'Александр Борисович', client:'Клиент', kira:'Кира', marina:'Марина', admin:'Алёна', narc:'Нарцисс', aya:'Айя', galina:'Галина Сергеевна', andrey:'Андрей', sonya:'Соня', viktoria:'Виктория', tamara:'Тамара Петровна', eric:'Эрик'};
-const ACTORS = ['ab','kira','marina','galina','andrey','sonya','viktoria','eric','client'];   // говорят на сцене, крупным планом
+const NAMES = {grisha:'Гриша', den:'Дэн', ab:'Александр Борисович', client:'Клиент', kira:'Кира', marina:'Марина', admin:'Алёна', narc:'Нарцисс', aya:'Айя', galina:'Галина Сергеевна', andrey:'Андрей', sonya:'Соня', viktoria:'Виктория', tamara:'Тамара Петровна', eric:'Эрик'};
+const ACTORS = ['grisha','den','ab','kira','marina','galina','andrey','sonya','viktoria','eric','client'];   // говорят на сцене, крупным планом
 let MASTER = 'kira';                                                     // чей крупный план вместе с собеседником
 let PARTNER = 'marina';                                                   // собеседник Киры в текущей сцене
 const C = {};
@@ -750,7 +852,7 @@ function makeChar(id, layer){
     x:0, y:0, face:1, pose:'stand', vis:true, mood:'neutral'};
 }
 makeChar('admin','layer-admin');
-['kira','marina','narc','galina','andrey','sonya','viktoria','tamara','eric','client','ab'].forEach(id => makeChar(id,'layer-chars'));
+['kira','marina','narc','galina','andrey','sonya','viktoria','tamara','eric','client','ab','grisha','den'].forEach(id => makeChar(id,'layer-chars'));
 
 function spec(id){ const c = C[id]; return SP[id][c.pose] || SP[id].stand || SP[id].dress; }
 function place(id){
@@ -927,6 +1029,7 @@ const bust = document.getElementById('bust'), bustImg = document.getElementById(
 function portraitSrc(id){
   if (id === 'client'){ const bs = SP.client.busts || {}, e = MEN_EMO[C.client.mood], b = (e && bs[e]) || (SP.client.stand[0].startsWith('woman_') && bs.happy); return IMG(b || SP.client.stand[0].replace('_stand', '_e0')); }
   if (id === 'ab') return IMG('ab_' + (AB_EMO[C.ab.mood] || 'calm') + '_bust');
+  if (id === 'grisha' || id === 'den') return IMG(id + '_' + ({skeptic:'skeptic', doubt:'skeptic', angry:'angry', upset:'angry', sad:'sad', phone:'phone'}[C[id].mood] || 'happy') + '_bust');
   const i = AV[id] ? (AV[id][C[id].mood] ?? 0) : 0;
   return IMG(id + '_e' + i);
 }
@@ -1052,6 +1155,7 @@ function slide(id, x, ms){        // движение без смены позы
 }
 async function sweep(){
   await walk('kira', P.sweep[0], P.sweep[1], {cam:narrow()});
+  C.kira.el.parentNode.append(C.kira.el);            // Кира с метлой — на переднем плане, перед клиенткой в кресле
   pose('kira','sweep'); cls('kira','busy',true);
   const cl = document.getElementById('clips'), x0 = C.kira.x;
   const passes = [-70, 60, -40, 30, 0];
@@ -1504,8 +1608,8 @@ async function summary(){
     : 'Посмотрите, где я подсказывала, и пройдите визит без них.';
   ayaState(S.mistakes === 0 || S.end === 'ref' ? 'praise' : 'cheer'); await say('aya', tip);
   const r = el('button','next alt','Сыграть визит снова'); r.type = 'button'; r.onclick = () => restart(true);
-  doneMark('marina'); savePut({kind:'shift', master:'kira', salon:'romashka', i:0, total:ROM.length, xPts:0, xMoney:e.total || 0, money:e.total || 0, happy:0, career:true});
-  const cont = el('button','next','Дальше по смене: Таня, Ольга, Ирина'); cont.type = 'button'; cont.onclick = () => { cont.disabled = true; saveResume(); };
+  doneMark('marina'); statsAdd('kira', {visits:1, happy:S.outcome === 'sat' ? 1 : 0, money:e.total || 0}); savePut({kind:'shift', master:'kira', salon:'romashka', i:0, total:ROM.length, xPts:0, xMoney:e.total || 0, money:e.total || 0, happy:0, career:true});
+  const cont = el('button','next','Дальше по смене: Таня, Ольга, Ирина'); cont.type = 'button'; cont.onclick = () => { cont.disabled = true; saveResume('kira'); };
   const rowE = el('div','btnrow'); rowE.append(r, cont); panel.append(rowE);
 }
 
@@ -1517,7 +1621,7 @@ function resetScene(){
   ['walking','busy','talking'].forEach(k => cls('kira', k, false));
   C.marina.pose = 'coat'; setPos('marina', P.door[0], P.door[1]); face('marina', 1); vis('marina', false); mood('marina','neutral');
   C.narc.pose = 'stand'; setPos('narc', 1570, 600); face('narc', -1); vis('narc', false); mood('narc','grumble');
-  ['galina','andrey','sonya','viktoria','tamara','eric','client','ab'].forEach(id => { C[id].pose = 'stand'; setPos(id, P.door[0], P.door[1]); vis(id, false); mood(id,'neutral'); });
+  ['galina','andrey','sonya','viktoria','tamara','eric','client','ab','grisha','den'].forEach(id => { C[id].pose = 'stand'; setPos(id, P.door[0], P.door[1]); vis(id, false); mood(id,'neutral'); });
   setLocation('salon');
   clips(true); clock('', false); camSet(1100); ayaState('cheer');
 }
@@ -1542,19 +1646,23 @@ function intro(){
     mk('⏱', 'Нормы времени', 'Сколько минут на услугу', () => { location.href = 'normy.html'; }),
     mk('🎓', 'Экзамен', 'Кира или Эрик: 80% — новый ранг', () => examPick0()),
     mk('👥', 'Персонажи', 'С кем вы встретитесь в игре', () => charsShow()));
-  const sv = saveGet();
-  let cont = null;
-  if (sv && sv.kind === 'shift'){
-    cont = el('button','hsPlay mbStart mbSalon mbCont'); cont.type = 'button';
-    cont.append(el('span','mbBig','▶ Продолжить'), el('span','mbS', saveLabel(sv)));
-    cont.onclick = () => { all.forEach(x => x.disabled = true); saveResume(); };
-  }
+  const conts = ['kira','eric'].map(m => {
+    const sv = saveGet(m); if (!sv || sv.kind !== 'shift') return null;
+    const b = el('button','hsPlay mbStart mbSalon mbCont mbCont-' + m); b.type = 'button';
+    b.append(el('span','mbBig','▶ Продолжить за ' + (m === 'eric' ? 'Эрика' : 'Киру')), el('span','mbS', saveLabel(sv)));
+    b.onclick = () => { all.forEach(x => x.disabled = true); saveResume(m); };
+    return b;
+  }).filter(Boolean);
+  const cont = conts.length ? el('div','mbConts') : null; if (cont) cont.append(...conts);
   const code = el('button','mbStory','Код сохранения: перенести прогресс на другое устройство'); code.type = 'button';
   code.onclick = () => { all.forEach(x => x.disabled = true); saveScreen(); };
-  all.unshift(start, story, code); if (cont) all.unshift(cont);
-  const rk = el('div','mbRank'); rk.append(el('span', null, 'Ваш ранг:'), el('b', null, RANKS[getRank()]));
+  all.unshift(start, story, code, ...conts);
+  const rk = el('button','mbRank'); rk.type = 'button'; rk.append(el('span', null, 'Ваш ранг:'), el('b', null, RANKS[getRank()]), el('span','mbProg','📊 Мой прогресс →'));
+  rk.onclick = () => { all.forEach(x => x.disabled = true); progressShow(); }; all.push(rk);
   if (cont) box.append(cont);
-  box.append(start, story, grid, rk, code);
+  const fb = el('a','mbFeedback','✉ Написать разработчикам'); fb.href = 'https://t.me/leokrava69'; fb.target = '_blank'; fb.rel = 'noopener';
+  fb.addEventListener('click', () => track('feedback'));
+  box.append(start, story, grid, rk, fb, code);
   const c = el('div','card','<ul><li>Выбирайте реплики и действия — персонажи разыгрывают их на сцене.</li><li>Плашка с настроением сверху — как себя чувствует клиент. Если упадёт до −80, клиент уйдёт.</li><li>Нажмите на сцену или на реплику, чтобы ускорить её.</li><li>Айя подсказывает голосом: 🔊 — голос, 🎵 — громкость музыки.</li></ul>');
   panel.append(box, c);
   stopVoice(); hideDlg(); bust.className = 'bust';
@@ -2478,7 +2586,7 @@ const MEN_BEARD = {viktor:true, mikhail:true};                       // в ви�
 const MEN_RETAIL = {mark:['матовая глина', 1200], mikhail:['масло для бороды', 1100]};   // продажа при лучшем втором ответе (только у Эрика)
 const MEN_SCALE = {artem:0.9};                                          // Артём нарисован крупнее остальных
 const MEN_PHOTO = {aleksey:'man_aleksey_photo'};                        // фото стрижки на телефоне клиента
-function menHead(title, n, total){ const h = el('div','head'); h.append(el('h1', null, title), el('span','step', n ? (MV && MV.salon === 'romashka' ? 'Клиентка ' : 'Клиент ') + n + ' из ' + total : (MV && MV.salon === 'romashka' ? '«Ромашка»' : 'Мужской зал'))); return h; }
+function menHead(title, n, total){ const h = el('div','head'); h.append(el('h1', null, title), el('span','step', n ? (MV && MV.cycle > 1 ? 'Цикл ' + MV.cycle + ' · ' : '') + (MV && MV.salon === 'romashka' ? 'Клиентка ' : 'Клиент ') + n + ' из ' + total : (MV && MV.salon === 'romashka' ? '«Ромашка»' : 'Мужской зал'))); return h; }
 function imgSize(n){
   return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = IMG(n); });
 }
@@ -2558,8 +2666,10 @@ async function menStart(master, fromCareer, salonArg, resume){
   const hard = master === 'kira' && salon === 'pijon';               // Кира пробует себя в барбершопе: те же клиенты, строже время
   track((rom ? 'rom_start_' : 'men_start_') + master);
   S = fresh(); resetScene(); hud(); stopVoice();
-  MV = {master, salon, hard, list:rom ? ROM : MEN.filter(v => v.salon === (hard ? 'family' : salon)), i:0, log:[], happy:0, career:!!fromCareer, clientY:rom ? 672 : 690, money:0};
+  const pj = master === 'eric' && salon === 'pijon', cyc = pj ? ((resume && resume.cycle) || pjNextCycle()) : 1;
+  MV = {master, salon, hard, pj, cycle:cyc, list:rom ? ROM : pj && cyc > 1 ? pjBuild(cyc) : MEN.filter(v => v.salon === (hard ? 'family' : salon)), i:0, log:[], happy:0, career:!!fromCareer, clientY:rom ? 672 : 690, money:0};
   MASTER = master; HERO = master;
+  if (MV.pj && !MV.list.length) return pjNobody();
   if (resume && resume.i >= 0 && resume.i < MV.list.length){ MV.i = resume.i; MV.money = resume.money || 0; MV.happy = resume.happy || 0; S.xPts = resume.xPts || 0; S.xMoney = resume.xMoney || 0; hud(); }
   saveShift();
   ['kira','eric','tamara','narc','ab'].forEach(x => vis(x, false));
@@ -2576,6 +2686,7 @@ async function menStart(master, fromCareer, salonArg, resume){
   }
   menRound();
 }
+const PJ_INTRO = {2:'«Пижон», месяц спустя. Те же клиенты возвращаются — и каждый помнит прошлый визит.', 3:'«Пижон», ещё месяц. Клиенты стали своими. Теперь проверяется не первое впечатление, а слово мастера.'};
 const MEN_INTRO = {eric:'«Пижон», вечерняя смена. Музыка, кирпич, полка с глиной и маслами. Эрик точит бритву и ждёт клиентов.',
                    kira:'«Семейная парикмахерская», обычный день. Кира готовит место: сегодня в записи мужчины.',
                    kiraPijon:'«Пижон», вечерняя смена. Кира — единственная девушка в зале. Клиенты ждут барберской подачи, цены выше, а на ответ здесь только 20 секунд.'};
@@ -2590,7 +2701,21 @@ async function menRound(){
   const P0 = MEN_PRICE[MV.salon];
   MV.norm = P0.norm + (MEN_BEARD[v.img] ? P0.beardMin : 0); MV.over = 0; MV.coatOff = false; MV.ok2 = false;
   svcTime(null);
-  if (MV.i === 0) await say(m, rom ? ROM_INTRO : MV.hard ? MEN_INTRO.kiraPijon : MEN_INTRO[m], {narr:true});
+  MV.noTips = false;
+  if (MV.i === 0) await say(m, rom ? ROM_INTRO : MV.hard ? MEN_INTRO.kiraPijon : MV.pj && MV.cycle === 2 ? PJ_INTRO[2] : MV.pj && MV.cycle === 3 ? PJ_INTRO[3] : MEN_INTRO[m], {narr:true});
+  if (MV.pj && MV.i === 0 && MV.cycle === 3){
+    ayaState('explain'); await say('aya', pjA(303));
+    const lost = pjLost(pjGet());
+    if (lost.length){ pjStaff('grisha', 1300, true); await say('grisha', lost.map(k => (PJ_NAMES[k] || [k])[0]).join(', ') + ' больше не записывается. Посмотрим, почему?', {mood:'skeptic'}); pjStaff('grisha', 0, false); ayaState('warn'); await say('aya', pjA(328)); }
+    await pjShiftStart3();
+  }
+  if (MV.pj && MV.i > 0){
+    if (MV.cycle === 1 && MV.i === 1) await pjCleanDecision(1);
+    else if (v.clean === 3) await pjCleanDecision(3);
+    else await pjCleanAnim();
+    panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','Смотрите сцену…'));
+    C[m].pose = 'stand'; setPos(m, 960, 690); face(m, -1);
+  }
   C.client.pose = 'stand'; setPos('client', P.door[0], MV.clientY); face('client', 1); vis('client', true); mood('client', v.img === 'mark' ? 'phone' : 'neutral');
   await say(m, v.enter, {narr:true});
   await walk('client', rom ? P.showM[0] : 650, MV.clientY, {face:1}); clientPose();
@@ -2722,6 +2847,11 @@ async function menChair(v){
     else await say(m, noteLine(c.note, c.t));
     svcTime(Math.min(target, svcMin + Math.round((target - svcMin) / (n - i))));
   }
+  if (MV.pj){
+    if (MV.cycle === 1 && v.img === 'mark') await pjPhone(1, v);
+    if (v.phone === 2) await pjPhone(2, v);
+    if (v.clean === 2) await pjCleanQuestion();
+  }
   await menAsk(v, 2);
 }
 async function menFinal(v){
@@ -2746,12 +2876,13 @@ async function menFinal(v){
   if (m === 'eric' && MV.ok2 && MEN_RETAIL[v.img]){ const r = MEN_RETAIL[v.img]; rows.push(['Продажа: ' + r[0] + ' ' + rub(r[1]) + ', 10%', r[1] * 0.1]); }
   if (v.retail && MV.ok2 && val > 0){ const r = v.retail; rows.push(['Продажа: ' + r[0] + ' ' + rub(r[1]) + ', 10%', r[1] * 0.1]); }
   else if (v.retail) await say('client', 'Крем? Подумаю.');
-  if (val >= 20) rows.push(['Чаевые', MV.salon === 'pijon' ? 200 : 100]);
+  if (val >= 20 && !MV.noTips) rows.push(['Чаевые', MV.salon === 'pijon' ? 200 : 100]);
+  if (MV.pj){ const p = pjGet(); p.out[MV.cycle] = p.out[MV.cycle] || {}; p.out[MV.cycle][v.img] = pjOut(val); pjPut(p); }
   const earned = rows.reduce((a, r) => a + r[1], 0);
   S.xMoney = (S.xMoney || 0) + earned; MV.money += earned;
   if (val >= 20){ MV.happy++; S.xPts = (S.xPts || 0) + 5; }
   hud();
-  ayaTail(v.ayaFin, val >= 20 ? 'praise' : 'explain');
+  if (v.ayaFin) ayaTail(v.ayaFin, val >= 20 ? 'praise' : 'explain');
   /* клиент встаёт и уходит */
   if (rom){ C.client.pose = val >= 20 && SP.client.after ? 'after' : 'nocoat'; setPos('client', P.chairStand[0], P.chairStand[1]); face('client', -1); if (C.client.pose === 'nocoat') clientPose(); }
   else if (C.client.pose === 'sit' || C.client.pose === 'nocoat'){ C.client.pose = 'stand'; setPos('client', CHAIR.x - 60, MV.clientY); face('client', -1); }
@@ -2763,12 +2894,14 @@ async function menFinal(v){
   c.append(el('h2', null, v.name + ': настроение ' + (val > 0 ? '+' : val < 0 ? '−' : '') + Math.abs(val)),
     el('p', null, (val >= 20 ? (rom ? 'Клиентка довольна и записалась снова.' : 'Клиент доволен и вернётся.') : val >= 0 ? 'Без восторга, но и без обиды.' : (rom ? 'Клиентка ушла недовольной.' : 'Клиент ушёл недовольным.')) + ' Время визита: ' + svcMin + ' мин при норме ' + MV.norm + '.'));
   const ul = el('ul','money'); rows.forEach(r => { const li = el('li'); li.append(el('span', null, r[0]), el('b', null, '+' + rub(r[1]))); ul.append(li); }); c.append(ul);
-  const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(v.ayaFin));
+  const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(v.ayaFin || ''));
+  if (!v.ayaFin) h.hidden = true;
   const last = MV.i >= MV.list.length;
   const nx = el('button','next', last ? 'Итог смены' : (rom ? 'Следующая клиентка' : 'Следующий клиент')); nx.type = 'button';
   nx.onclick = async () => {
     nx.disabled = true; stopVoice(); hideDlg(); svcTime(null);
     await camWide(); await walk('client', P.door[0], MV.clientY, {cam:narrow()}); vis('client', false); face(m, -1); mood(m, 'neutral');
+    if (last && MV.pj && MV.cycle === 3) MV.upskill = await pjDeadEnd();
     if (last) menSummary(); else menRound();
   };
   const row = el('div','btnrow');
@@ -2780,15 +2913,19 @@ async function menSummary(){
   const rom = MV.salon === 'romashka';
   track((rom ? 'rom_finish_' : 'men_finish_') + MV.master);
   hideDlg(); bust.className = 'bust'; vis('client', false); svcTime(null);
-  saveClear(); doneMark(MV.salon + '_' + MV.master);
+  saveClear(MV.master); doneMark(MV.salon + '_' + MV.master);
   const m = MV.master, n = MV.i;
+  let pjp = null;
+  if (MV.pj){ panel.innerHTML = ''; panel.append(menHead('Итог смены', 0), el('p','wait','Смотрите сцену…')); C.eric.pose = 'stand'; setPos('eric', 900, 690); face('eric', -1); camSet(900); pjp = await pjCycleEnd(); }
   panel.innerHTML = ''; panel.append(menHead('Итог смены', 0));
   const picks = MV.log.filter(r => r.picked !== 'Слишком долгая пауза с ответом');
   const okN = picks.filter(r => r.ok).length;
+  statsAdd(m, {shifts:1, visits:n, happy:MV.happy, best:okN, answers:picks.length, money:MV.money, salon:MV.salon});
   const c0 = el('div','card');
   c0.innerHTML = '<h2>' + (rom ? 'Кира · «Ромашка»' : MV.hard ? 'Кира · «Пижон»' : m === 'eric' ? 'Эрик · «Пижон»' : 'Кира · «Семейная»') + '</h2><p>' + (rom ? 'Записались снова' : 'Довольных клиентов') + ': <b>' + MV.happy + ' из ' + n + '</b>. Лучших ответов: <b>' + okN + ' из ' + picks.length + '</b> (' + Math.round(okN / Math.max(1, picks.length) * 100) + '%).</p>'
     + '<p>Заработано за смену: <b>' + rub(MV.money) + '</b>. Баллы мастерства: <b>' + (S.xPts || 0) + '</b>.</p>'
-    + (rom ? '<p>Практичная стрижка, честная продажа ухода и вопрос старшему мастеру вместо догадок — это и есть работа постоянного мастера.</p>' : m === 'eric' ? '<p>Удлинённые стрижки (Денис) — предел барбера. Повышение квалификации в Академии откроет и их, и женский зал.</p>' : '<p>Форма бороды с окантовкой (Михаил) — предел Киры. Это отдельный курс в Академии.</p>');
+    + (MV.pj ? '<p><b>Цикл ' + MV.cycle + ' из 3</b>' + (MV.cycle === 3 ? (pjp && pjp.passed ? ' — уровень пройден! Эрик идёт на повышение квалификации. Сцена в Академии — в следующей версии.' : ' — для перехода нужно: вернулись 6 из 8 клиентов и решение учиться.') : ' — через месяц клиенты вернутся.') + '</p>' : '')
+    + (rom ? '<p>Практичная стрижка, честная продажа ухода и вопрос старшему мастеру вместо догадок — это и есть работа постоянного мастера.</p>' : MV.pj && MV.cycle > 1 ? '' : m === 'eric' ? '<p>Удлинённые стрижки (Денис) — предел барбера. Повышение квалификации в Академии откроет и их, и женский зал.</p>' : '<p>Форма бороды с окантовкой (Михаил) — предел Киры. Это отдельный курс в Академии.</p>');
   const c1 = el('div','card'); c1.append(el('h2', null, 'Работа над ошибками'));
   const ul = el('ul','review');
   MV.log.forEach(r => {
@@ -2804,10 +2941,10 @@ async function menSummary(){
   const perfect = n === MV.list.length && okN === picks.length && picks.length === MV.log.length;
   if (rom){ C[m].pose = 'stand'; setPos(m, P.showK[0], P.showK[1]); face(m, -1); mood(m, perfect ? 'happy' : 'smile'); camSet(700); ayaState('explain'); await say('aya', 'Смена окончена. Давай посмотрим, что получилось.'); }
   else { C[m].pose = 'stand'; setPos(m, 900, 690); face(m, -1); mood(m, perfect ? 'happy' : 'smile'); camSet(800); }
-  if (rom) {}
+  if (rom || MV.pj) {}
   else if (m === 'eric') await say('eric', perfect ? 'Мужской зал — мой. А дальше — повышение квалификации, чтобы и Денис ушёл с кудрями.' : 'Барбер — это не только машинка. Разберу ошибки — и завтра лучше.', {mood: perfect ? 'happy' : 'smile'});
-  if (!rom) ayaTail(perfect ? 'Чистый визит без ошибок. Так держать!' : 'Ошибаться — нормально. Перечитайте мои подсказки и попробуйте ещё раз.', perfect ? 'praise' : 'cheer');
-  const again = el('button','next','Ещё раз'); again.type = 'button'; again.onclick = () => menStart(m, MV.career, MV.salon);
+  if (!rom && !MV.pj) ayaTail(perfect ? 'Чистый визит без ошибок. Так держать!' : 'Ошибаться — нормально. Перечитайте мои подсказки и попробуйте ещё раз.', perfect ? 'praise' : 'cheer');
+  const again = el('button','next', MV.pj && MV.cycle < 3 ? 'Следующий цикл: через месяц' : 'Ещё раз'); again.type = 'button'; again.onclick = () => menStart(m, MV.career, MV.salon);
   const other = el('button','next alt', m === 'eric' ? 'За Киру' : 'За Эрика'); other.type = 'button'; other.onclick = () => menStart(m === 'eric' ? 'kira' : 'eric');
   if (rom || MV.hard) other.hidden = true;
   const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
@@ -2816,14 +2953,27 @@ async function menSummary(){
 
 /* ================= СОХРАНЕНИЕ ПРОГРЕССА: только на устройстве игрока (localStorage) ================= */
 const SAVE_KEY = 'romashka_save', DONE_KEY = 'romashka_done';
-function saveGet(){ try { const o = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); return o && o.v === 1 ? o : null; } catch(e){ return null; } }
-function savePut(o){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(Object.assign({v:1, t:Date.now()}, o))); } catch(e){} }
-function saveClear(){ try { localStorage.removeItem(SAVE_KEY); } catch(e){} }
+/* у каждого героя своё сохранение: Кира и Эрик продолжаются независимо */
+(function(){ try { const old = localStorage.getItem(SAVE_KEY); if (old){ const o = JSON.parse(old); if (o && o.master) localStorage.setItem(SAVE_KEY + '_' + o.master, old); localStorage.removeItem(SAVE_KEY); } } catch(e){} })();
+function saveGet(m){ try { const o = JSON.parse(localStorage.getItem(SAVE_KEY + '_' + m) || 'null'); return o && o.v === 1 ? o : null; } catch(e){ return null; } }
+function savePut(o){ try { localStorage.setItem(SAVE_KEY + '_' + o.master, JSON.stringify(Object.assign({v:1, t:Date.now()}, o))); } catch(e){} }
+function saveClear(m){ try { localStorage.removeItem(SAVE_KEY + '_' + m); } catch(e){} }
+/* статистика по героям: смены, клиенты, довольные, лучшие ответы, заработок */
+const STATS_KEY = 'romashka_stats';
+function statsGet(){ try { return JSON.parse(localStorage.getItem(STATS_KEY) || '{}') || {}; } catch(e){ return {}; } }
+function statsAdd(m, d){
+  try {
+    const all = statsGet(), s = all[m] || {shifts:0, visits:0, happy:0, best:0, answers:0, money:0, salons:{}};
+    s.shifts += d.shifts || 0; s.visits += d.visits || 0; s.happy += d.happy || 0; s.best += d.best || 0; s.answers += d.answers || 0; s.money += d.money || 0;
+    if (d.salon) s.salons[d.salon] = (s.salons[d.salon] || 0) + (d.shifts || 0);
+    all[m] = s; localStorage.setItem(STATS_KEY, JSON.stringify(all));
+  } catch(e){}
+}
 function doneGet(){ try { return JSON.parse(localStorage.getItem(DONE_KEY) || '{}') || {}; } catch(e){ return {}; } }
 function doneMark(k){ try { const d = doneGet(); d[k] = (d[k] || 0) + 1; localStorage.setItem(DONE_KEY, JSON.stringify(d)); } catch(e){} }
 function saveShift(){
   if (!MV) return;
-  savePut({kind:'shift', master:MV.master, salon:MV.salon, i:MV.i, total:MV.list.length, xPts:S.xPts || 0, xMoney:S.xMoney || 0, money:MV.money, happy:MV.happy, career:MV.career});
+  savePut({kind:'shift', master:MV.master, salon:MV.salon, cycle:MV.cycle || 1, i:MV.i, total:MV.list.length, xPts:S.xPts || 0, xMoney:S.xMoney || 0, money:MV.money, happy:MV.happy, career:MV.career});
 }
 const SALON_NAME = {romashka:'«Ромашка»', pijon:'«Пижон»', family:'«Семейная»'};
 function saveLabel(o){
@@ -2831,9 +2981,9 @@ function saveLabel(o){
   const d = new Date(o.t), dd = String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth() + 1).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
   return who + ' · ' + (SALON_NAME[o.salon] || o.salon) + ' · ' + noun + ' ' + (o.i + 1) + ' из ' + o.total + ' · сохранено ' + dd;
 }
-function saveResume(){ const o = saveGet(); if (!o || o.kind !== 'shift') return restart(false); track('save_resume'); menStart(o.master, o.career, o.salon, o); }
+function saveResume(m){ const o = saveGet(m); if (!o || o.kind !== 'shift') return restart(false); track('save_resume'); menStart(o.master, o.career, o.salon, o); }
 /* код сохранения: перенести прогресс на другое устройство без сервера */
-const SAVE_KEYS = [SAVE_KEY, DONE_KEY, 'romashka_rank', 'romashka_career'];
+const SAVE_KEYS = [SAVE_KEY + '_kira', SAVE_KEY + '_eric', DONE_KEY, STATS_KEY, 'romashka_rank', 'romashka_career'];
 function saveCode(){
   const o = {}; SAVE_KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v !== null) o[k] = v; } catch(e){} });
   return btoa(unescape(encodeURIComponent(JSON.stringify(o))));
@@ -2845,6 +2995,33 @@ function saveLoadCode(code){
     let n = 0; Object.keys(o).forEach(k => { if (SAVE_KEYS.includes(k)){ localStorage.setItem(k, o[k]); n++; } });
     return n > 0;
   } catch(e){ return false; }
+}
+function progressShow(){
+  track('progress');
+  panel.innerHTML = '';
+  const h = el('div','head'); h.append(el('h1', null, 'Мой прогресс'), el('span','step', 'Ранг: ' + RANKS[getRank()])); panel.append(h);
+  const st = statsGet(), done = doneGet();
+  const NAMES_S = {romashka:'«Ромашка»', pijon:'«Пижон»', family:'«Семейная»'};
+  ['kira','eric'].forEach(m => {
+    const s = st[m], c = el('div','card prCard');
+    c.append(el('h2', null, m === 'eric' ? '💈 Эрик' : '✂ Кира'));
+    if (!s){ c.append(el('p','note', 'Ещё не играли за ' + (m === 'eric' ? 'Эрика' : 'Киру') + '.')); }
+    else {
+      const g = el('div','prGrid');
+      const cell = (v, l) => { const d = el('div','prCell'); d.append(el('b', null, String(v)), el('span', null, l)); return d; };
+      g.append(cell(s.shifts, 'смен пройдено'), cell(s.visits, 'клиентов'), cell(s.happy, 'довольных'),
+        cell(s.answers ? Math.round(s.best / s.answers * 100) + '%' : '—', 'лучших ответов'), cell(rub(Math.round(s.money)), 'заработано'));
+      c.append(g);
+      const sal = Object.keys(s.salons || {}).filter(k => s.salons[k] > 0).map(k => NAMES_S[k] + ' × ' + s.salons[k]);
+      if (sal.length) c.append(el('p','note', 'Смены по салонам: ' + sal.join(', ')));
+    }
+    if (m === 'eric'){ const pj = pjGet(); if (pj.done) c.append(el('p','note', '💈 «Пижон»: циклов пройдено ' + pj.done + ' из 3' + (pj.passed ? ' · уровень пройден, впереди повышение квалификации' : pj.done >= 3 ? ' · для перехода нужно вернуть 6 из 8 клиентов и решить учиться' : '') + '.')); }
+    const sv = saveGet(m); if (sv) c.append(el('p','note', '▶ Сейчас: ' + saveLabel(sv)));
+    panel.append(c);
+  });
+  if (done.marina) panel.append(el('p','note', 'Визит Марины в «Ромашке» пройден: ' + done.marina + ' раз.'));
+  const back = el('button','backBtn','← В меню'); back.type = 'button'; back.onclick = () => restart(false);
+  panel.append(back); fitStage();
 }
 function saveScreen(){
   panel.innerHTML = '';
@@ -3036,6 +3213,337 @@ function charsShow(){
   tabs.setAttribute('role','tablist');
   const back = el('button','backBtn','← В меню'); back.type = 'button'; back.onclick = () => restart(false);
   panel.append(tabs, list, back); show(0);
+}
+
+/* ================= «ПИЖОН»: ПОВТОРНЫЕ ВИЗИТЫ (циклы 2 и 3), уборка, телефон, тупик Эрика ================= */
+const PJ_KEY = 'romashka_pijon';
+function pjGet(){ try { return Object.assign({done:0, out:{1:{}, 2:{}, 3:{}}, passed:false, up:false}, JSON.parse(localStorage.getItem(PJ_KEY) || '{}')); } catch(e){ return {done:0, out:{1:{}, 2:{}, 3:{}}, passed:false, up:false}; } }
+function pjPut(o){ try { localStorage.setItem(PJ_KEY, JSON.stringify(o)); } catch(e){} }
+const pjOut = val => val >= 20 ? 'good' : val >= 0 ? 'mid' : 'bad';
+function pjNextCycle(){ const p = pjGet(); return Math.min(3, p.done + 1); }
+/* кто не вернулся в цикл 3: дважды ушёл недовольным */
+function pjLost(p){ return Object.keys(p.out[1] || {}).filter(k => p.out[1][k] === 'bad' && (p.out[2] || {})[k] === 'bad'); }
+const pjA = n => (typeof VOICE !== 'undefined' && Object.keys(VOICE).find(t => VOICE[t] === 'audio/aya_' + n + '.mp3')) || '';
+const PJ_NAMES = {artem:['Артём',27], viktor:['Виктор Павлович',58], mark:['Марк',33], denis:['Денис',24], aleksey:['Алексей',30], vadim:['Вадим',55], mikhail:['Михаил',48], roman:['Роман',38]};
+const pjO = (ok, t, pts, aya) => ({ok, t, pts, aya});
+/* цикл 2: line[хорошо, плохо], первое решение — ответ на отзыв (лучший ответ зависит от прошлого визита) */
+const PJ2 = {
+ artem:{title:'Друг со свадьбы', enter:'Месяц спустя. Артём заходит, как к себе домой.',
+  line:['Бро, мои в зале спрашивали, где стригся. И наши тогда отыгрались, кстати!', 'В прошлый раз я второй тайм пропустил. Сегодня без фокусов.'],
+  best:['«Рад, что зашло! Сегодня так же или поменяем?»', '«Твоя правда, затянул. Сегодня 30 минут — засекай»'], bestAya:[248, 248],
+  err:[pjO(false,'«Ну так, я же лучший»',-5,249), pjO(false,'«Матч сам виноват, не я»',-7,250)],
+  d2:{title:'запись друзей', intro:'Артём достаёт телефон. «Слушай, у брата свадьба в субботу, я свидетель. Запиши нас вдвоём в пятницу вечером».', opts:[
+   pjO(true,'«Сделаем. Пятница, 19:00 и 19:40 — сразу вношу в запись. Жениха беру первым, чтобы точно успел на мальчишник»',12,251),
+   pjO(false,'«Приходите, что-нибудь придумаем»',-6,252), pjO(false,'«В пятницу всё занято, бро» — не проверив запись',-6,252)]},
+  fin:[{who:'client', t:'Огонь, бро. В пятницу будем!'}], ayaFin:253},
+ viktor:{title:'Время — деньги', enter:'Виктор Павлович, минута в минуту.',
+  line:['На совете директоров спросили, кто меня стрижёт. Вы были правы про мягкий квадрат.', 'В прошлый раз на щеках были видны просветы. Жена заметила.'],
+  best:['«Спасибо, Виктор Павлович. Держим ту же форму?»', '«Вы правы, жёсткий квадрат открыл просветы. Сегодня смягчу линию на щеках — строгость останется»'], bestAya:[248, 248],
+  err:[pjO(false,'«Я же вас предупреждал»',-8,249), pjO(false,'«Это свет так падал»',-6,250)],
+  phone:2,
+  d2:{title:'встреча перенеслась', intro:'Звонит телефон Виктора Павловича. «У меня встреча перенеслась. У вас пятнадцать минут».', opts:[
+   pjO(true,'«Понял. За 15 минут — стрижка целиком, бороду подровняю только контур. Полную бороду — в четверг бесплатно, 15 минут. Подходит?»',12,254),
+   pjO(false,'«Не успею, приходите в другой день»',-6,255), pjO(false,'«Успею всё!» — и спешит с бородой',-8,255)]},
+  fin:[{who:'client', t:'Четверг. Записывайте.'}], ayaFin:256},
+ mark:{title:'Ты мне должен', enter:'Марк влетает с кофе в руке.',
+  line:['Бро, сделку закрыли! Я же говорил — партнёров приведу. Двое записаны на завтра.', 'Глина ваша к обеду поплыла. Одуванчик вернулся.'],
+  best:['«Поздравляю! Спасибо за партнёров — приму по высшему разряду»', '«Покажи, сколько наносишь. Скорее всего, много и на влажные — сейчас научу за минуту»'], bestAya:[248, 248],
+  err:[pjO(false,'«У всех держится, надо уметь»',-7,250), pjO(false,'«Возьми спрей подороже»',-5,298)],
+  d2:{title:'скидка по-партнёрски', intro:'Марк подмигивает в зеркало. «Раз я тебе клиентов вожу — сделай мне скидку 30%. По-партнёрски».', opts:[
+   pjO(true,'«Скидки — не моё решение, это к Грише. Но моё спасибо — запись без очереди и укладка перед важными встречами бесплатно. Спрошу Гришу про программу за друзей»',12,257),
+   pjO(false,'«Давай тайно 30%, только тихо»',-5,258), pjO(false,'«Нет. Прайс есть прайс»',-6,258)]},
+  fin:[{who:'client', t:'Ладно, бро. Честно — уважаю.'}], ayaFin:259},
+ denis:{title:'А может, ты всё-таки?', enter:'Денис — кудри заметно отросли.',
+  line:['Эрик, привет! Тот мастер в другом конце города, мне далеко. А окантовка твоя носилась идеально. Может, ты всё-таки попробуешь форму? Я тебе доверяю', 'После твоей стрижки треугольник стал ещё больше. Но я даю второй шанс. Может, ты всё-таки попробуешь форму?'],
+  d1title:'просьба попробовать',
+  best:['«Доверие ценю — поэтому и не рискну. Сегодня окантовка и шея, без длины. А мастера по кудрям поближе к тебе спрошу у Гриши — к пятнице скину»'], bestAya:[260], bestPts:10,
+  err:[pjO(false,'«Давай, что там сложного»',-10,261), pjO(false,'«Не моё, я же говорил» — и всё',-5,261)],
+  d2:{title:'тупик нарастает', intro:'Вадим в очереди отрывается от газеты. «Мой сын тоже отращивает, хотел к вам привести».', opts:[
+   pjO(true,'«Вадим, честно: длину пока не делаю. Но я разберусь — и вам первому скажу»',8,262),
+   pjO(false,'«Ведите, сделаем!»',-8,263), pjO(false,'Промолчать',-4,263)]},
+  fin:[{who:'eric', note:'про себя', t:'Третий за месяц…'}], ayaFin:264},
+ aleksey:{title:'Таблица в телефоне', enter:'Алексей, ровно к назначенному времени.',
+  line:['Отрастало ровно по плану: виски через четыре недели — ровно на насадку. Я записал.', 'Сзади отросло неровно, на фото не совпадает. Покажу.'],
+  best:['«Отлично, значит, держим ту же схему»', '«Покажите фото. Да, затылок ушёл влево — сегодня выровняю и сфотографирую сзади, чтобы было что сравнить»'], bestAya:[248, 265],
+  err:[pjO(false,'«Это волосы так растут, не я»',-7,250), pjO(false,'«Да ладно, никто не заметит»',-6,250)],
+  clean:2,
+  d2:{title:'запись наперёд', intro:'Алексей открывает календарь. «Я хочу ходить строго каждые 4 недели. Можно запись сразу на три месяца вперёд?»', opts:[
+   pjO(true,'«Конечно. Три записи, одно и то же время — 19:00 по вторникам. Напоминание придёт за день. Если что-то сдвинется — переносим одним сообщением»',12,266),
+   pjO(false,'«Давайте ближе к делу решим»',-6,267), pjO(false,'«Запишу одну, а там посмотрим»',-4,267)]},
+  fin:[{who:'client', t:'Система. Это мне нравится.'}], ayaFin:268},
+ vadim:{title:'Сын тоже придёт', enter:'Вадим. Тихо здоровается кивком.',
+  line:['Дочь сказала — помолодел. Про камуфляж подумал: давайте попробуем, но чуть-чуть.', 'В прошлый раз было шумно. И про седину лучше было промолчать.'],
+  best:['«Рад. Чуть-чуть — это 20% седины уйдёт, 80% останется. Будет естественно»', '«Понял, простите. Сегодня тихо, музыку выключу. Про седину — ни слова»'], bestAya:[269, 269],
+  err:[pjO(false,'«А я говорил, что надо было сразу закрашивать!»',-8,249), pjO(false,'«У нас всегда шумно, такой стиль»',-6,250)],
+  d2:{title:'длина для сына', intro:'Вадим протягивает телефон. «Это мой сын, ему 17. Хочет длинные волосы, как у рок-музыкантов. Возьмётесь?»', opts:[
+   pjO(true,'«Длина — это не моё пока, скажу честно. Сейчас могу подровнять шею и виски, чтобы отращивание было аккуратным. А форму под длину скоро освою — и вашему сыну первым скажу»',10,270),
+   pjO(false,'«Беру, приводите!»',-8,271), pjO(false,'«Длинные волосы — это не стиль, пусть стрижётся»',-10,271)]},
+  fin:[{who:'client', t:'Спасибо за честность.'}], ayaFin:272},
+ mikhail:{title:'Масло кончилось', enter:'Михаил, в рабочей куртке автосервиса.',
+  line:['Масло ваше — вещь. Чесаться перестало. Кончилось, кстати.', 'Масло купил, а толку? Всё так же чешется.'],
+  best:['«Отлично! Возьмёте новое — или сразу набор с шампунем для бороды, на 200 ₽ выгоднее?»', '«Покажите, как наносите. А, на сухую бороду и много. Надо 2–3 капли на влажную — давайте покажу»'], bestAya:[248, 273],
+  err:[pjO(false,'«Значит, у вас кожа такая»',-7,250), pjO(false,'«Берите подороже, то просто слабое»',-6,298)],
+  d2:{title:'бригада', intro:'Михаил вытирает руки платком. «Слушай, у меня в автосервисе ребята — шесть человек. Можно к вам приходить всей бригадой раз в месяц? Только по-быстрому, в один вечер».', opts:[
+   pjO(true,'«Отличная идея. Шесть человек по 30 минут — это вечер на двоих мастеров. Позову Дэна, закроем за 1,5 часа. Сейчас спрошу Гришу про корпоративную цену»',12,274),
+   pjO(false,'«Всех за вечер? Не успею»',-6,275), pjO(false,'«Да, приходите, разберёмся»',-5,275)]},
+  fin:[{who:'client', t:'По рукам. И винт я тебе опять подтянул.'}], ayaFin:276},
+ roman:{title:'Ты был прав', enter:'Роман, загорелый, с телефоном наготове.',
+  line:['Эрик! Море, байк, солнце — макушка жива! Смотри фото. Ты был прав, я бы сгорел.', 'Слушай, обрил меня — и я весь отпуск в кепке. Зачем ты меня послушал?'],
+  best:['«Классные фотки! Рад, что помогло»', '«Ты прав — надо было тебя остановить. Сегодня помогу отрастить ровно: форму с запасом, чтобы через месяц было что стричь»'], bestAya:[248, 277],
+  err:[pjO(false,'«Ты сам просил под ноль»',-8,250), pjO(false,'«Ну волосы отрастут, чего ты»',-6,250)],
+  d2:{title:'борода викинга', intro:'Роман вскакивает с кресла. «Хочу бороду, как у викинга! Через неделю! Сделай что-нибудь!»', opts:[
+   pjO(true,'«Викинг за неделю не вырастет, честно. Нужно 2–3 месяца. Сейчас задам форму, чтобы росла красиво, а каждые 3 недели — коррекция. К Новому году будет викинг»',12,278),
+   pjO(false,'«Да, есть накладные, найду»',-6,279), pjO(false,'«Невозможно, забудь»',-7,279)]},
+  fin:[{who:'client', t:'К Новому году. Договорились!'}], ayaFin:279}
+};
+/* цикл 3: свои клиенты — проверяется слово мастера */
+const PJ3 = {
+ artem:{title:'Жених у Дэна', line:'Бро, свадьба огонь! Только жених теперь ходит к Дэну. Ты не обиделся?',
+  d1:{title:'клиент у коллеги', opts:[pjO(true,'«Главное — чтобы в наш салон. Дэн делает классно»',12,280), pjO(false,'«Дэн клиентов уводит»',-6,280), pjO(false,'«Верни его ко мне»',-6,280)]},
+  d2:{title:'дерзкая идея', intro:'Артём трогает висок. «Давай сегодня что-то дерзкое — полоску на виске».', opts:[
+   pjO(true,'«Можно. Только на ринге она сотрётся за неделю — придёшь освежить бесплатно»',12,281), pjO(false,'Молча сделать',-4,282), pjO(false,'«Тебе не пойдёт»',-6,282)]},
+  fin:[{who:'client', t:'Вот это сервис, бро.'}]},
+ viktor:{title:'На «ты»?', line:'Стало быть, теперь можно на «ты»? — Нет, шучу.',
+  d1:{title:'проверка границ', opts:[pjO(true,'«С вами, Виктор Павлович, мне привычнее на «вы»»',12,283), pjO(false,'«Давай, Витя!»',-8,284), pjO(false,'Промолчать',-3,284)]},
+  d2:{title:'мимо салона', intro:'Виктор Павлович понижает голос. «Стригите меня дома. Плачу вдвое. Салону знать необязательно».', opts:[
+   pjO(true,'«Спасибо за доверие. Но я работаю через салон. Могу держать для вас последнее время по средам, без очереди»',12,285),
+   pjO(false,'«Договорились!»',-8,286), pjO(false,'«Только Грише не говорите»',-8,286)]},
+  fin:[{who:'client', t:'Сегодня тихо. Дельно.'}]},
+ mark:{title:'Партнёр молчит', line:'Бро, знакомься — мой партнёр Тимур. Стрижём обоих! Мы вчера такую сделку…',
+  d1:{title:'молчаливый гость', opts:[pjO(true,'«А вам как удобнее?» — повернуться к партнёру',12,287), pjO(false,'Слушать только Марка',-5,288), pjO(false,'Подстричь партнёра «как Марка»',-7,288)]},
+  d2:{title:'акция салона', intro:'Гриша утвердил акцию: «Приведи друга — стрижка со скидкой 20%». Марк о ней ещё не знает.', opts:[
+   pjO(true,'«Марк, тебе положена скидка 20% — честно заработана. Вот карточка»',12,289), pjO(false,'Не говорить про акцию',-5,290), pjO(false,'«Давай 30% — по дружбе»',-6,290)]},
+  fin:[{who:'client', t:'Вот за это и вожу к тебе людей.'}]},
+ aleksey:{title:'Семь минут', line:'Добрый вечер. Я жду семь минут.', pre:'Предыдущий клиент задержался — Эрик опаздывает на 7 минут.',
+  d1:{title:'опоздал сам', opts:[pjO(true,'«Алексей, извините, 7 минут — моя ошибка. Закончим вовремя, укладку сделаю бесплатно»',12,291), pjO(false,'«Да что там семь минут»',-7,292), pjO(false,'«Предыдущий клиент задержал»',-6,292)]},
+  d2:{title:'к свадьбе друга', intro:'Алексей: «Через шесть недель свадьба друга. Хочу чёлку длиннее, чтобы укладывать назад».', opts:[
+   pjO(true,'«За 6 недель вырастет на 1,5 см. Пропускаем одну стрижку сверху, бока держим»',12,293), pjO(false,'«И сейчас сойдёт»',-6,294), pjO(false,'«Это к нормальному мастеру»',-7,294)]},
+  fin:[{who:'client', t:'Хорошо. Записываю в календарь.'}]},
+ mikhail:{title:'Бригада не вся', line:'Здорово! Ребят сегодня четверо — двое не смогли.',
+  d1:{title:'договорённость', opts:[pjO(true,'«Михаил, давайте закрепим: если кто-то не приходит — предупреждаем до обеда. Иначе Гриша отменит корпоративную цену»',12,295), pjO(false,'Молча потерпеть',-4,296), pjO(false,'«Вы нас подвели!»',-7,296)]},
+  d2:{title:'триммер домой', intro:'Михаил: «Посоветуй триммер для дома — между визитами подравнивать».', opts:[
+   pjO(true,'«Для контура между визитами — да. Форму трогать не надо, покажу границу на щеке»',12,297), pjO(false,'«Не надо, только испортите»',-6,298), pjO(false,'Назвать самый дорогой',-5,298)]},
+  fin:[{who:'client', t:'Понял. Граница — вот тут.'}]},
+ roman:{title:'Всё поменять', line:'Расстался с девушкой. Хочу всё поменять!', clean:3,
+  d1:{title:'импульс', opts:[pjO(true,'«Менять — можно. Давай сегодня свежую форму, а радикальное — через неделю, если не передумаешь»',12,299), pjO(false,'Под ноль сразу',-8,300), pjO(false,'«Из-за девушки — глупо»',-7,300)]},
+  d2:{title:'выговориться', intro:'Роман: «Слушай, можно я тебе всё расскажу?..»', opts:[
+   pjO(true,'«Доскажешь за кофе — сейчас не дёргайся, виски»',12,301), pjO(false,'Советы о женщинах',-5,302), pjO(false,'Оборвать',-7,302)]},
+  fin:[{who:'client', t:'Спасибо, брат. Полегчало.'}]}
+};
+/* сборка списка клиентов для цикла */
+function pjBuild(cyc){
+  const p = pjGet(), base = MEN.filter(v => v.salon === 'pijon'), lost = cyc === 3 ? pjLost(p) : [];
+  const out = [];
+  base.forEach(b => {
+    const [name, age] = PJ_NAMES[b.img] || [b.name, b.age];
+    if (cyc === 2){
+      const d = PJ2[b.img]; if (!d) return;
+      const bad = (p.out[1] || {})[b.img] === 'bad' ? 1 : 0, bi = d.best.length > 1 ? bad : 0;
+      out.push({salon:'pijon', master:'eric', img:b.img, w:b.w, h:b.h, name, age, title:d.title, enter:'Месяц спустя. ' + d.enter, line:d.line[bad], lineNote:'',
+        chair:[], fin:d.fin, ayaFin:pjA(d.ayaFin), clean:d.clean, phone:d.phone, prevBad:!!bad,
+        d1:{title:d.d1title || 'ответ на отзыв', opts:[pjO(true, d.best[bi], d.bestPts || 12, pjA(d.bestAya[bi]))].concat(d.err.map(e => pjO(false, e.t, e.pts, pjA(e.aya))))},
+        d2:{title:d.d2.title, intro:d.d2.intro, opts:d.d2.opts.map(e => pjO(e.ok, e.t, e.pts, pjA(e.aya)))}});
+    } else if (cyc === 3){
+      if (b.img === 'denis' || b.img === 'vadim') return;          // они придут вместе — в тупике
+      if (lost.includes(b.img)) return;
+      const d = PJ3[b.img]; if (!d) return;
+      out.push({salon:'pijon', master:'eric', img:b.img, w:b.w, h:b.h, name, age, title:d.title, enter:d.pre || ('Ещё месяц. ' + name + ' — уже свой клиент.'), line:d.line, lineNote:'',
+        chair:[], fin:d.fin, ayaFin:'', clean:d.clean,
+        d1:{title:d.d1.title, opts:d.d1.opts.map(e => pjO(e.ok, e.t, e.pts, pjA(e.aya)))},
+        d2:{title:d.d2.title, intro:d.d2.intro, opts:d.d2.opts.map(e => pjO(e.ok, e.t, e.pts, pjA(e.aya)))}});
+    }
+  });
+  return out;
+}
+/* персонал «Пижона» на сцене: Гриша и Дэн */
+async function pjStaff(id, x, show){
+  if (!show){ vis(id, false); return; }
+  C[id].pose = 'stand'; setPos(id, x, 690); face(id, -1); vis(id, true); place(id);
+}
+/* отдельное решение (уборка, телефон, тупик) — тот же вид, что выбор ответа */
+function pjDecide(title, sub, opts, opt = {}){
+  return new Promise(res => {
+    panel.innerHTML = ''; panel.append(menHead(title, MV.i + (opt.after ? 0 : 1), MV.list.length));
+    const s = el('p','menStep'); s.textContent = sub; panel.append(s);
+    const list = el('div','choices'); list.setAttribute('role','group');
+    shuffle(opts).forEach(c => {
+      const b = el('button','choice'); b.type = 'button';
+      b.innerHTML = '<span class="k" aria-hidden="true"></span><span></span>'; b.lastChild.textContent = c.t;
+      b.onclick = async () => {
+        [...list.children].forEach(x => x.disabled = true); b.classList.add('picked'); clearHeld();
+        if (!opt.noMeter){ S.meter = clamp(S.meter + c.pts, -100, 100); hud(); }
+        if (c.ok) S.xPts = (S.xPts || 0) + 2;
+        const best = opts.find(x => x.ok);
+        if (best) MV.log.push({title:sub, picked:c.t, ok:!!c.ok, d:c.ok ? 0 : c.pts, aya:c.aya, best:c.ok ? null : best.t});
+        const q = c.t.match(/«[^«»]*(?:«[^«»]*»[^«»]*)*»/g) || [];
+        if (q.length) for (const x of q) await say('eric', x.slice(1, -1));
+        else await say('eric', 'Действие: ' + c.t.charAt(0).toLowerCase() + c.t.slice(1) + '.', {narr:true});
+        if (opt.onPick) await opt.onPick(c);
+        const fb = el('div','chips'); if (!opt.noMeter) fb.append(el('span', 'chip ' + (c.pts >= 0 ? 'plus' : 'minus'), 'Настроение ' + (c.pts >= 0 ? '+' + c.pts : String(c.pts).replace('-','−'))));
+        panel.append(fb);
+        if (c.aya){ ayaTail(c.aya, c.ok ? 'praise' : 'warn'); const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(c.aya)); panel.append(h); }
+        if (!c.ok && best){ const bb = el('div','hint best','<b>Лучше:</b>&nbsp;'); bb.append(document.createTextNode(best.t)); panel.append(bb); }
+        const nx = el('button','next','Дальше'); nx.type = 'button'; nx.onclick = () => { nx.disabled = true; stopVoice(); hideDlg(); res(c); };
+        panel.append(nx); fitStage(); nx.focus({preventScroll:true});
+      };
+      list.append(b);
+    });
+    panel.append(list); fitStage();
+  });
+}
+/* уборка между клиентами: короткая анимация, а в ключевые моменты — решение */
+async function pjCleanAnim(){
+  const e = C.eric; await camWide();
+  for (const p of ['sweep','spray','jar']){ if (SP.eric[p]){ e.pose = p; place('eric'); await wait(650); } }
+  e.pose = 'stand'; place('eric');
+}
+async function pjCleanDecision(cyc){
+  if (cyc === 1){
+    await pjCleanAnimStart();
+    await say('eric', 'После Артёма у кресла волосы, на ножах машинки — тоже. В дверь уже заходит Виктор Павлович.', {narr:true});
+    await pjDecide('Уборка рабочего места', 'Уборка — следующий клиент уже в дверях', [
+      pjO(true,'«Виктор Павлович, добрый вечер! Две минуты — готовлю место, кофе пока?» — и полная уборка',5,pjA(304)),
+      pjO(false,'Сдуть волосы с кресла рукой и посадить клиента',-10,pjA(305)),
+      pjO(false,'Посадить клиента и подметать вокруг него',-5,pjA(306))],
+      {onPick: async c => { if (c.ok) await pjCleanAnim(); else MV.dirty = true; }});
+  } else if (cyc === 3){
+    pjStaff('den', 1300, true);
+    await say('eric', 'Пятница, запись впритык, лезвия закончились. Следующий — Роман, борода с окантовкой.', {narr:true});
+    await say('den', 'Бро, протри своё спиртом — и поехали.');
+    await pjDecide('Лезвия закончились', 'Уборка — одноразовое лезвие', [
+      pjO(true,'«Роман, 5 минут: бегу за лезвиями к Грише» — или окантовка триммером, честно сказав клиенту',5,pjA(310)),
+      pjO(false,'Послушать Дэна: протереть старое лезвие спиртом',-15,pjA(309)),
+      pjO(false,'Отменить бороду без объяснений',-6,pjA(309))],
+      {onPick: async c => { MV.blade = c.ok ? 'ok' : 'bad'; if (c.ok && SP.eric.blade){ C.eric.pose = 'blade'; place('eric'); await wait(700); C.eric.pose = 'stand'; place('eric'); } }});
+    pjStaff('den', 0, false);
+  }
+}
+async function pjCleanAnimStart(){ await pjCleanAnim(); }
+/* вопрос Алексея про обработку (цикл 2, в кресле) */
+async function pjCleanQuestion(){
+  await say('client', 'А вы машинку между клиентами обрабатываете?');
+  await pjDecide('Вопрос про чистоту', 'Клиент спрашивает про обработку', [
+    pjO(true,'«Каждого. Смотрите: щётка, спрей, а насадки в растворе. Лезвие для вас — новое, сейчас при вас вскрою»',8,pjA(307)),
+    pjO(false,'«Конечно, что за вопросы» — обиженно',-5,pjA(308)),
+    pjO(false,'«У нас чисто, не переживайте» — без действий',-6,pjA(308))],
+    {onPick: async c => { if (c.ok && SP.eric.spray){ C.eric.pose = 'spray'; place('eric'); await wait(800); C.eric.pose = 'cut'; place('eric'); } }});
+}
+/* телефон во время работы */
+async function pjPhone(cyc, v){
+  if (cyc === 1){
+    const prev = C.eric.pose;
+    if (SP.eric.callcut){ C.eric.pose = 'callcut'; place('eric'); }
+    await say('eric', 'У Эрика в кармане фартука звонит телефон: «Братан». Эрик берёт трубку — одной рукой телефон, другой машинка.', {narr:true});
+    await say('eric', 'Да, бро, слушаю… не, не занят, говори.');
+    S.meter = clamp(S.meter - 10, -100, 100); hud(); mood('client', 'skeptic'); MV.over += 3; MV.noTips = true;
+    await say('client', '(смотрит на часы, потом в зеркало) …');
+    pjStaff('grisha', 1300, true); mood('grisha', 'skeptic');
+    await say('grisha', 'Эрик, на секунду. У тебя в кресле человек за 1 800. Телефон — после клиента.');
+    if (SP.eric.pocket){ C.eric.pose = 'pocket'; place('eric'); await wait(500); }
+    pjStaff('grisha', 0, false); MV.phoneNote = 'call';
+    await pjDecide('Звонок посреди стрижки', 'Телефон — как исправить ситуацию', [
+      pjO(true,'«Марк, извини, это было некрасиво. Телефон убрал, доделаю вовремя — на переговоры успеваешь»',6,pjA(311)),
+      pjO(false,'«Да это брат, важное» — и продолжает молча',-5,pjA(312)),
+      pjO(false,'Ничего не сказать, сделать вид, что ничего не было',-3,pjA(313))]);
+    C.eric.pose = prev; place('eric');
+  } else if (cyc === 2){
+    await say('eric', 'Звонит телефон Эрика. Эрик быстро берёт: «Я на работе, перезвоню» — и убирает.', {narr:true});
+    MV.phoneNote = 'quick';
+    await say('client', 'У меня подчинённые на совещании телефон сдают на входе.');
+    await pjDecide('Звонок во время работы', 'Телефон — клиент заметил', [
+      pjO(true,'«Справедливо, Виктор Павлович. Выключаю звук — дальше только ваша борода»',5,pjA(315)),
+      pjO(false,'«Я же не стал разговаривать»',-4,pjA(316)),
+      pjO(false,'«Мама звонила, неудобно было сбрасывать»',-3,pjA(316))]);
+  }
+}
+/* начало смены в цикле 3: телефон в подсобку */
+async function pjShiftStart3(){
+  pjStaff('grisha', 1300, true); mood('grisha', 'happy');
+  if (SP.eric.handoff){ C.eric.pose = 'handoff'; place('eric'); }
+  await say('eric', 'Гриш, телефон на беззвучном в подсобке. Если что-то срочное — пусть звонят на салонный.');
+  await say('grisha', 'Растёшь.');
+  C.eric.pose = 'stand'; place('eric'); MV.phoneNote = 'away';
+  ayaState('praise'); await say('aya', pjA(318));
+  pjStaff('grisha', 0, false);
+}
+/* тупик: длинные волосы */
+async function pjDeadEnd(){
+  MV.log = MV.log || [];
+  PARTNER = 'client';
+  await camWide(); C.eric.pose = 'stand'; setPos('eric', 960, 690); face('eric', -1);
+  /* Денис и Арсений: показываем Арсения как клиента, Денис говорит рядом */
+  await menSprite({img:'denis', name:'Денис', w:300, h:760});
+  C.client.pose = 'stand'; setPos('client', P.door[0], 690); vis('client', true); face('client', 1);
+  await say('eric', '19:30. Входят Денис — кудри почти до плеч — и Арсений, 17, сын Вадима, прямые волосы до плеч.', {narr:true});
+  await walk('client', 650, 690, {face:1});
+  await say('client', 'Эрик, нам через неделю на выставку — наши работы висят рядом. Тот мастер уехал. Кроме тебя некому.');
+  await say('eric', 'Вадим из кресла ожидания кивает: «Вы обещали».', {narr:true});
+  const c = await pjDecide('Тупик', 'Длинные волосы — хорошего варианта нет', [
+    pjO(false,'«Давайте попробую»',-30,pjA(319)), pjO(false,'«Не моё, извините»',-15,pjA(320)), pjO(false,'«Отдам Дэну»',-15,pjA(321))],
+    {after:true, onPick: async c => {
+      if (/попробую/.test(c.t)){ await say('eric', 'Эрик стрижёт кудри как фейд — слои не ложатся. Денис молча смотрит в зеркало.', {narr:true}); mood('client', 'sad'); }
+      else if (/Дэну/.test(c.t)){ pjStaff('den', 1300, true); await say('den', 'Бро, я тоже длину не делаю. У нас никто не делает.'); pjStaff('den', 0, false); }
+      else { await say('client', 'Я ждал три месяца…'); mood('client', 'sad'); }
+    }});
+  await walk('client', P.door[0], 690, {cam:narrow()}); vis('client', false);
+  pjStaff('grisha', 1250, true); if (SP.grisha.coffee){ C.grisha.pose = 'coffee'; place('grisha'); }
+  await say('eric', 'Клиенты уходят. Гриша ставит кофе перед Эриком и открывает ноутбук.', {narr:true});
+  if (SP.grisha.laptop){ C.grisha.pose = 'laptop'; place('grisha'); }
+  await say('grisha', 'Четыре клиента за три месяца. Это минус семь тысяч в месяц только по стрижкам. И сарафанное радио в другую сторону.');
+  if (SP.eric.tired){ C.eric.pose = 'tired'; place('eric'); }
+  const h = await pjDecide('Решение героя', 'Что дальше?', [
+    pjO(true,'«Я понял. Пойду на повышение квалификации в Академию. Длина, кудри — и буду брать таких клиентов сам»',0,pjA(322)),
+    pjO(false,'«Я барбер, моя история — бороды»',0,pjA(323)),
+    pjO(false,'«Научусь по роликам»',0,pjA(324))], {noMeter:true, after:true});
+  C.eric.pose = 'stand'; place('eric');
+  if (h.ok){ C.grisha.pose = 'stand'; place('grisha'); await say('grisha', 'Графики подвинем. Учись.', {mood:'happy'}); }
+  else await say('grisha', 'Как знаешь.', {mood:'skeptic'});
+  pjStaff('grisha', 0, false);
+  ayaState('explain'); await say('aya', pjA(325));
+  return h.ok;
+}
+/* никто не вернулся — начинаем «Пижон» заново */
+async function pjNobody(){
+  saveClear('eric');
+  setLocation2('barber_pijon'); clips(false); ['kira','eric','tamara','narc','ab','client'].forEach(x => vis(x, false));
+  C.eric.pose = 'stand'; setPos('eric', 900, 690); face('eric', 1); vis('eric', true); camSet(1000);
+  panel.innerHTML = ''; panel.append(menHead('«Пижон», цикл 3', 0), el('p','wait','Смотрите сцену…'));
+  pjStaff('grisha', 1250, true); if (SP.grisha.laptop){ C.grisha.pose = 'laptop'; place('grisha'); }
+  await say('grisha', 'Ни один клиент не записался снова. Таблица пустая. Давай начнём сначала: новые люди, новый шанс — и разбор ошибок.', {mood:'sad'});
+  ayaState('warn'); await say('aya', pjA(328));
+  panel.innerHTML = ''; panel.append(menHead('«Пижон», цикл 3', 0));
+  const again = el('button','next','Начать «Пижон» заново'); again.type = 'button';
+  again.onclick = () => { try { localStorage.removeItem(PJ_KEY); } catch(e){} menStart('eric', MV.career, 'pijon'); };
+  const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
+  const row = el('div','btnrow'); row.append(menu, again); panel.append(row); fitStage();
+}
+/* итог цикла: Гриша и таблица повторных записей */
+async function pjCycleEnd(){
+  const p = pjGet(), cyc = MV.cycle;
+  p.done = Math.max(p.done, cyc);
+  const lost = pjLost(p);
+  if (cyc === 3){ p.passed = (8 - lost.length) >= 6 && !!MV.upskill; if (MV.upskill) p.up = true; }
+  pjPut(p);
+  /* уборка в конце смены */
+  if (SP.eric.sweep){ C.eric.pose = 'sweep'; place('eric'); }
+  await say('eric', 'Конец смены. Эрик подметает, чистит и смазывает машинку, раскладывает инструмент на завтра.', {narr:true});
+  C.eric.pose = 'stand'; place('eric');
+  pjStaff('grisha', 1250, true);
+  const notes = [];
+  if (MV.phoneNote === 'call') notes.push('Одно замечание — телефон.');
+  if (MV.phoneNote === 'away') notes.push('Замечаний нет.');
+  if (MV.dirty) notes.push('Утром Дэн нашёл твои волосы в машинке.'); else notes.push('Рабочее место — в порядке.');
+  const ret = Object.values(p.out[cyc] || {}).filter(x => x !== 'bad').length;
+  notes.push('Довольны или нейтральны: ' + ret + ' из ' + Object.keys(p.out[cyc] || {}).length + '.');
+  await say('grisha', notes.join(' '), {mood: MV.phoneNote === 'call' || MV.dirty ? 'skeptic' : 'happy'});
+  if (cyc === 3 && lost.length) await say('grisha', lost.map(k => (PJ_NAMES[k] || [k])[0]).join(', ') + ' больше не записывается. Посмотрим, почему?');
+  pjStaff('grisha', 0, false);
+  ayaState('explain');
+  if (cyc === 1) await say('aya', pjA(326));
+  else if (cyc === 2) await say('aya', pjA(327));
+  else await say('aya', p.passed ? pjA(329) : pjA(330));
+  await say('aya', pjA(331));
+  return p;
 }
 
 /* фоновая подгрузка всех картинок (по 4 одновременно), чтобы смена поз не мигала */
