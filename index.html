@@ -443,7 +443,7 @@ ul.money b{color:#1f7a45;white-space:nowrap}
 .a2hs .btnrow{flex-wrap:wrap;justify-content:flex-end}
 
 /* ---------- режим директора ---------- */
-body.dirMode .hud .plate{display:none}
+body.dirMode .hud .plate:not(.pDirCash):not(.pDirRep){display:none}
 .hsDir{display:grid;gap:8px;margin-top:6px}
 .hsDirT{font-family:var(--display);font-weight:700;font-size:16px;color:#fff;text-align:center;text-transform:uppercase;letter-spacing:.08em}
 .hsDirCard{display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
@@ -482,6 +482,52 @@ body.dirMode .hud .plate{display:none}
 .dirStars{list-style:none;padding:0;margin:0 0 8px;display:grid;gap:4px}
 .dirStars li{color:var(--muted)} .dirStars li.on b{color:var(--leaf)}
 .dirDisc{font-size:12px;color:var(--muted);margin:0}
+
+.pDirCash .ico{background:radial-gradient(circle at 35% 30%,#d9ffd0,#3fae5a)}
+.pDirRep .ico{background:radial-gradient(circle at 35% 30%,#fff3b0,#ffc928)}
+.pDirCash .pLbl,.pDirRep .pLbl{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#aebbe8;line-height:1}
+.pDirRep{flex:1 1 150px;max-width:220px}
+.pDirRep .pIn{flex:1;display:flex;flex-direction:column;gap:2px;min-width:40px}
+.dirRepBar{height:8px;border-radius:99px;background:#0b0f1f;overflow:hidden}
+.dirRepBar i{display:block;height:100%;width:0;background:#ffc928;transition:width .4s}
+.dirRepBar i.low{background:#e0533f}
+.dirThermo{position:absolute;z-index:4;right:4%;top:8%;bottom:8%;display:flex;align-items:stretch;gap:8px;padding:8px 10px;border-radius:14px;background:rgba(18,24,20,.78);color:#fff;font-size:11px;pointer-events:none}
+.dirThermo .dtL{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:700;letter-spacing:.04em;opacity:.85}
+.dtTube{position:relative;width:22px;border-radius:12px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.6);overflow:hidden}
+.dtTube i{position:absolute;left:0;right:0;bottom:0;transition:height .8s cubic-bezier(.2,.8,.2,1)}
+.dtTube i.ok{background:linear-gradient(0deg,#2f8f4e,#7fd39a)} .dtTube i.bad{background:linear-gradient(0deg,#b8443a,#f08a6c)}
+.dtTube b{position:absolute;left:-2px;right:-2px;height:3px;background:#ffd84a;box-shadow:0 0 6px #ffd84a}
+.dtV{display:flex;flex-direction:column;justify-content:center;gap:1px;font-variant-numeric:tabular-nums}
+.dtV span{opacity:.75} .dtV b{font-size:13px;margin-bottom:4px}
+.dirTam{display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;flex:none}
+.dirTam img{width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:top;background:var(--surface-2);flex:none}
+.dirTamQ{display:grid;gap:2px;font-size:14px} .dirTamQ b{font-size:12px;color:var(--muted)}
+.dirBlock{display:grid;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;flex:none}
+.dirBlock h3{margin:0;font-family:var(--display);font-weight:500;font-size:15px}
+.dirSl{display:grid;gap:4px}
+.dirSl label{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted)}
+.dirSl label b{color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dirSl input{width:100%;accent-color:var(--leaf)}
+.dirMList{display:grid;gap:4px}
+.dirMRow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.dirMRow.low .dirMName{color:var(--bad)}
+.dirMNote{font-size:12px;color:var(--muted)}
+.dirStep{display:inline-flex;align-items:center;gap:6px}
+.dirStep button{all:unset;cursor:pointer;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--surface-2);border:1px solid var(--line)}
+.dirStep button:focus-visible{outline:3px solid var(--accent)}
+.dirStep b{min-width:62px;text-align:center;font-variant-numeric:tabular-nums}
+.dirLoans{display:grid;gap:8px;flex:none}
+.dirLoan{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;display:grid;gap:8px}
+.dirLoanH{display:grid;gap:2px;font-size:14px} .dirLoanH span{color:var(--muted);font-size:13px}
+.dirLoanC{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.dirLoanC b{min-width:96px;text-align:center;font-variant-numeric:tabular-nums}
+.dirLoanC button{all:unset;cursor:pointer;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--surface-2);font-weight:700;font-size:14px}
+.dirLoanC button.dirTake{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dirLoanC button[disabled]{opacity:.4;cursor:default}
+.dirLoanC button:focus-visible{outline:3px solid var(--accent)}
+@media (max-width:520px){.plate.pDirRep{max-width:none}}
+
+.dirThermo[hidden],.plate[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -491,6 +537,8 @@ body.dirMode .hud .plate{display:none}
     <div class="plate pPts" title="Баллы мастерства"><span class="ico" aria-hidden="true">★</span><b id="hudPts">0</b></div>
     <div class="plate pMoney" title="Заработано за смену"><span class="ico" aria-hidden="true">₽</span><b id="hudMoney">0 ₽</b></div>
     <div class="plate pRank" id="rankPlate" title="Ранг ножниц"><span class="ico" aria-hidden="true">✂</span><b id="hudRank">—</b></div>
+    <div class="plate pDirCash" id="dirCashPlate" hidden title="Деньги на счёте салона"><span class="ico" aria-hidden="true">₽</span><span class="pLbl">Счёт</span><b id="dirCashOut">0</b></div>
+    <div class="plate pDirRep" id="dirRepPlate" hidden title="Репутация салона: от 0 до 100"><span class="ico" aria-hidden="true">⭐</span><div class="pIn"><span class="pLbl">Репутация</span><div class="dirRepBar" aria-hidden="true"><i id="dirRepBar"></i></div></div><b id="dirRepOut">0</b></div>
     <span class="hudGap"></span>
     <button type="button" class="fs" id="rstBtn" aria-label="Начать сначала">⟲ Сначала</button>
     <button type="button" class="fs snd" id="musBtn" hidden aria-label="Выключить музыку">🎵</button>
@@ -988,6 +1036,22 @@ const VOICE = {
 "Мастера отработали декабрь без выходных и без благодарности. После праздников кто-то уйдёт.": "audio/aya_468.mp3",
 "Верно. Перенести записи заранее — значит сохранить клиентов.": "audio/aya_469.mp3",
 "Стрижка при свете телефона — так себе впечатление о салоне.": "audio/aya_470.mp3",
+"Это режим директора. Тамара Петровна открывает салон с нуля: на счёте ноль, всё — в долг. Цель первого года — выйти на точку безубыточности и не закрыться.": "audio/aya_515.mp3",
+"Сначала помещение. Большой зал на проспекте даёт поток клиентов, но аренда съедает деньги, пока салон не раскрутится.": "audio/aya_516.mp3",
+"Каждое кресло — это восемьдесят тысяч на оборудование. Пустое кресло ничего не приносит, а деньги за него уже потрачены.": "audio/aya_517.mp3",
+"Денег нет — значит, нужен заём. Банк даёт много, но под проценты. Подруга и муж — без процентов, но с ними сложнее спорить.": "audio/aya_518.mp3",
+"Банковский кредит: проценты каждый месяц, пока долг не погашен. Гасите, как только появятся свободные деньги.": "audio/aya_519.mp3",
+"Деньги подруги без процентов, но вернуть их нужно за полгода. Просрочка будет стоить дружбы.": "audio/aya_520.mp3",
+"Муж поможет без процентов. Но семейный бюджет общий: каждый месяц долга — разговор на кухне.": "audio/aya_521.mp3",
+"Термометр — это точка безубыточности. Пока выручка ниже черты, салон работает в минус, даже если клиенты идут.": "audio/aya_522.mp3",
+"На одно кресло нужно два мастера по графику два через два. Мастеров больше — кто-то сидит без работы. Меньше — кресла простаивают.": "audio/aya_523.mp3",
+"Цену можно ставить каждому мастеру. Опытному — выше, новичку — ниже: так клиенты распределяются честно.": "audio/aya_524.mp3",
+"Тамара может стричь сама. Это бесплатный мастер для салона, но директор, который всё время у кресла, не успевает управлять.": "audio/aya_525.mp3",
+"Первый год пройден, салон вышел на точку безубыточности. Дальше — возвращать долги и расти.": "audio/aya_526.mp3",
+"Салон пережил первый год, но ещё не окупается. Так бывает: на выход в прибыль нужно от трёх до пяти лет.": "audio/aya_527.mp3",
+"Срок возврата подруге прошёл. Деньги вы вернёте, а доверие — вряд ли.": "audio/aya_528.mp3",
+"Новый салон раскручивается полгода. Первые месяцы клиентов мало — заложите это в расчёт.": "audio/aya_529.mp3",
+"Деньги закончились. Нужен заём, иначе салон закроется. Посмотрите, у кого ещё можно взять.": "audio/aya_530.mp3",
 "__silent": "audio/silent.mp3"
 };
 const MUSIC = "audio/music.mp3";
@@ -2465,14 +2529,21 @@ function heroSelect(){
   play.onclick = () => { if (!pick) return; play.disabled = true; [...row.children].forEach(x => x.disabled = true); HERO = pick; vis(pick === 'kira' ? 'eric' : 'kira', false); careerStart(); };
   wrap.append(row, play);
   /* директора: отдельная экономическая игра */
-  const dsec = el('div','hsDir'); dsec.append(el('div','hsDirT','Директора'));
+  const dsec = el('div','hsDir'); dsec.append(el('div','hsDirT','Бизнес: директора и своё дело'));
   const dc = el('div','hsDirCard'); const dim = el('img'); dim.src = IMG('tamara_b4'); dim.alt = 'Тамара Петровна';
   const dtx = el('div','hsDirTx'); dtx.append(el('b', null, 'Тамара Петровна · «Семейная»'), el('span', null, 'Владелица эконом-салона. Год по месяцам: выручка, зарплаты, аренда, налоги. Цель — год в плюсе и без кредита.'));
   const dbtns = el('div','hsDirBtns');
   const dsv = dirGet();
   if (dsv && dsv.form && !dsv.over && dsv.month < 12){ const cb = el('button','hsPlay hsDirPlay','▶ Продолжить: ' + DIR_MON[dsv.month].toLowerCase()); cb.type = 'button'; cb.onclick = () => { cb.disabled = true; dirStart(true); }; dbtns.append(cb); }
   const dp = el('button','hsPlay hsDirPlay' + (dsv && dsv.form && !dsv.over ? ' alt' : ''), dsv && dsv.form && !dsv.over && dsv.month < 12 ? 'Начать год заново' : 'Играть'); dp.type = 'button'; dp.onclick = () => { dp.disabled = true; dirStart(false); };
-  dbtns.append(dp); dc.append(dim, dtx, dbtns); dsec.append(dc); wrap.append(dsec);
+  dbtns.append(dp); dc.append(dim, dtx, dbtns); dsec.append(dc);
+  const OWN_READY = false;   // «Кира: своё дело» спрятан до озвучки Айи 471–514
+  const kc = el('div','hsDirCard'); kc.hidden = !OWN_READY; const kim = el('img'); kim.src = IMG('kira_e4'); kim.alt = 'Кира';
+  const ktx = el('div','hsDirTx'); ktx.append(el('b', null, 'Кира · своё дело'), el('span', null, 'Уходит из найма: кресло в аренду, потом свой кабинет. Никакого опыта в бизнесе — только профессия. Цель — год на себя без долгов.'));
+  const kbtns = el('div','hsDirBtns'); const ksv = ownGet();
+  if (ksv && ksv.reg && !ksv.over && ksv.month < 12){ const cb = el('button','hsPlay hsDirPlay','▶ Продолжить: ' + DIR_MON[ksv.month].toLowerCase()); cb.type = 'button'; cb.onclick = () => { cb.disabled = true; ownStart(true); }; kbtns.append(cb); }
+  const kp = el('button','hsPlay hsDirPlay hsOwnPlay' + (ksv && ksv.reg && !ksv.over ? ' alt' : ''), ksv && ksv.reg && !ksv.over && ksv.month < 12 ? 'Начать год заново' : 'Играть'); kp.type = 'button'; kp.onclick = () => { kp.disabled = true; ownStart(false); };
+  kbtns.append(kp); kc.append(kim, ktx, kbtns); dsec.append(kc); wrap.append(dsec);
   const back = el('button','backBtn','← В меню'); back.type = 'button'; back.onclick = () => restart(false);
   panel.append(wrap, back); fitStage();
 }
@@ -3321,7 +3392,7 @@ function saveLabel(o){
 }
 function saveResume(m){ const o = saveGet(m); if (!o || o.kind !== 'shift') return restart(false); track('save_resume'); menStart(o.master, o.career, o.salon, o); }
 /* код сохранения: перенести прогресс на другое устройство без сервера */
-const SAVE_KEYS = [SAVE_KEY + '_kira', SAVE_KEY + '_eric', DONE_KEY, STATS_KEY, 'romashka_rank', 'romashka_career', 'romashka_pijon', 'romashka_family', 'romashka_director', 'romashka_director_best'];
+const SAVE_KEYS = [SAVE_KEY + '_kira', SAVE_KEY + '_eric', DONE_KEY, STATS_KEY, 'romashka_rank', 'romashka_career', 'romashka_pijon', 'romashka_family', 'romashka_director', 'romashka_director_best', 'romashka_own'];
 function saveCode(){
   const o = {}; SAVE_KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v !== null) o[k] = v; } catch(e){} });
   return btoa(unescape(encodeURIComponent(JSON.stringify(o))));
@@ -3715,16 +3786,23 @@ function famCard(r){
   return '<p>Через месяц клиенты вернутся — и расскажут, что им понравилось, а что нет.</p>';
 }
 
-/* ================= РЕЖИМ ДИРЕКТОРА: Тамара Петровна, «Семейная» — год салона по месяцам ================= */
+/* ================= РЕЖИМ ДИРЕКТОРА: Тамара Петровна открывает салон с нуля — помещение, кресла, мастера, займы ================= */
 const DIR_KEY = 'romashka_director';
 const DIR_MON = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const DIR_SEAS = [-.25,-.05,.15,0,.05,0,-.20,.15,0,0,0,.25];
-const DIR_MROT = 27093, DIR_IPFIX = 57390;
-const DIR_FIX = {rent:60000, util:18000, kassa:5000, hoz:5000, amort:2000, trash:2000, buh:6500};   // постоянные расходы в месяц
+const DIR_MROT = 27093, DIR_IPFIX = 57390, DIR_CHAIR = 80000, DIR_SIGN = 30000;
+const DIR_PREM = {
+  basement:{t:'Полуподвал в спальном районе', s:'40 м², до 3 кресел. Мало прохожих, зато дёшево.', rent:35000, util:12000, max:3, traffic:9},
+  stop:{t:'Первый этаж у остановки', s:'60 м², до 4 кресел. Люди идут мимо каждый день.', rent:60000, util:18000, max:4, traffic:13},
+  avenue:{t:'Помещение на проспекте', s:'90 м², до 6 кресел. Большой поток и большая аренда.', rent:100000, util:27000, max:6, traffic:20}};
 const DIR_FORMS = {
   emp:{t:'Трудовой договор', s:'Оклад не ниже МРОТ, отпускные, взносы 30% сверху. Мастера спокойны, салону дорого.'},
   self:{t:'Самозанятые на проценте', s:'Взносов нет, мастер получает процент с услуг. Дёшево, но мастер на маленьком заработке уйдёт.'},
   rent:{t:'Аренда кресла', s:'Мастер платит 15 000 ₽ в месяц за кресло, работает своей косметикой со своими клиентами.'}};
+const DIR_LOANS = {
+  bank:{t:'Банк', s:'До 1,5 млн ₽ под 2,5% в месяц. Проценты платятся каждый месяц, пока долг не погашен.', max:1500000, step:50000, aya:519},
+  friend:{t:'Подружка Галя', s:'До 100 000 ₽ без процентов. Вернуть за полгода.', max:100000, step:10000, aya:520},
+  husband:{t:'Муж', s:'До 200 000 ₽ без процентов. Но каждый месяц долга — разговор на кухне.', max:200000, step:10000, aya:521}};
 const DIR_AYA = {
   424:'Это режим директора. Здесь вы не стрижёте, а считаете: выручку, зарплаты, аренду и налоги. Цель — закончить год в плюсе и без кредита.',
   425:'Сначала решите, как оформить мастеров. От этого зависят налоги, взносы и то, останутся ли мастера с вами.',
@@ -3735,12 +3813,9 @@ const DIR_AYA = {
   430:'Месяц в плюсе. Отложите часть: раз в квартал придут налоги.',
   431:'Месяц в минусе. Аренда и зарплаты не уменьшаются, когда клиентов становится меньше.',
   432:'Конец квартала: заплатили налог по упрощёнке и взносы за себя. Эти деньги нужно откладывать заранее.',
-  433:'Деньги закончились. Банк даёт кредит, но проценты съедят часть прибыли. Без него салон закроется.',
   434:'Салон закрылся. Эконом живёт на тонкой грани. Попробуйте другие решения — здесь можно ошибаться.',
-  435:'Год закрыт в плюсе. Тамара Петровна справилась, а вы теперь знаете, из чего складывается прибыль салона.',
   436:'Год пройден, но цель не достигнута. Посмотрите отчёт: где ушли деньги и что можно было решить иначе.',
   437:'Мастер получает меньше МРОТ. Такие мастера ищут другое место и уводят своих клиентов.',
-  438:'Новый мастер — это риск и шанс. Опытный приведёт своих клиентов, но попросит больше.',
   439:'Мастер ушёл. Его кресло пустует, пока вы не найдёте замену.',
   440:'Верно. Отпустить и выйти в зал самой — мастер это запомнит.',
   441:'Мастер отработает субботу, но обиду запомнит. Верность важнее одного дня.',
@@ -3772,72 +3847,122 @@ const DIR_AYA = {
   467:'Правильно. Премия в горячий сезон окупается: мастера работают с отдачей.',
   468:'Мастера отработали декабрь без выходных и без благодарности. После праздников кто-то уйдёт.',
   469:'Верно. Перенести записи заранее — значит сохранить клиентов.',
-  470:'Стрижка при свете телефона — так себе впечатление о салоне.'};
+  470:'Стрижка при свете телефона — так себе впечатление о салоне.',
+  515:'Это режим директора. Тамара Петровна открывает салон с нуля: на счёте ноль, всё — в долг. Цель первого года — выйти на точку безубыточности и не закрыться.',
+  516:'Сначала помещение. Большой зал на проспекте даёт поток клиентов, но аренда съедает деньги, пока салон не раскрутится.',
+  517:'Каждое кресло — это восемьдесят тысяч на оборудование. Пустое кресло ничего не приносит, а деньги за него уже потрачены.',
+  518:'Денег нет — значит, нужен заём. Банк даёт много, но под проценты. Подруга и муж — без процентов, но с ними сложнее спорить.',
+  519:'Банковский кредит: проценты каждый месяц, пока долг не погашен. Гасите, как только появятся свободные деньги.',
+  520:'Деньги подруги без процентов, но вернуть их нужно за полгода. Просрочка будет стоить дружбы.',
+  521:'Муж поможет без процентов. Но семейный бюджет общий: каждый месяц долга — разговор на кухне.',
+  522:'Термометр — это точка безубыточности. Пока выручка ниже черты, салон работает в минус, даже если клиенты идут.',
+  523:'На одно кресло нужно два мастера по графику два через два. Мастеров больше — кто-то сидит без работы. Меньше — кресла простаивают.',
+  524:'Цену можно ставить каждому мастеру. Опытному — выше, новичку — ниже: так клиенты распределяются честно.',
+  525:'Тамара может стричь сама. Это бесплатный мастер для салона, но директор, который всё время у кресла, не успевает управлять.',
+  526:'Первый год пройден, салон вышел на точку безубыточности. Дальше — возвращать долги и расти.',
+  527:'Салон пережил первый год, но ещё не окупается. Так бывает: на выход в прибыль нужно от трёх до пяти лет.',
+  528:'Срок возврата подруге прошёл. Деньги вы вернёте, а доверие — вряд ли.',
+  529:'Новый салон раскручивается полгода. Первые месяцы клиентов мало — заложите это в расчёт.',
+  530:'Деньги закончились. Нужен заём, иначе салон закроется. Посмотрите, у кого ещё можно взять.'};
 const dirA = n => DIR_AYA[n];
-const DIR_NAMES = ['Света','Оля','Ирина','Нина'];
+const DIR_NAMES = ['Света','Оля','Ирина','Нина','Алина','Жанна','Вика','Люда','Таня','Катя','Даша','Лена'];
 let D = null;
 
-function dirGet(){ try { const o = JSON.parse(localStorage.getItem(DIR_KEY) || 'null'); return o && o.v === 1 ? o : null; } catch(e){ return null; } }
-function dirPut(){ try { localStorage.setItem(DIR_KEY, JSON.stringify(D)); } catch(e){} }
+function dirGet(){ try { const o = JSON.parse(localStorage.getItem(DIR_KEY) || 'null'); return o && o.v === 2 ? o : null; } catch(e){ return null; } }
+function dirPut(){ try { localStorage.setItem(DIR_KEY, JSON.stringify(D)); } catch(e){} dirHud(); }
 function dirClear(){ try { localStorage.removeItem(DIR_KEY); } catch(e){} }
 function dirFresh(){
-  return {v:1, kind:'director', month:0, cash:100000, form:null, check:650, pct:0.45, tamDays:22, care:true, mark:false,
-    rep:50, comp:0, compM:0, credit:0, creditEver:false, scandal:false, left:0, hires:0, flags:{}, used:[], log:[], incQ:0, insQ:0, incY:0, over:false, months:[], _noHire:false,
-    masters:DIR_NAMES.map(n => ({name:n, loy:50, base:0.15, pct:null}))};
+  return {v:2, kind:'director', month:0, cash:0, prem:null, chairs:3, form:null, pct:0.45, tamDays:3, tamPrice:700, care:true, mark:false,
+    rep:40, comp:0, compM:0, loans:{bank:0, friend:0, husband:0}, friendDue:null, friendLate:false, husbandM:0, debtStart:0,
+    scandal:false, left:0, flags:{}, used:[], log:[], months:[], incQ:0, insQ:0, incY:0, over:false, masters:[], nameI:0};
+}
+function dirNewMaster(){ const n = DIR_NAMES[D.nameI++ % DIR_NAMES.length] + (D.nameI > DIR_NAMES.length ? ' ' + Math.ceil(D.nameI / DIR_NAMES.length) : ''); return {name:n, loy:55, price:650}; }
+function dirSetMasters(n){ while (D.masters.length < n) D.masters.push(dirNewMaster()); while (D.masters.length > n){ D.masters.pop(); D.masters.forEach(m => m.loy = Math.max(0, m.loy - 3)); } }
+const dirDebt = () => D.loans.bank + D.loans.friend + D.loans.husband;
+
+/* ---------- плашки сверху и термометр на сцене ---------- */
+function dirHud(){
+  const on = document.body.classList.contains('dirMode') && D && D.prem;
+  const rp = document.getElementById('dirRepPlate'), cp = document.getElementById('dirCashPlate');
+  if (!rp || !cp) return;
+  rp.hidden = !on; cp.hidden = !on; if (!on) return;
+  document.getElementById('dirRepOut').textContent = Math.round(D.rep);
+  const bar = document.getElementById('dirRepBar'); bar.style.width = D.rep + '%'; bar.className = D.rep < 30 ? 'low' : '';
+  document.getElementById('dirCashOut').textContent = (D.cash < 0 ? '−' : '') + Math.abs(Math.round(D.cash / 1000)).toLocaleString('ru-RU') + ' тыс.';
+}
+const dirThermo = (() => { const d = document.createElement('div'); d.className = 'dirThermo'; d.hidden = true; stage.append(d); return d; })();
+function dirThermoShow(rev, be){
+  if (rev == null){ dirThermo.hidden = true; return; }
+  const top = Math.max(rev, isFinite(be) ? be : rev) * 1.25 || 1;
+  const fill = Math.min(100, rev / top * 100), line = isFinite(be) ? Math.min(100, be / top * 100) : 100;
+  const ok = isFinite(be) && rev >= be;
+  dirThermo.innerHTML = '<div class="dtL">Точка<br>безубыточности</div><div class="dtTube"><i class="' + (ok ? 'ok' : 'bad') + '" style="height:' + fill + '%"></i><b style="bottom:' + line + '%"></b></div>' +
+    '<div class="dtV"><span>выручка</span><b>' + Math.round(rev / 1000) + ' тыс.</b><span>нужно</span><b>' + (isFinite(be) ? Math.round(be / 1000) + ' тыс.' : '—') + '</b></div>';
+  dirThermo.className = 'dirThermo ' + (ok ? 'ok' : 'bad'); dirThermo.hidden = false;
 }
 function dirSalonScene(pose){
   ['kira','eric','marina','narc','ab','x2','admin','client'].forEach(x => { try { vis(x, false); } catch(e){} });
   setLocation2('salon_econom'); clips(false);
-  C.tamara.pose = SP.tamara[pose] ? pose : 'stand'; setPos('tamara', 1100, 690); face('tamara', -1); vis('tamara', true); mood('tamara', 'ok');
+  C.tamara.pose = SP.tamara[pose] ? pose : 'stand'; setPos('tamara', 1100, 690); face('tamara', -1); vis('tamara', true);
   camSet(1000);
 }
 function dirHead(sub, title){
   const h = el('div','head'); h.append(el('h1', null, title || (D && D.month < 12 && D.form && !D.over ? DIR_MON[D.month] + ' · месяц ' + (D.month + 1) + ' из 12' : 'Директор «Семейной»')), el('span','step', sub || 'Тамара Петровна'));
   return h;
 }
-function dirStatus(){
-  const box = el('div','dirStat');
-  const it = (k, v, c) => { const d = el('div','dirKpi' + (c ? ' ' + c : '')); d.append(el('span', null, k), el('b', null, v)); return d; };
-  const act = D.masters.filter(m => !m.gone);
-  box.append(it('На счёте', rub(Math.round(D.cash)), D.cash < 0 ? 'neg' : ''),
-    it('Мастера', act.length + ' из 4'),
-    it('Репутация', D.rep >= 65 ? 'хорошая' : D.rep >= 40 ? 'обычная' : 'плохая', D.rep < 40 ? 'neg' : D.rep >= 65 ? 'pos' : ''),
-    it('Кредит', D.credit ? rub(D.credit) : 'нет', D.credit ? 'neg' : ''));
-  const ms = el('div','dirMasters');
-  act.forEach(m => { const s = el('span','dirM' + (m.loy < 35 ? ' low' : m.loy >= 70 ? ' high' : '')); s.textContent = m.name + ' ' + (m.loy < 35 ? '😟' : m.loy >= 70 ? '😊' : '🙂'); s.title = 'Верность ' + Math.round(m.loy); ms.append(s); });
-  const w = el('div','dirStatWrap'); w.append(box, ms); return w;
+function dirSeg(label, opts, cur, set){
+  const w = el('div','dirSeg'); w.append(el('span','dirSegL', label));
+  const row = el('div','dirSegR'); row.setAttribute('role','group'); row.setAttribute('aria-label', label);
+  opts.forEach(([v, t]) => { const b = el('button', null, t); b.type = 'button'; b.setAttribute('aria-pressed', String(v === cur)); b.onclick = () => { set(v); [...row.children].forEach(x => x.setAttribute('aria-pressed', String(x === b))); if (D && D.kind === 'director') dirPut(); }; row.append(b); });
+  w.append(row); return w;
+}
+function dirSlider(label, min, max, step, cur, fmt, set){
+  const id = 'ds' + Math.random().toString(36).slice(2, 7);
+  const w = el('div','dirSl'); const l = el('label'); l.htmlFor = id; const out = el('b', null, fmt(cur)); l.append(el('span', null, label), out);
+  const r = el('input'); r.type = 'range'; r.id = id; r.min = min; r.max = max; r.step = step; r.value = cur;
+  r.oninput = () => { const v = +r.value; out.textContent = fmt(v); set(v); };
+  w.append(l, r); return w;
+}
+function dirStep(cur, min, max, step, fmt, set){
+  const w = el('span','dirStep'); const v = el('b', null, fmt(cur));
+  const mk = (t, d, lbl) => { const b = el('button', null, t); b.type = 'button'; b.setAttribute('aria-label', lbl); b.onclick = () => { cur = Math.max(min, Math.min(max, cur + d)); v.textContent = fmt(cur); set(cur); dirPut(); }; return b; };
+  w.append(mk('−', -step, 'Дешевле'), v, mk('+', step, 'Дороже')); return w;
 }
 
 /* ---------- расчёт месяца ---------- */
+function dirPriceK(p){ return Math.max(0.4, 1 - (p - 650) / 50 * 0.08); }
 function dirMonthCalc(){
-  const i = D.month, k = 1 + DIR_SEAS[i];
-  const priceK = 1 - (D.check - 650) / 50 * 0.08;
-  const repK = 0.8 + D.rep / 250;
-  const compK = D.compM > 0 ? 1 - D.comp : 1;
-  const ev = D.ev || {};
-  const cpd = Math.max(1, 3.5 * k * priceK * repK * compK * (ev.load || 1));
-  const act = D.masters.filter(m => !m.gone);
-  const r = {cpd, svc:0, rentIn:0, utilIn:0, care:0, pay:0, ins:0, mat:0, acq:0, careCost:0, fixed:0, extra:ev.cost || 0, interest:0, tax:0};
-  const tamVis = D.tamDays * cpd;
-  r.svc = tamVis * D.check; let visits = tamVis;
-  r.mIncome = {};
-  if (D.form === 'rent'){
-    const chairs = Math.min(2, Math.ceil(act.length / 2));
-    r.rentIn = chairs * 15000; r.utilIn = DIR_FIX.util * chairs / 3;
-    act.forEach(m => { const v = 15 * cpd * (1 + m.base); r.mIncome[m.name] = v * D.check - 15000 / 2 - DIR_FIX.util / 6 - v * 40; });
-  } else {
-    act.forEach(m => {
-      const v = 15 * cpd * (1 + m.base), rev = v * D.check, pct = m.pct || D.pct;
-      let pay = rev * pct; r.mIncome[m.name] = pay;
-      if (D.form === 'emp'){ pay = Math.max(pay, DIR_MROT); r.mIncome[m.name] = pay; pay *= 1.083; r.ins += pay * 0.302; }
-      r.svc += rev; visits += v; r.pay += pay;
-    });
+  const i = D.month, k = 1 + DIR_SEAS[i], P = DIR_PREM[D.prem], ev = D.ev || {};
+  const ramp = Math.min(1, 0.55 + 0.075 * i), repK = 0.6 + D.rep / 125, compK = D.compM > 0 ? 1 - D.comp : 1;
+  const tamShifts = Math.round(D.tamDays * 4.3);
+  const rent = D.form === 'rent';
+  const units = D.masters.map(m => ({m, sh:15, p:m.price})).concat(tamShifts ? [{tam:true, sh:tamShifts, p:D.tamPrice}] : []);
+  const capSh = D.chairs * 30;
+  const wantSh = units.reduce((a, u) => a + u.sh, 0);
+  const shK = wantSh > capSh && wantSh ? capSh / wantSh : 1;       // мастеров больше, чем кресел, — смены делятся
+  units.forEach(u => u.sh *= shK);
+  const avgP = units.length ? units.reduce((a, u) => a + u.p * u.sh, 0) / Math.max(1, units.reduce((a, u) => a + u.sh, 0)) : 650;
+  const demand = P.traffic * 30 * k * repK * ramp * compK * (ev.load || 1) * dirPriceK(avgP) * (units.length ? 1 : 0);
+  const wsum = units.reduce((a, u) => a + u.sh * dirPriceK(u.p), 0) || 1;
+  const r = {svc:0, rentIn:0, utilIn:0, care:0, pay:0, ins:0, mat:0, acq:0, careCost:0, fixed:0, extra:ev.cost || 0, interest:0, tax:0, visits:0, lost:0, mIncome:{}, demand};
+  units.forEach(u => {
+    const want = demand * u.sh * dirPriceK(u.p) / wsum, v = Math.min(want, u.sh * 8);
+    r.lost += want - v; const rev = v * u.p;
+    if (rent && u.m){ r.mIncome[u.m.name] = rev - 7500 - P.util / D.chairs / 2 - v * 40; return; }   // арендатор: выручка его, салону — аренда
+    r.visits += v; r.svc += rev;
+    if (u.m){ let pay = rev * D.pct; r.mIncome[u.m.name] = pay;
+      if (D.form === 'emp'){ pay = Math.max(pay, DIR_MROT); r.mIncome[u.m.name] = pay; pay *= 1.083; r.ins += pay * 0.302; }
+      r.pay += pay; }
+  });
+  if (rent){
+    const used = Math.min(D.chairs, Math.ceil(D.masters.length / 2));
+    r.rentIn = used * 15000; r.utilIn = P.util * used / D.chairs;
   }
-  if (D.care && D.mark){ r.care = 6000 * k * (D.rep / 50); r.careCost = r.care / 1.5 + (D.form === 'rent' ? 0 : r.care * 0.1) + 1500; }
-  r.mat = visits * 40;
+  if (D.care && D.mark){ r.care = 3000 * D.chairs * k * (D.rep / 50); r.careCost = r.care / 1.5 + (rent ? 0 : r.care * 0.1) + 1500; }
+  r.mat = r.visits * 40;
   r.acq = (r.svc + r.care) * 0.7 * 0.012;
-  r.fixed = Object.values(DIR_FIX).reduce((a, b) => a + b, 0);
-  r.interest = D.credit * 0.025;
+  r.fixed = P.rent + P.util + 5000 + (2000 + 1000 * D.chairs) + 700 * D.chairs + 2000 + 6500;
+  r.interest = D.loans.bank * 0.025;
   r.income = r.svc + r.rentIn + r.utilIn + r.care;
   r.exp = r.pay + r.ins + r.mat + r.acq + r.careCost + r.fixed + r.extra + r.interest;
   r.pre = r.income - r.exp;
@@ -3849,16 +3974,20 @@ function dirMonthCalc(){
     D.incQ = 0; D.insQ = 0;
   }
   r.net = r.pre - r.tax;
+  const varShare = r.income > 0 ? (r.pay + r.ins + r.mat + r.acq + r.careCost) / r.income : 1;
+  r.be = varShare < 0.97 ? (r.fixed + r.interest + DIR_IPFIX / 12) / (1 - varShare) : Infinity;
+  // репутация: очереди и перегруз — минус, ровная работа — плюс
+  const lostShare = r.demand > 0 ? r.lost / r.demand : 0;
+  D.rep = Math.max(0, Math.min(100, D.rep + (lostShare > 0.15 ? -3 : 1.5) - (D.tamDays >= 6 ? 1 : 0)));
   return r;
 }
-/* верность мастеров после месяца */
 function dirLoyalty(r){
   const low = [];
-  D.masters.filter(m => !m.gone).forEach(m => {
+  D.masters.forEach(m => {
     const inc = r.mIncome[m.name] || 0;
-    let d = inc >= 20000 ? 5 : inc >= 15000 ? 1 : inc >= 12000 ? -4 : -8;   // мастера в экономе на 2/2 подрабатывают на дому: ориентир — 15–20 тыс. в салоне
+    let d = inc >= 20000 ? 5 : inc >= 15000 ? 1 : inc >= 12000 ? -4 : -8;
     if (D.form === 'emp') d = Math.max(d, 4);
-    if ((m.pct || D.pct) >= 0.5) d += 3; if ((m.pct || D.pct) <= 0.4) d -= 3;
+    if (D.form !== 'rent'){ if (D.pct >= 0.5) d += 3; if (D.pct <= 0.4) d -= 3; }
     m.loy = Math.max(0, Math.min(100, m.loy + d));
     if (inc < DIR_MROT) low.push(m);
   });
@@ -3867,59 +3996,61 @@ function dirLoyalty(r){
 
 /* ---------- события ---------- */
 const dO = (ok, t, aya, fx) => ({ok, t, aya, fx});
+const dirM = i => (D.masters[i] || D.masters[0] || {name:'мастер'}).name;
 const DIR_EVENTS = [
-  {id:'sat', when:D => D.month >= 1, who:'Света', text:'Света просит отпустить её в субботу: у дочери выпускной в садике.', opts:[
-    dO(true,'Отпустить. Тамара Петровна сама выйдет в зал в субботу.', 440, {loyName:'Света', loy:15}),
-    dO(false,'Не отпускать: суббота — самый денежный день.', 441, {loyName:'Света', loy:-20}),
-    dO(false,'Отпустить, а кресло в субботу пусть постоит пустым.', 442, {loyName:'Света', loy:10, load:0.97})]},
-  {id:'fen', text:'У Оли сгорел фен посреди укладки. Клиентка досушивается полотенцем.', opts:[
+  {id:'sat', when:D => D.month >= 1 && D.masters.length, mk:() => ({text:dirM(0) + ' просит отпустить её в субботу: у дочери выпускной в садике.', opts:[
+    dO(true,'Отпустить. Тамара Петровна сама выйдет в зал в субботу.', 440, {loyName:dirM(0), loy:15}),
+    dO(false,'Не отпускать: суббота — самый денежный день.', 441, {loyName:dirM(0), loy:-20}),
+    dO(false,'Отпустить, а кресло в субботу пусть постоит пустым.', 442, {loyName:dirM(0), loy:10, load:0.97})]})},
+  {id:'fen', when:D => D.masters.length > 1, mk:() => ({text:dirM(1) + ': «Тамара Петровна, фен сгорел прямо на укладке!» Клиентка досушивается полотенцем.', opts:[
     dO(true,'Сразу купить новый профессиональный фен за 5 000 ₽.', 443, {cost:5000}),
-    dO(false,'Пусть Оля пока работает своим феном.', 444, {loyName:'Оля', loy:-12}),
-    dO(false,'Отдать в ремонт к знакомому за 1 500 ₽.', 445, {cost:1500, later:'fen2'})]},
-  {id:'water', text:'Управляющая компания отключает горячую воду на два дня. В записи двенадцать человек.', opts:[
+    dO(false,'Пусть мастер пока работает своим феном.', 444, {loyName:dirM(1), loy:-12}),
+    dO(false,'Отдать в ремонт к знакомому за 1 500 ₽.', 445, {cost:1500, later:'fen2'})]})},
+  {id:'water', mk:() => ({text:'Управляющая компания отключает горячую воду на два дня. В записи двенадцать человек.', opts:[
     dO(true,'Обзвонить всех записанных и перенести на другие дни.', 446, {load:0.97, rep:3}),
     dO(false,'Работать без мытья: стричь всех на сухую.', 447, {load:0.98, rep:-6}),
-    dO(false,'Просто закрыться на два дня.', 448, {load:0.93, rep:-8})]},
-  {id:'leak', when:D => D.month >= 2, text:'Под мойкой течёт труба. Вода уже дошла до кресла Ирины.', opts:[
+    dO(false,'Просто закрыться на два дня.', 448, {load:0.93, rep:-8})]})},
+  {id:'leak', when:D => D.month >= 2, mk:() => ({text:'Под мойкой течёт труба. Вода уже дошла до кресел.', opts:[
     dO(true,'Вызвать сантехника сразу — 4 000 ₽.', 449, {cost:4000}),
     dO(false,'Подставить тазик и ждать, пока собственник помещения решит.', 450, {rep:-3, cost:15000}),
-    dO(false,'Позвать соседа-умельца за 1 500 ₽.', 451, {cost:5500})]},
-  {id:'review', text:'В 2ГИС новый отзыв: «Стригли пятнадцать минут, вышло криво. Больше не приду». Одна звезда.', opts:[
+    dO(false,'Позвать соседа-умельца за 1 500 ₽.', 451, {cost:5500})]})},
+  {id:'review', mk:() => ({text:'В 2ГИС новый отзыв: «Стригли пятнадцать минут, вышло криво. Больше не приду». Одна звезда.', opts:[
     dO(true,'Ответить вежливо и публично, пригласить на бесплатное исправление.', 452, {rep:6, cost:650}),
     dO(false,'Не отвечать: один отзыв ничего не решает.', 453, {rep:-6}),
-    dO(false,'Ответить резко: «Сами виноваты, надо было сразу сказать мастеру».', 454, {rep:-12})]},
-  {id:'san', text:'Соседний салон оштрафовали за стерилизацию. Мастера спрашивают, как у нас с этим.', opts:[
+    dO(false,'Ответить резко: «Сами виноваты, надо было сразу сказать мастеру».', 454, {rep:-12})]})},
+  {id:'san', mk:() => ({text:'Соседний салон оштрафовали за стерилизацию. Мастера спрашивают, как у нас с этим.', opts:[
     dO(true,'Купить сухожаровой шкаф и завести журналы — 8 000 ₽.', 455, {cost:8000, rep:4}),
-    dO(false,'«У нас всё нормально, работаем как работали».', 456, {rep:-5, loy:-4})]},
-  {id:'narc', when:D => D.month >= 3 && D.form !== 'emp', who:'Ирина', text:'Нарцисс из «Ромашки» позвал Ирину к себе: обещает 50% и клиентов. Ирина пришла поговорить.', opts:[
-    dO(true,'Поговорить и поднять Ирине процент до 50%.', 457, {pctName:'Ирина', loyName:'Ирина', loy:25}),
-    dO(false,'Отпустить: «Держать не буду, удачи».', 458, {leave:'Ирина'}),
-    dO(false,'«Предательница! После всего, что я для тебя сделала!»', 459, {leave:'Ирина', scandal:true, rep:-10})]},
-  {id:'comp', when:D => D.month >= 2, text:'Через дорогу открылась парикмахерская: стрижка 450 ₽, яркая вывеска.', opts:[
+    dO(false,'«У нас всё нормально, работаем как работали».', 456, {rep:-5, loy:-4})]})},
+  {id:'narc', when:D => D.month >= 3 && D.form !== 'emp' && D.masters.length > 2, mk:() => ({text:dirM(2) + ' пришла поговорить: Нарцисс из «Ромашки» зовёт её к себе, обещает 50% и клиентов.', opts:[
+    dO(true,'Поговорить и поднять ей цену стрижки и общий процент до 50%.', 457, {pct:0.5, loyName:dirM(2), loy:25}),
+    dO(false,'Отпустить: «Держать не буду, удачи».', 458, {leave:dirM(2)}),
+    dO(false,'«Предательница! После всего, что я для тебя сделала!»', 459, {leave:dirM(2), scandal:true, rep:-10})]})},
+  {id:'comp', when:D => D.month >= 2, mk:() => ({text:'Через дорогу открылась парикмахерская: стрижка 450 ₽, яркая вывеска.', opts:[
     dO(true,'Цены не снижать, а держать сервис: чай, чистота, запись без ожидания.', 460, {comp:0.05, compM:2, rep:4}),
-    dO(false,'Снизить цену до 550 ₽, чтобы клиенты не ушли.', 461, {check:550}),
-    dO(false,'Ничего не делать: у нас свои клиенты.', 462, {comp:0.10, compM:4})]},
-  {id:'fns', when:D => D.form === 'self' && D.month >= 5, text:'Из налоговой пришёл запрос: мастера-самозанятые работают по графику салона, как сотрудники.', opts:[
+    dO(false,'Снизить всем мастерам цену на 100 ₽, чтобы клиенты не ушли.', 461, {priceAll:-100}),
+    dO(false,'Ничего не делать: у нас свои клиенты.', 462, {comp:0.10, compM:4})]})},
+  {id:'fns', when:D => D.form === 'self' && D.month >= 5, mk:() => ({text:'Из налоговой пришёл запрос: мастера-самозанятые работают по графику салона, как сотрудники.', opts:[
     dO(true,'Нанять юриста и привести договоры в порядок — 15 000 ₽.', 463, {cost:15000}),
-    dO(false,'Ничего не делать: «все так работают».', 464, {cost:60000})]},
-  {id:'mark', when:D => D.care && !D.mark, first:true, text:'С этого года уход продают только с маркировкой «Честный знак»: нужен сканер и подключение.', opts:[
+    dO(false,'Ничего не делать: «все так работают».', 464, {cost:60000})]})},
+  {id:'mark', first:true, when:D => D.care && !D.mark, mk:() => ({text:'С этого года уход продают только с маркировкой «Честный знак»: нужен сканер и подключение.', opts:[
     dO(true,'Подключиться: сканер и настройка — 7 000 ₽.', 465, {cost:7000, mark:true}),
-    dO(false,'Убрать витрину с уходом: морока не стоит того.', 466, {care:false})]},
-  {id:'light', text:'Во вторник в доме отключат свет на весь день: плановые работы.', opts:[
+    dO(false,'Убрать витрину с уходом: морока не стоит того.', 466, {care:false})]})},
+  {id:'light', mk:() => ({text:'Во вторник в доме отключат свет на весь день: плановые работы.', opts:[
     dO(true,'Заранее перенести записи и предупредить клиентов.', 469, {load:0.98, rep:2}),
-    dO(false,'Работать при свете телефонов и ножницами — машинки не работают.', 470, {rep:-4})]},
-  {id:'dec', month:11, text:'Декабрь: запись забита до Нового года. Мастера работают без выходных.', opts:[
+    dO(false,'Работать при свете телефонов и ножницами — машинки не работают.', 470, {rep:-4})]})},
+  {id:'dec', month:11, when:D => D.masters.length, mk:() => ({text:'Декабрь: запись забита до Нового года. Мастера работают без выходных.', opts:[
     dO(true,'Выплатить каждому мастеру премию 3 000 ₽.', 467, {premium:3000, loy:12}),
-    dO(false,'Без премий: «Вам же процент идёт».', 468, {loy:-15})]}
+    dO(false,'Без премий: «Вам же процент идёт».', 468, {loy:-15})]})}
 ];
 function dirPickEvent(){
   if (D.flags.fen2 && D.month >= D.flags.fen2){ delete D.flags.fen2;
-    return {id:'fen2', text:'Фен Оли из ремонта снова сломался — в субботу утром.', opts:[dO(true,'Купить новый — 5 000 ₽.', 443, {cost:5000}), dO(false,'Пусть Оля работает своим.', 444, {loyName:'Оля', loy:-12})]}; }
-  const fixed = DIR_EVENTS.find(e => e.month === D.month && !D.used.includes(e.id)); if (fixed) return fixed;
-  const first = DIR_EVENTS.find(e => e.first && !D.used.includes(e.id) && (!e.when || e.when(D))); if (first) return first;
-  const pool = DIR_EVENTS.filter(e => e.month == null && !e.first && !D.used.includes(e.id) && (!e.when || e.when(D)) && (!e.who || D.masters.some(m => m.name === e.who && !m.gone)));
+    return {id:'fen2', text:'Фен из ремонта снова сломался — в субботу утром.', opts:[dO(true,'Купить новый — 5 000 ₽.', 443, {cost:5000}), dO(false,'Пусть мастер работает своим.', 444, {loy:-6})]}; }
+  const ok = e => !D.used.includes(e.id) && (!e.when || e.when(D));
+  const fixed = DIR_EVENTS.find(e => e.month === D.month && ok(e)); if (fixed) return Object.assign({id:fixed.id}, fixed.mk());
+  const first = DIR_EVENTS.find(e => e.first && ok(e)); if (first) return Object.assign({id:first.id}, first.mk());
+  const pool = DIR_EVENTS.filter(e => e.month == null && !e.first && ok(e));
   if (!pool.length || Math.random() < 0.15) return null;
-  return pool[Math.floor(Math.random() * pool.length)];
+  const e = pool[Math.floor(Math.random() * pool.length)]; return Object.assign({id:e.id}, e.mk());
 }
 function dirApply(fx){
   D.ev = D.ev || {};
@@ -3928,18 +4059,18 @@ function dirApply(fx){
   if (fx.rep) D.rep = Math.max(0, Math.min(100, D.rep + fx.rep));
   if (fx.loy && !fx.loyName) D.masters.forEach(m => m.loy = Math.max(0, Math.min(100, m.loy + fx.loy)));
   if (fx.loyName){ const m = D.masters.find(x => x.name === fx.loyName); if (m) m.loy = Math.max(0, Math.min(100, m.loy + fx.loy)); }
-  if (fx.pctName){ const m = D.masters.find(x => x.name === fx.pctName); if (m) m.pct = 0.5; }
+  if (fx.pct) D.pct = fx.pct;
+  if (fx.priceAll) D.masters.forEach(m => m.price = Math.max(400, m.price + fx.priceAll));
   if (fx.later) D.flags[fx.later] = D.month + 2;
   if (fx.comp){ D.comp = fx.comp; D.compM = fx.compM; }
-  if (fx.check) D.check = fx.check;
   if (fx.mark) D.mark = true;
   if (fx.care === false){ D.care = false; D.mark = false; }
-  if (fx.premium) D.ev.cost = (D.ev.cost || 0) + fx.premium * D.masters.filter(m => !m.gone).length;
+  if (fx.premium) D.ev.cost = (D.ev.cost || 0) + fx.premium * D.masters.length;
   if (fx.leave) dirLeave(fx.leave, fx.scandal);
 }
 function dirLeave(name, scandal){
-  const m = D.masters.find(x => x.name === name && !x.gone); if (!m) return;
-  m.gone = true; D.left++; D.rep = Math.max(0, D.rep - Math.round(m.base * 30)); if (scandal) D.scandal = true;
+  const i = D.masters.findIndex(x => x.name === name); if (i < 0) return;
+  D.masters.splice(i, 1); D.left++; D.rep = Math.max(0, D.rep - 4); if (scandal) D.scandal = true;
 }
 function dirDecide(title, sub, opts){
   return new Promise(res => {
@@ -3963,24 +4094,57 @@ function dirDecide(title, sub, opts){
     panel.append(list); fitStage();
   });
 }
+/* реплика Тамары с портретом нужной эмоции — прямо в панели */
+function dirTamara(text, emo){
+  mood('tamara', emo);
+  const c = el('div','dirTam'); const im = el('img'); im.src = IMG('tamara_b' + (AV.tamara[emo] ?? 0)); im.alt = '';
+  const q = el('div','dirTamQ'); q.append(el('b', null, 'Тамара Петровна'), el('span', null, text)); c.append(im, q); return c;
+}
 
-/* ---------- экраны ---------- */
+/* ---------- старт: помещение, кресла, оформление, деньги ---------- */
 async function dirStart(resume){
   track('dir_start');
   S = fresh(); resetScene(); hud(); stopVoice(); hideDlg();
   document.body.classList.add('dirMode');
   D = resume ? dirGet() : null;
-  dirSalonScene('cash');
-  if (D && D.form && D.month < 12) return dirPlan();
-  D = dirFresh(); dirClear();
-  panel.innerHTML = ''; panel.append(dirHead('Начало года'), el('p','wait','Смотрите сцену…'));
-  await say('tamara', '«Семейная», три кресла, четыре мастера. Аренда шестьдесят тысяч, коммуналка, налоги. Посмотрим, сведу ли я этот год в плюс.', {narr:true});
-  await say('tamara', 'Тридцать лет стригу, а считать так и не полюбила. Ну, давай считать вместе.', {mood:'warm'});
-  ayaState('explain'); await say('aya', dirA(424));
-  dirFormPick();
+  dirSalonScene('stand'); dirThermoShow(null);
+  if (D && D.form && D.month < 12 && !D.over){ dirHud(); return D.opened ? dirPlan() : dirMoney(true); }
+  D = dirFresh(); dirClear(); dirHud();
+  panel.innerHTML = ''; panel.append(dirHead('Начало', 'Директор «Семейной»'), el('p','wait','Смотрите сцену…'));
+  mood('tamara','warm');
+  await say('tamara', 'Тамара Петровна тридцать лет стригла у чужих. Теперь решилась: своя парикмахерская. Денег на счёте — ноль.', {narr:true});
+  await say('tamara', 'Назову «Семейная». Стричь умею, а считать… ну, научимся.', {mood:'warm'});
+  ayaState('explain'); await say('aya', dirA(515));
+  dirPremPick();
+}
+function dirPremPick(){
+  panel.innerHTML = ''; panel.append(dirHead('Помещение', 'Шаг 1 из 4'));
+  ayaState('explain'); say('aya', dirA(516), {hold:true});
+  const grid = el('div','dirForms');
+  Object.entries(DIR_PREM).forEach(([id, p]) => {
+    const b = el('button','mbBtn dirForm'); b.type = 'button';
+    b.append(el('b', null, p.t), el('span','mbS', p.s + ' Аренда ' + rub(p.rent) + ', коммуналка около ' + rub(p.util) + ' в месяц.'));
+    b.onclick = () => { stopVoice(); hideDlg(); D.prem = id; D.chairs = Math.min(D.chairs, p.max); track('dir_prem_' + id); dirPut(); dirChairs(); };
+    grid.append(b);
+  });
+  panel.append(grid, dirMenuBtn()); fitStage();
+}
+function dirStartCost(){ return D.chairs * DIR_CHAIR + DIR_PREM[D.prem].rent + DIR_SIGN; }
+function dirChairs(){
+  const P = DIR_PREM[D.prem];
+  panel.innerHTML = ''; panel.append(dirHead('Рабочие места', 'Шаг 2 из 4'));
+  ayaState('explain'); say('aya', dirA(517), {hold:true});
+  const cost = el('div','card');
+  const upd = () => { cost.innerHTML = '<b>Нужно на открытие: ' + rub(dirStartCost()) + '</b><br>Оборудование ' + D.chairs + ' × ' + rub(DIR_CHAIR) + ', залог за аренду ' + rub(P.rent) + ', вывеска ' + rub(DIR_SIGN) + '.'; };
+  const sl = dirSlider('Рабочих мест (кресел)', 2, P.max, 1, D.chairs, v => String(v), v => { D.chairs = v; upd(); });
+  upd();
+  const go = el('button','next','Дальше'); go.type = 'button'; go.onclick = () => { stopVoice(); hideDlg(); dirSetMasters(Math.min(D.chairs * 2, 8)); dirPut(); dirFormPick(); };
+  const back = el('button','next alt','← Другое помещение'); back.type = 'button'; back.onclick = () => { stopVoice(); hideDlg(); dirPremPick(); };
+  const row = el('div','btnrow'); row.append(back, go);
+  panel.append(sl, cost, row, dirMenuBtn()); fitStage();
 }
 function dirFormPick(){
-  panel.innerHTML = ''; panel.append(dirHead('Как оформить мастеров'));
+  panel.innerHTML = ''; panel.append(dirHead('Как оформить мастеров', 'Шаг 3 из 4'));
   ayaState('explain'); say('aya', dirA(425), {hold:true});
   const grid = el('div','dirForms');
   Object.entries(DIR_FORMS).forEach(([id, f]) => {
@@ -3989,149 +4153,183 @@ function dirFormPick(){
       [...grid.children].forEach(x => x.disabled = true); stopVoice(); hideDlg();
       D.form = id; track('dir_form_' + id); dirPut();
       ayaState('explain'); await say('aya', dirA({emp:426, self:427, rent:428}[id]));
-      dirPlan();
+      dirMoney(true);
     };
     grid.append(b);
   });
-  const c = el('div','card','<ul><li>Год — 12 ходов, один ход — месяц.</li><li>Каждый месяц: решения → событие → отчёт.</li><li>Цель: закончить год в плюсе и без кредита.</li></ul>');
-  panel.append(grid, c, dirMenuBtn()); fitStage();
+  panel.append(grid, dirMenuBtn()); fitStage();
 }
-function dirMenuBtn(){ const b = el('button','backBtn','← В меню'); b.type = 'button'; b.onclick = () => { stopVoice(); hideDlg(); document.body.classList.remove('dirMode'); restart(false); }; return b; }
-function dirSeg(label, opts, cur, set){
-  const w = el('div','dirSeg'); w.append(el('span','dirSegL', label));
-  const row = el('div','dirSegR'); row.setAttribute('role','group'); row.setAttribute('aria-label', label);
-  opts.forEach(([v, t]) => { const b = el('button', null, t); b.type = 'button'; b.setAttribute('aria-pressed', String(v === cur)); b.onclick = () => { set(v); [...row.children].forEach(x => x.setAttribute('aria-pressed', String(x === b))); dirPut(); }; row.append(b); });
-  w.append(row); return w;
+function dirMenuBtn(){ const b = el('button','backBtn','← В меню'); b.type = 'button'; b.onclick = () => { stopVoice(); hideDlg(); dirThermoShow(null); document.body.classList.remove('dirMode'); dirHud(); restart(false); }; return b; }
+
+/* ---------- деньги: занять и вернуть ---------- */
+function dirMoney(opening){
+  const need = opening ? dirStartCost() : 0;
+  panel.innerHTML = ''; panel.append(dirHead(opening ? 'Деньги на открытие' : 'Займы', opening ? 'Шаг 4 из 4' : null));
+  ayaState('explain'); say('aya', dirA(opening ? 518 : D.cash < 0 ? 530 : 519), {hold:true});
+  const info = el('div','card');
+  const upd = () => { info.innerHTML = (opening ? 'Нужно на открытие: <b>' + rub(need) + '</b>. ' : '') + 'На счёте: <b>' + (D.cash < 0 ? '−' : '') + rub(Math.abs(Math.round(D.cash))) + '</b>. Долг: <b>' + rub(dirDebt()) + '</b>' + (D.loans.bank ? ' (банк ' + rub(D.loans.bank) + ', проценты ' + rub(Math.round(D.loans.bank * 0.025)) + ' в месяц)' : '') + '.'; go.disabled = opening ? D.cash < need : D.cash < 0; };
+  const go = el('button','next', opening ? 'Открыть салон' : 'Готово'); go.type = 'button';
+  const list = el('div','dirLoans');
+  Object.entries(DIR_LOANS).forEach(([id, L]) => {
+    const card = el('div','dirLoan'); const h = el('div','dirLoanH'); h.append(el('b', null, L.t), el('span', null, L.s)); card.append(h);
+    const left = () => L.max - D.loans[id];
+    let amt = Math.min(L.step * (id === 'bank' ? 4 : 2), left());
+    const ctr = el('div','dirLoanC'); const v = el('b', null, rub(amt));
+    const minus = el('button', null, '−'), plus = el('button', null, '+'), take = el('button','dirTake','Взять'), back = el('button','dirBack','Вернуть');
+    [minus, plus, take, back].forEach(b => b.type = 'button'); minus.setAttribute('aria-label','Меньше'); plus.setAttribute('aria-label','Больше');
+    const ref = () => { amt = Math.max(0, Math.min(amt, Math.max(left(), D.loans[id]))); v.textContent = rub(amt); take.disabled = amt <= 0 || amt > left(); back.disabled = !D.loans[id] || amt <= 0 || D.cash < Math.min(amt, D.loans[id]); upd(); };
+    minus.onclick = () => { amt = Math.max(0, amt - L.step); ref(); };
+    plus.onclick = () => { amt = amt + L.step; ref(); };
+    take.onclick = () => { const a = Math.min(amt, left()); if (a <= 0) return; D.loans[id] += a; D.cash += a; if (id === 'friend' && !D.friendDue) D.friendDue = D.month + 6; track('dir_loan_' + id); stopVoice(); ayaState('explain'); say('aya', dirA(L.aya), {hold:true}); dirPut(); ref(); };
+    back.onclick = () => { const a = Math.min(amt, D.loans[id], Math.max(0, D.cash)); if (a <= 0) return; D.loans[id] -= a; D.cash -= a; if (id === 'friend' && !D.loans.friend) D.friendDue = null; dirPut(); ref(); };
+    ctr.append(minus, v, plus, take, back); card.append(ctr); list.append(card);
+    setTimeout(ref);
+  });
+  go.onclick = () => {
+    stopVoice(); hideDlg();
+    if (opening){ D.cash -= need; D.opened = true; D.debtStart = dirDebt(); dirPut(); C.tamara.pose = SP.tamara.key ? 'key' : 'stand'; place('tamara'); return dirPlan(true); }
+    dirPlan();
+  };
+  panel.append(info, list, go);
+  if (!opening && D.cash < 0){ const close = el('button','next alt','Закрыть салон'); close.type = 'button'; close.onclick = () => { stopVoice(); hideDlg(); dirBankrupt(); }; panel.append(close); }
+  if (!opening && D.cash >= 0){ /* go остаётся «Готово» */ }
+  panel.append(dirMenuBtn()); upd(); fitStage();
 }
-async function dirPlan(){
+
+/* ---------- месяц: решения ---------- */
+async function dirPlan(first){
   if (D.month >= 12) return dirFinal();
-  dirSalonScene('cash');
+  dirSalonScene(D.month ? 'stand' : 'key'); dirThermoShow(null); mood('tamara', 'ok');
   D.ev = {};
-  panel.innerHTML = ''; panel.append(dirHead('Решения на месяц'), dirStatus());
-  const act = D.masters.filter(m => !m.gone);
-  if (act.length < 4 && D.month > 0 && !D._noHire) return dirHire();
-  const lv = el('div','dirLevers');
-  lv.append(dirSeg('Цена стрижки, ₽', [[550,'550'],[600,'600'],[650,'650'],[700,'700'],[750,'750']], D.check, v => D.check = v));
-  if ((D.month % 3 === 0 && D.month > 0) || (D.credit && !D.flags.reformed)) lv.append(dirSeg(D.credit && D.month % 3 ? 'Оформление мастеров (после кредита можно поменять один раз)' : 'Оформление мастеров (меняется раз в квартал)', Object.entries(DIR_FORMS).map(([k, f]) => [k, f.t]), D.form, v => { if (v !== D.form){ if (D.form === 'emp') D.masters.forEach(m => m.loy = Math.max(0, m.loy - 10)); D.form = v; if (D.month % 3) D.flags.reformed = 1; track('dir_form_' + v); } }));
-  if (D.form !== 'rent') lv.append(dirSeg('Процент мастерам', [[0.4,'40%'],[0.45,'45%'],[0.5,'50%']], D.pct, v => D.pct = v));
-  lv.append(dirSeg('Тамара сама стрижёт', [[22,'5 дней в неделю'],[26,'6 дней']], D.tamDays, v => D.tamDays = v));
-  lv.append(dirSeg('Продавать уход', [[true,'Да'],[false,'Нет']], D.care, v => { D.care = v; if (!v) D.mark = false; }));
+  const P = DIR_PREM[D.prem];
+  panel.innerHTML = ''; panel.append(dirHead('Решения на месяц'));
+  if (first){ panel.append(dirTamara('Ключи у меня, кресла стоят, вывеска висит. Ну, с богом!', 'warm')); ayaState('explain'); say('aya', dirA(529), {hold:true}); }
+  // команда
+  const team = el('div','dirBlock'); team.append(el('h3', null, 'Команда'));
+  const mList = el('div','dirMList');
+  const drawList = () => {
+    mList.innerHTML = '';
+    D.masters.forEach(m => {
+      const row = el('div','dirMRow' + (m.loy < 35 ? ' low' : ''));
+      row.append(el('span','dirMName', m.name + ' ' + (m.loy < 35 ? '😟' : m.loy >= 70 ? '😊' : '🙂')));
+      if (D.form === 'rent') row.append(el('span','dirMNote','арендует кресло'));
+      else row.append(dirStep(m.price, 400, 1000, 50, v => v + ' ₽', v => m.price = v));
+      mList.append(row);
+    });
+    if (!D.masters.length) mList.append(el('p','note','Мастеров нет — стрижёт только Тамара.'));
+  };
+  const cnt = dirSlider('Мастеров в салоне (на кресло — два мастера 2/2, кресел: ' + D.chairs + ')', 0, D.chairs * 2 + 2, 1, D.masters.length, v => String(v), v => { dirSetMasters(v); drawList(); dirPut(); });
+  drawList(); team.append(cnt, mList);
+  // Тамара
+  const tam = el('div','dirBlock'); tam.append(el('h3', null, 'Тамара Петровна'));
+  tam.append(dirSlider('Сама стрижёт, дней в неделю', 0, 7, 1, D.tamDays, v => v ? String(v) : 'не стрижёт', v => { D.tamDays = v; dirPut(); }));
+  const tp = el('div','dirMRow'); tp.append(el('span','dirMName','Цена стрижки у Тамары'), dirStep(D.tamPrice, 400, 1200, 50, v => v + ' ₽', v => D.tamPrice = v)); tam.append(tp);
+  // финансы
+  const fin = el('div','dirBlock'); fin.append(el('h3', null, 'Финансы'));
+  if ((D.month % 3 === 0 && D.month > 0)) fin.append(dirSeg('Оформление мастеров (меняется раз в квартал)', Object.entries(DIR_FORMS).map(([k, f]) => [k, f.t]), D.form, v => { if (v !== D.form){ if (D.form === 'emp') D.masters.forEach(m => m.loy = Math.max(0, m.loy - 10)); D.form = v; track('dir_form_' + v); } }));
+  if (D.form !== 'rent') fin.append(dirSeg('Процент мастерам', [[0.4,'40%'],[0.45,'45%'],[0.5,'50%']], D.pct, v => D.pct = v));
+  fin.append(dirSeg('Продавать уход', [[true,'Да'],[false,'Нет']], D.care, v => { D.care = v; if (!v) D.mark = false; }));
+  const loan = el('button','next alt','💳 Кредит и займы'); loan.type = 'button'; loan.onclick = () => { stopVoice(); hideDlg(); dirMoney(false); };
+  const debt = el('p','note', 'Долг: ' + rub(dirDebt()) + (D.loans.friend && D.friendDue != null ? ' · подружке вернуть до: ' + DIR_MON[Math.min(11, D.friendDue)].toLowerCase() : ''));
+  fin.append(loan, debt);
   const ask = el('button','next alt','💬 Спросить Айю'); ask.type = 'button';
-  ask.onclick = () => { ayaState('explain'); say('aya', dirA(429), {hold:true}); };
+  let n = 0; ask.onclick = () => { ayaState('explain'); say('aya', dirA([523, 524, 525, 429, 522][n++ % 5]), {hold:true}); };
   const go = el('button','next','Начать месяц'); go.type = 'button';
   go.onclick = () => { go.disabled = true; stopVoice(); hideDlg(); dirRun(); };
   const row = el('div','btnrow'); row.append(ask, go);
-  panel.append(lv, row, dirMenuBtn()); fitStage();
-  if (D.month === 0) { ayaState('explain'); say('aya', dirA(429), {hold:true}); }
-}
-async function dirHire(){
-  panel.innerHTML = ''; panel.append(dirHead('Пустое кресло'), dirStatus());
-  ayaState('explain'); say('aya', dirA(438), {hold:true});
-  const slot = D.masters.find(m => m.gone);
-  const cands = [
-    {name:'Алина', s:'23 года, после Академии. Быстрая, своих клиентов нет, просит общий процент.', base:0, pct:null, loy:55},
-    {name:'Жанна', s:'41 год, опытная. Приведёт своих клиентов, просит 50%.', base:0.35, pct:0.5, loy:50}];
-  const grid = el('div','dirForms');
-  cands.forEach(c => {
-    const b = el('button','mbBtn dirForm'); b.type = 'button'; b.append(el('b', null, c.name), el('span','mbS', c.s));
-    b.onclick = () => { stopVoice(); hideDlg(); Object.assign(slot, {name:c.name + (D.hires ? ' ' + (D.hires + 1) : ''), base:c.base, pct:c.pct, loy:c.loy, gone:false}); D.hires++; dirPut(); dirPlan(); };
-    grid.append(b);
-  });
-  const skip = el('button','mbStory','Пока работать без нового мастера'); skip.type = 'button';
-  skip.onclick = () => { stopVoice(); hideDlg(); D._noHire = true; dirPlan(); };
-  panel.append(grid, skip, dirMenuBtn()); fitStage();
+  panel.append(team, tam, fin, row, dirMenuBtn()); fitStage(); dirHud();
 }
 async function dirRun(){
-  D._noHire = false;
   panel.innerHTML = ''; panel.append(dirHead('Месяц идёт'), el('p','wait','Мастера работают…'));
-  C.tamara.pose = SP.tamara.cut ? 'cut' : 'stand'; place('tamara'); await wait(900);
-  C.tamara.pose = SP.tamara.cash ? 'cash' : 'stand'; place('tamara'); await wait(500);
+  C.tamara.pose = SP.tamara.cut && D.tamDays ? 'cut' : 'walk'; place('tamara'); await wait(900);
+  C.tamara.pose = 'stand'; place('tamara'); await wait(400);
   const ev = dirPickEvent();
   if (ev){ D.used.push(ev.id); const c = await dirDecide('Событие месяца', ev.text, ev.opts); dirApply(c.fx); }
   const r = dirMonthCalc();
   const low = dirLoyalty(r);
   D.cash += r.net;
   if (D.compM > 0) D.compM--;
+  if (D.loans.husband) D.husbandM++;
   r.month = D.month;
-  D.months.push({m:D.month, income:Math.round(r.income), exp:Math.round(r.exp + r.tax), net:Math.round(r.net), cash:Math.round(D.cash)});
-  // мастер с низкой верностью уходит
-  const quit = D.masters.find(m => !m.gone && m.loy < 25);
+  D.months.push({m:D.month, income:Math.round(r.income), net:Math.round(r.net), be:isFinite(r.be) ? Math.round(r.be) : null, cash:Math.round(D.cash)});
+  const quit = D.masters.find(m => m.loy < 25);
   D.month++; dirPut();
   await dirReport(r, low, quit);
 }
+function dirTamLine(r){
+  const ratio = isFinite(r.be) ? r.income / r.be : 0;
+  if (r.month === 0 && r.net < 0) return ['Первый месяц — минус. Ожидаемо: про нас ещё никто не знает. Главное — не опускать руки.', 'doubt'];
+  if (r.net >= 40000) return ['Вот это месяц! Касса полная, мастера довольные. Не зря я решилась.', 'warm'];
+  if (r.net >= 0) return ['В плюсе. Немного, но в плюсе. Так и держим.', 'ok'];
+  if (ratio >= 0.85) return ['Чуть-чуть не дотянули до черты. Ещё немного клиентов — и выйдем в ноль.', 'doubt'];
+  if (D.loans.husband && D.husbandM >= 3) return ['Муж опять спрашивал за ужином, когда вернём. А что я ему скажу?', 'doubt'];
+  return ['Опять минус. Аренду плати, мастерам плати, а клиентов нет. Да что ж такое!', 'angry'];
+}
 async function dirReport(r, low, quit){
-  panel.innerHTML = ''; panel.append(dirHead('Отчёт месяца', DIR_MON[r.month] + ' · месяц ' + (r.month + 1) + ' из 12'), dirStatus());
+  const good = r.net >= 0;
+  dirSalonScene(good ? 'cash' : (SP.tamara.sit ? 'sit' : 'stand')); setPos('tamara', 860, 690); place('tamara');
+  const [line, emo] = dirTamLine(r); mood('tamara', emo);
+  dirThermoShow(r.income, r.be);
+  panel.innerHTML = ''; panel.append(dirHead('Отчёт месяца', DIR_MON[r.month] + ' · месяц ' + (r.month + 1) + ' из 12'));
+  panel.append(dirTamara(line, emo));
   const t = el('table','dirTbl');
   const row = (n, v, c) => { const tr = el('tr', c || null); tr.append(el('td', null, n), el('td','num ' + (v < 0 ? 'neg' : ''), (v < 0 ? '−' : '') + rub(Math.round(Math.abs(v))))); t.append(tr); };
-  row('Услуги (≈ ' + r.cpd.toLocaleString('ru-RU', {maximumFractionDigits:1}) + ' клиента на кресло в день)', r.svc);
+  row('Услуги: ' + Math.round(r.visits) + ' клиентов' + (r.lost > r.demand * 0.1 ? ', ещё ' + Math.round(r.lost) + ' ушли без записи' : ''), r.svc);
   if (r.rentIn) row('Аренда кресел и коммуналка от мастеров', r.rentIn + r.utilIn);
   if (r.care) row('Продажи ухода', r.care);
   if (r.pay) row(D.form === 'emp' ? 'Зарплата мастерам с отпускными' : 'Мастерам, процент', -r.pay);
   if (r.ins) row('Страховые взносы за мастеров', -r.ins);
-  row('Аренда и коммуналка', -(DIR_FIX.rent + DIR_FIX.util));
-  row('Материалы, касса, хозтовары, бухгалтер и прочее', -(r.mat + r.acq + r.fixed - DIR_FIX.rent - DIR_FIX.util + r.careCost));
+  const P = DIR_PREM[D.prem];
+  row('Аренда и коммуналка', -(P.rent + P.util));
+  row('Материалы, касса, хозтовары, бухгалтер и прочее', -(r.mat + r.acq + r.fixed - P.rent - P.util + r.careCost));
   if (r.extra) row('Расходы по событию месяца', -r.extra);
-  if (r.interest) row('Проценты по кредиту', -r.interest);
+  if (r.interest) row('Проценты банку', -r.interest);
   if (r.tax) row('Налог и взносы Тамары за квартал', -r.tax);
   row('Итог месяца', r.net, 'total');
-  const tw = el('div','dirTblW'); tw.append(t);
-  panel.append(tw);
-  if (low.length) panel.append(el('p','note', 'Меньше МРОТ в этом месяце: ' + low.map(m => m.name).join(', ') + '.'));
+  const tw = el('div','dirTblW'); tw.append(t); panel.append(tw);
+  panel.append(el('p','note', 'Точка безубыточности: выручка ' + (isFinite(r.be) ? rub(Math.round(r.be)) : '— (расходы на мастеров больше выручки)') + ' в месяц. Сейчас — ' + rub(Math.round(r.income)) + '.' + (low.length && D.form !== 'emp' ? ' Меньше МРОТ: ' + low.map(m => m.name).join(', ') + '.' : '')));
   fitStage();
-  ayaState(r.net >= 0 ? 'praise' : 'warn');
-  if (r.tax) await say('aya', dirA(432));
-  else await say('aya', dirA(r.net >= 0 ? 430 : 431));
+  ayaState(good ? 'praise' : 'warn');
+  if (r.tax) await say('aya', dirA(432)); else await say('aya', dirA(good ? 430 : 431));
+  if (r.month === 0){ ayaState('explain'); await say('aya', dirA(522)); }
   if (low.length && D.form === 'self' && !D.flags.lowSaid){ D.flags.lowSaid = 1; ayaState('warn'); await say('aya', dirA(437)); }
   if (quit){
     dirLeave(quit.name, false);
-    C.tamara.pose = 'stand'; place('tamara');
     await say('tamara', quit.name + ' положила ключи на стойку: «Тамара Петровна, я ухожу. На мои деньги не прожить».', {narr:true});
     ayaState('warn'); await say('aya', dirA(439));
   }
+  if (D.loans.friend && D.friendDue != null && D.month > D.friendDue && !D.friendLate){ D.friendLate = true; panel.append(dirTamara('Галя звонила. Сказала, что больше в долг не даст. И на день рождения теперь вряд ли позовёт.', 'doubt')); ayaState('warn'); await say('aya', dirA(528)); }
   dirPut();
-  if (D.cash < 0) return dirCredit();
+  if (D.cash < 0) return dirMoney(false);
   const nx = el('button','next', D.month >= 12 ? 'Итоги года' : 'Следующий месяц'); nx.type = 'button';
-  nx.onclick = () => { nx.disabled = true; stopVoice(); hideDlg(); D.month >= 12 ? dirFinal() : dirPlan(); };
+  nx.onclick = () => { nx.disabled = true; stopVoice(); hideDlg(); dirThermoShow(null); D.month >= 12 ? dirFinal() : dirPlan(); };
   panel.append(nx, el('p','dirDisc','Цифры и налоги — игровая механика. Для реальных решений сверяйтесь с актуальными данными Правительства РФ и бухгалтером.'));
   fitStage(); nx.focus({preventScroll:true});
 }
-async function dirCredit(){
-  ayaState('warn'); say('aya', dirA(433), {hold:true});
-  const box = el('div','card'); box.append(el('h2', null, 'На счёте ' + rub(Math.round(D.cash))));
-  if (D.credit){
-    box.append(el('p', null, 'Кредит уже взят, а денег снова нет. Банк больше не даёт.'));
-    panel.append(box); fitStage();
-    return setTimeout(() => dirBankrupt(), 2500);
-  }
-  box.append(el('p', null, 'Банк предлагает 150 000 ₽ под 2,5% в месяц. Вернуть — до конца года.'));
-  const yes = el('button','next','Взять кредит'); yes.type = 'button';
-  yes.onclick = () => { stopVoice(); hideDlg(); D.credit = 150000; D.creditEver = true; D.cash += 150000; dirPut(); track('dir_credit'); D.month >= 12 ? dirFinal() : dirPlan(); };
-  const no = el('button','next alt','Закрыть салон'); no.type = 'button'; no.onclick = () => { stopVoice(); hideDlg(); dirBankrupt(); };
-  const row = el('div','btnrow'); row.append(no, yes);
-  panel.append(box, row); fitStage();
-}
 async function dirBankrupt(){
-  track('dir_bankrupt'); D.over = true; dirClear();
-  D.over = true; panel.innerHTML = ''; panel.append(dirHead('Салон закрыт'));
-  C.tamara.pose = SP.tamara.key ? 'key' : 'stand'; place('tamara'); mood('tamara','doubt');
+  track('dir_bankrupt'); D.over = true; dirClear(); dirThermoShow(null);
+  panel.innerHTML = ''; panel.append(dirHead('Салон закрыт', 'Директор «Семейной»'));
+  C.tamara.pose = SP.tamara.key ? 'key' : 'stand'; place('tamara'); mood('tamara','angry');
+  panel.append(dirTamara('Вот и всё. Ключи отдам хозяину, оборудование продам. Долги… буду отдавать.', 'doubt'));
   await say('tamara', 'Тамара Петровна закрывает дверь на ключ. На двери — объявление «Сдаётся».', {narr:true});
   ayaState('warn'); await say('aya', dirA(434));
   dirEndButtons();
 }
 async function dirFinal(){
-  track('dir_final');
-  if (D.credit){ D.cash -= D.credit; D.credit = 0; }
-  const plus = (D.months || []).reduce((a, x) => a + x.net, 0) > 0 && D.cash > 100000;
-  const stars = [plus, !D.creditEver, !D.scandal && D.left === 0];
-  const win = stars[0] && stars[1];
-  panel.innerHTML = ''; panel.append(dirHead('Итоги года'));
+  track('dir_final'); dirThermoShow(null);
+  const last3 = D.months.slice(-3);
+  const be = last3.length === 3 && last3.every(x => x.net >= 0);
+  const stars = [true, be, dirDebt() - Math.max(0, D.cash) < D.debtStart && !D.friendLate];
+  panel.innerHTML = ''; panel.append(dirHead('Итоги года', 'Директор «Семейной»'));
+  C.tamara.pose = be ? 'cash' : 'stand'; setPos('tamara', 1000, 690); place('tamara');
+  panel.append(dirTamara(be ? 'Год продержались и вышли в плюс. Теперь долги отдавать — и дальше расти.' : 'Год продержались. Пока не окупаемся, но салон живой. Будем работать.', be ? 'warm' : 'ok'));
   const card = el('div','card');
-  card.append(el('h2', null, win ? 'Год закрыт в плюсе' : 'Цель не достигнута'));
+  card.append(el('h2', null, be ? 'Точка безубыточности пройдена' : 'Салон работает, но ещё не окупается'));
   const ul = el('ul','dirStars');
-  [['Год в плюсе', 'на счёте больше, чем было в январе (100 000 ₽)'], ['Без кредита', 'ни разу не занимали у банка'], ['Команда сохранена', 'ни один мастер не ушёл']].forEach(([t, s], i) => {
+  [['Салон работает', 'не закрылся за год'], ['Безубыточность', 'последние три месяца в плюсе'], ['Долги под контролем', 'долг за вычетом денег на счёте меньше, чем при открытии; подруге вернули вовремя']].forEach(([t, s], i) => {
     const li = el('li', stars[i] ? 'on' : null); li.append(el('b', null, (stars[i] ? '★ ' : '☆ ') + t), el('span', null, ' — ' + s)); ul.append(li);
   });
-  card.append(ul, el('p', null, 'На счёте в конце года: <b>' + rub(Math.round(D.cash)) + '</b>. Прибыль за год: <b>' + (D.cash < 100000 ? '−' : '') + rub(Math.abs(Math.round(D.cash - 100000))) + '</b> — это ' + rub(Math.max(0, Math.round((D.cash - 100000) / 12))) + ' в месяц на Тамару Петровну вместе с её собственными стрижками.'));
+  card.append(ul, el('p', null, 'На счёте: <b>' + (D.cash < 0 ? '−' : '') + rub(Math.abs(Math.round(D.cash))) + '</b>. Долг: <b>' + rub(dirDebt()) + '</b> (при открытии было ' + rub(D.debtStart) + '). Репутация: <b>' + Math.round(D.rep) + '</b> из 100.'));
   panel.append(card);
   const errs = D.log.filter(x => !x.ok);
   if (errs.length){
@@ -4141,8 +4339,7 @@ async function dirFinal(){
   }
   panel.append(el('p','dirDisc','Цифры и налоги — игровая механика по правилам 2026 года. Для реальных решений сверяйтесь с актуальными данными Правительства РФ и бухгалтером.'));
   fitStage();
-  C.tamara.pose = 'stand'; place('tamara'); mood('tamara', win ? 'warm' : 'doubt');
-  ayaState(win ? 'praise' : 'explain'); await say('aya', dirA(win ? 435 : 436));
+  ayaState(be ? 'praise' : 'explain'); await say('aya', dirA(be ? 526 : 527));
   D.over = true; dirClear();
   try { const b = JSON.parse(localStorage.getItem('romashka_director_best') || '0'); const sc = stars.filter(Boolean).length; if (sc > b) localStorage.setItem('romashka_director_best', JSON.stringify(sc)); } catch(e){}
   dirEndButtons();
@@ -4151,6 +4348,365 @@ function dirEndButtons(){
   const again = el('button','next','Сыграть год заново'); again.type = 'button'; again.onclick = () => { stopVoice(); hideDlg(); dirStart(false); };
   const row = el('div','btnrow'); row.append(again);
   panel.append(row, dirMenuBtn()); fitStage();
+}
+
+/* ================= СВОЁ ДЕЛО: Кира уходит из найма — кресло в аренду, потом свой кабинет ================= */
+const OWN_KEY = 'romashka_own';
+const OWN_SEAS = [-.20,-.05,.15,0,.05,0,-.15,.15,0,0,0,.20];
+const OWN_LIFE = 15000;                                   // Кира живёт с родителями: на жизнь 15 000 ₽ в месяц
+const OWN_PLACE = {
+  chair:{t:'Кресло в «Семейной»', rent:15000, util:0, loc:'salon_econom'},
+  cab:{t:'Свой кабинет', rent:20000, util:4000, loc:'salon_econom_plus'}};
+const OWN_AYA = {
+  471:'Это режим «Своё дело». Кира уходит из найма и работает на себя. Теперь она и мастер, и администратор, и бухгалтер.',
+  472:'Сначала оформление. Работать на себя без регистрации нельзя: это штрафы и налог задним числом.',
+  473:'Самозанятость — самый простой старт: четыре процента с оплат от людей, никаких взносов и отчётов. Чек — в приложении «Мой налог».',
+  474:'Индивидуальный предприниматель платит взносы за себя около пятидесяти семи тысяч в год, даже если клиентов нет. Для старта это тяжело.',
+  475:'Теперь главное правило: на жизнь — отдельно, на дело — отдельно. Кира откладывает себе пятнадцать тысяч в месяц, остальное — на аренду и развитие.',
+  476:'Своих клиентов немного: те, кто пошёл за Кирой из салона. Без продвижения новые не появятся.',
+  477:'Больше рабочих дней — больше денег, но и больше усталости. Уставший мастер теряет клиентов.',
+  478:'Месяц в плюсе. Подушка растёт — можно думать о своём кабинете.',
+  479:'Месяц в минусе. Аренда кресла платится, даже когда записи пустые.',
+  480:'Деньги закончились. Мама готова одолжить пятьдесят тысяч. Это долг, его нужно вернуть.',
+  481:'Денег снова нет. Кира возвращается в найм. Это не провал: теперь она знает, сколько стоит своё дело.',
+  482:'Год на себя пройден без долгов. Кира — настоящий самостоятельный мастер.',
+  483:'Год пройден, но не всё получилось. Посмотрите, где уходили деньги и клиенты.',
+  484:'Свой кабинет — это свобода и своя атмосфера. Но аренда, коммуналка и оборудование теперь только на вас.',
+  485:'Рано. Без подушки и без постоянной записи кабинет съест все деньги за пару месяцев.',
+  486:'Верно. Напоминание накануне снимает почти все неявки.',
+  487:'Предоплата отпугнёт часть новых клиентов. Сначала попробуйте напоминания.',
+  488:'Пустое окно — это потерянные деньги. Неявки повторятся.',
+  489:'Правильно. Чек — это защита и мастера, и клиента.',
+  490:'Работа без чека — это доход, скрытый от налоговой. Самозанятость могут отнять и начислить штраф.',
+  491:'Верно. Первая скидка для знакомых — да, работа бесплатно — нет.',
+  492:'Подруга будет приходить бесплатно всегда. И приводить других «по дружбе».',
+  493:'Резкий отказ стоит подруги и её рекомендаций.',
+  494:'Правильно. Без инструмента нет работы — это вложение, а не трата.',
+  495:'Чужой инструмент — чужие правила. Хозяйка запомнит.',
+  496:'Отлично. Фото работ с согласия клиентки — лучшая реклама мастера.',
+  497:'Фото без разрешения — повод для скандала и жалобы.',
+  498:'Без соцсетей новые клиенты узнают о вас только от старых.',
+  499:'Правильно. Бесплатное исправление сохраняет и клиентку, и репутацию.',
+  500:'Деньги вернули, клиентку потеряли. Она расскажет подругам.',
+  501:'Спор с клиенткой в соцсетях читают все.',
+  502:'Верно. Неделя отдыха дешевле, чем месяц больничного.',
+  503:'Через силу — до первой травмы. Спина и руки — главный инструмент мастера.',
+  504:'Правильно. Налог самозанятой платится до двадцать восьмого числа. Пени — лишняя трата.',
+  505:'Пени небольшие, но налоговая не забывает. Лучше платить вовремя.',
+  506:'Верно. Самозанятым нельзя перепродавать чужие товары. Можно посоветовать, где купить.',
+  507:'Перепродажа — нарушение для самозанятой. Ради пары сотен рублей не стоит рисковать.',
+  508:'Правильно. Требования к кабинету проверяют. Лучше сделать сразу.',
+  509:'Без стерилизации и раковины кабинет закроют после первой жалобы.',
+  510:'Хороший ход. Договориться о цене спокойно — нормальная часть аренды.',
+  511:'Согласиться сразу — значит платить больше весь год.',
+  512:'Уйти в никуда — без кресла нет и записи.',
+  513:'Авито приводит новых клиентов, но за деньги. Считайте, сколько стоит один клиент.',
+  514:'Соцсети бесплатны, но съедают время: фото, тексты, ответы. Это тоже работа.'};
+const ownA = n => OWN_AYA[n];
+let O = null;
+function ownGet(){ try { const o = JSON.parse(localStorage.getItem(OWN_KEY) || 'null'); return o && o.v === 1 ? o : null; } catch(e){ return null; } }
+function ownPut(){ try { localStorage.setItem(OWN_KEY, JSON.stringify(O)); } catch(e){} }
+function ownClear(){ try { localStorage.removeItem(OWN_KEY); } catch(e){} }
+function ownFresh(){
+  return {v:1, kind:'own', month:0, cash:80000, reg:null, place:'chair', price:900, days:22, promo:'social', pool:25, rep:50, tired:20,
+    debt:0, debtEver:false, equip:0, cabMonths:0, noShow:false, flags:{}, used:[], log:[], months:[], over:false};
+}
+function ownScene(pose){
+  ['eric','marina','narc','ab','x2','admin','client','tamara'].forEach(x => { try { vis(x, false); } catch(e){} });
+  setLocation2(OWN_PLACE[O.place].loc); clips(false);
+  C.kira.pose = SP.kira[pose] ? pose : 'stand'; setPos('kira', 1000, 690); face('kira', -1); vis('kira', true); mood('kira', O.tired > 70 ? 'neutral' : 'happy');
+  camSet(1000);
+}
+function ownHead(sub, title){
+  const h = el('div','head'); h.append(el('h1', null, title || (O && O.month < 12 && O.reg && !O.over ? DIR_MON[O.month] + ' · месяц ' + (O.month + 1) + ' из 12' : 'Кира: своё дело')), el('span','step', sub || OWN_PLACE[(O && O.place) || 'chair'].t));
+  return h;
+}
+function ownStatus(){
+  const box = el('div','dirStat');
+  const it = (k, v, c) => { const d = el('div','dirKpi' + (c ? ' ' + c : '')); d.append(el('span', null, k), el('b', null, v)); return d; };
+  box.append(it('На счёте', rub(Math.round(O.cash)), O.cash < 0 ? 'neg' : ''),
+    it('Постоянных клиенток', String(Math.round(O.pool))),
+    it('Усталость', O.tired >= 70 ? 'сильная' : O.tired >= 45 ? 'заметная' : 'норма', O.tired >= 70 ? 'neg' : ''),
+    it('Долг', O.debt ? rub(O.debt) : 'нет', O.debt ? 'neg' : ''));
+  const w = el('div','dirStatWrap'); w.append(box); return w;
+}
+/* ---------- расчёт месяца ---------- */
+function ownCalc(){
+  const i = O.month, k = 1 + OWN_SEAS[i], ev = O.ev || {};
+  const base = O.place === 'cab' ? 1000 : 900;
+  const priceK = Math.max(0.5, 1 - (O.price - base) / 100 * 0.10);
+  const quality = O.tired >= 70 ? 0.85 : 1;
+  const daysK = O.days >= 26 ? 1.08 : O.days >= 22 ? 1 : 0.85;          // больше рабочих дней — больше удобных окон для записи
+  const demand = O.pool * 0.65 * k * priceK * daysK * (ev.load || 1) * (O.noShow ? 0.92 : 1);
+  const cap = O.days * 4 * (ev.cap || 1);                                 // 4 клиентки в день: стрижки, окрашивания
+  const visits = Math.min(demand, cap);
+  const check = O.price * 1.15;                         // часть клиенток — с окрашиванием и уходом
+  const r = {visits, cap, demand, rev:visits * check};
+  r.mat = visits * 60;
+  r.place = OWN_PLACE[O.place].rent + OWN_PLACE[O.place].util;
+  r.equip = O.equipLeft > 0 ? O.equip : 0; if (O.equipLeft > 0) O.equipLeft--;
+  r.promo = O.promo === 'avito' ? 3000 : O.promo === 'both' ? 3000 : 0;
+  r.extra = ev.cost || 0;
+  r.tax = O.reg === 'self' ? r.rev * (O.flags.deduct > 0 ? 0.03 : 0.04) : r.rev * 0.06;
+  if (O.reg === 'self' && O.flags.deduct > 0) O.flags.deduct -= r.rev * 0.01;
+  r.ip = O.reg === 'ip' ? 57390 / 12 : 0;
+  if (O.reg === 'ip') r.tax = Math.max(0, r.tax - r.ip);
+  r.life = OWN_LIFE;
+  r.net = r.rev - r.mat - r.place - r.equip - r.promo - r.extra - r.tax - r.ip - r.life;
+  // клиентская база
+  const promoNew = (O.promo === 'social' ? 3 : O.promo === 'avito' ? 6 : O.promo === 'both' ? 8 : 0) + (O.place === 'cab' ? 2 : 0);
+  const word = visits * 0.04 * (O.rep / 50) * quality;
+  const churn = O.pool * (0.04 + (O.tired >= 70 ? 0.06 : 0) + Math.max(0, priceK < 0.9 ? 0.03 : 0)) + (demand > cap ? (demand - cap) * 0.15 : 0);
+  r.newC = promoNew + word; r.lostC = churn;
+  O.pool = Math.max(5, O.pool + r.newC - r.lostC + (ev.pool || 0));
+  // усталость
+  const dayT = O.days >= 26 ? 12 : O.days >= 22 ? 2 : -8;
+  const socT = O.promo === 'social' || O.promo === 'both' ? 2 : 0;
+  O.tired = Math.max(0, Math.min(100, O.tired + dayT + socT + (ev.tired || 0)));
+  return r;
+}
+const OWN_EVENTS = [
+  {id:'noshow', text:'Клиентка не пришла на окрашивание. Два часа простоя, краска уже разведена.', opts:[
+    dO(true,'Ввести правило: напоминание накануне сообщением и в день визита.', 486, {fix:'noShow'}),
+    dO(false,'Ввести стопроцентную предоплату для всех.', 487, {fix:'noShow', pool:-3}),
+    dO(false,'Ничего не менять: бывает.', 488, {noShow:true, cost:400})]},
+  {id:'check', when:O => O.reg === 'self', text:'Клиентка просит: «Давай без чека, а я тебе наличкой и чуть больше».', opts:[
+    dO(true,'Вежливо отказать: чек оформляется всегда, это занимает минуту.', 489, {}),
+    dO(false,'Согласиться: никто не узнает.', 490, {later:'fns'})]},
+  {id:'friend', text:'Школьная подруга записалась и пишет: «Ты же своя, подстрижёшь бесплатно?»', opts:[
+    dO(true,'Предложить скидку на первый визит, дальше — по прайсу.', 491, {pool:1}),
+    dO(false,'Стричь бесплатно: подруга же.', 492, {cost:2500, tired:3}),
+    dO(false,'Ответить: «Бесплатно не работаю. Точка».', 493, {rep:-4})]},
+  {id:'tool', text:'Сгорела машинка прямо перед клиентом.', opts:[
+    dO(true,'Купить новую профессиональную — 8 000 ₽.', 494, {cost:8000}),
+    dO(false,'Попросить машинку у мастеров салона на время.', 495, {rep:-2, tired:3})]},
+  {id:'photo', text:'Получилось красивое окрашивание. Хочется выложить фото в соцсети.', opts:[
+    dO(true,'Спросить разрешения у клиентки и сфотографировать при хорошем свете.', 496, {pool:3, rep:3}),
+    dO(false,'Сфотографировать и выложить, пока клиентка не видит.', 497, {rep:-8}),
+    dO(false,'Не выкладывать: некогда этим заниматься.', 498, {})]},
+  {id:'unhappy', text:'Клиентка пишет вечером: «Чёлка короче, чем договаривались. Я расстроена».', opts:[
+    dO(true,'Извиниться и пригласить на бесплатную коррекцию в удобный день.', 499, {rep:4, tired:1}),
+    dO(false,'Сразу вернуть деньги и закрыть вопрос.', 500, {cost:1000, rep:-3, pool:-1}),
+    dO(false,'Ответить, что она сама так попросила.', 501, {rep:-10, pool:-2})]},
+  {id:'burn', when:O => O.tired >= 55, text:'Кира третью неделю без выходных. Болит спина, утром не хочется идти на работу.', opts:[
+    dO(true,'Взять неделю отдыха, записи перенести.', 502, {tired:-35, cap:0.75}),
+    dO(false,'Работать дальше: деньги нужны.', 503, {tired:15, later:'sick'})]},
+  {id:'tax', when:O => O.reg === 'self' && O.month >= 1, text:'Пришло уведомление из «Мой налог»: оплатить налог до 28-го.', opts:[
+    dO(true,'Оплатить сразу из отложенных денег.', 504, {}),
+    dO(false,'Отложить: потом заплачу.', 505, {cost:600})]},
+  {id:'shampoo', when:O => O.reg === 'self', text:'Клиентка просит продать ей шампунь, которым Кира мыла голову.', opts:[
+    dO(true,'Объяснить, что самозанятой нельзя перепродавать товары, и подсказать, где купить.', 506, {rep:2}),
+    dO(false,'Продать флакон со своей полки с наценкой.', 507, {later:'fns2'})]},
+  {id:'raise', when:O => O.place === 'chair' && O.month >= 3, text:'Тамара Петровна поднимает аренду кресла: «С нового месяца — восемнадцать тысяч».', opts:[
+    dO(true,'Спокойно договориться: шестнадцать тысяч и договор на полгода.', 510, {chairRent:16000}),
+    dO(false,'Согласиться на восемнадцать.', 511, {chairRent:18000}),
+    dO(false,'Хлопнуть дверью и уйти искать другое место.', 512, {pool:-8, cap:0.5, chairRent:15000})]}
+];
+function ownPickEvent(){
+  if (O.flags.fns && O.month >= O.flags.fns){ delete O.flags.fns; return {id:'fns', text:'Клиентка поссорилась с Кирой и написала в налоговую про оплату без чека.', opts:[dO(true,'Оплатить штраф и доначисленный налог, дальше — только с чеком.', 489, {cost:10000})]}; }
+  if (O.flags.fns2 && O.month >= O.flags.fns2){ delete O.flags.fns2; return {id:'fns2', text:'Налоговая заметила продажу товаров: самозанятой это запрещено.', opts:[dO(true,'Оплатить штраф и больше не перепродавать.', 506, {cost:5000})]}; }
+  if (O.flags.sick && O.month >= O.flags.sick){ delete O.flags.sick; return {id:'sick', text:'Спину защемило. Врач запретил работать две недели.', opts:[dO(true,'Лечиться и перенести всех клиенток.', 502, {cap:0.5, tired:-40, cost:6000})]}; }
+  if (O.place === 'cab' && !O.used.includes('san')) return {id:'san', text:'В своём кабинете нужен стерилизатор, раковина с горячей водой и журналы, как в салоне.', opts:[
+    dO(true,'Сделать сразу — 15 000 ₽.', 508, {cost:15000}),
+    dO(false,'Пока обойтись: кто проверит маленький кабинет.', 509, {rep:-6, later:'sanfine'})]};
+  if (O.flags.sanfine && O.month >= O.flags.sanfine){ delete O.flags.sanfine; return {id:'sanfine', text:'Клиентка пожаловалась в Роспотребнадзор: нет стерилизатора.', opts:[dO(true,'Оплатить штраф и купить оборудование.', 508, {cost:30000})]}; }
+  const pool = OWN_EVENTS.filter(e => !O.used.includes(e.id) && (!e.when || e.when(O)));
+  if (!pool.length || Math.random() < 0.15) return null;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+function ownApply(fx){
+  O.ev = O.ev || {};
+  if (fx.cost) O.ev.cost = (O.ev.cost || 0) + fx.cost;
+  if (fx.cap) O.ev.cap = (O.ev.cap || 1) * fx.cap;
+  if (fx.load) O.ev.load = (O.ev.load || 1) * fx.load;
+  if (fx.pool) O.ev.pool = (O.ev.pool || 0) + fx.pool;
+  if (fx.tired) O.ev.tired = (O.ev.tired || 0) + fx.tired;
+  if (fx.rep) O.rep = Math.max(0, Math.min(100, O.rep + fx.rep));
+  if (fx.fix === 'noShow') O.noShow = false;
+  if (fx.noShow) O.noShow = true;
+  if (fx.later) O.flags[fx.later] = O.month + 2;
+  if (fx.chairRent) OWN_PLACE.chair.rent = fx.chairRent, O.chairRent = fx.chairRent;
+}
+function ownDecide(sub, opts){
+  return new Promise(res => {
+    panel.innerHTML = ''; panel.append(ownHead('Событие месяца'));
+    const s = el('p','menStep'); s.textContent = sub; panel.append(s);
+    const list = el('div','choices'); list.setAttribute('role','group');
+    shuffle(opts).forEach(c => {
+      const b = el('button','choice'); b.type = 'button';
+      b.innerHTML = '<span class="k" aria-hidden="true"></span><span></span>'; b.lastChild.textContent = c.t;
+      b.onclick = () => {
+        [...list.children].forEach(x => x.disabled = true); b.classList.add('picked'); clearHeld();
+        const best = opts.find(x => x.ok);
+        O.log.push({m:O.month, ev:sub, ok:!!c.ok, best:c.ok ? null : best && best.t});
+        if (c.aya){ const t = ownA(c.aya); ayaTail(t, c.ok ? 'praise' : 'warn'); const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(t)); panel.append(h); }
+        if (!c.ok && best){ const bb = el('div','hint best','<b>Лучше:</b>&nbsp;'); bb.append(document.createTextNode(best.t)); panel.append(bb); }
+        const nx = el('button','next','Дальше'); nx.type = 'button'; nx.onclick = () => { nx.disabled = true; stopVoice(); hideDlg(); res(c); };
+        panel.append(nx); fitStage(); nx.focus({preventScroll:true});
+      };
+      list.append(b);
+    });
+    panel.append(list); fitStage();
+  });
+}
+/* ---------- экраны ---------- */
+function ownMenuBtn(){ const b = el('button','backBtn','← В меню'); b.type = 'button'; b.onclick = () => { stopVoice(); hideDlg(); document.body.classList.remove('dirMode'); restart(false); }; return b; }
+async function ownStart(resume){
+  track('own_start');
+  S = fresh(); resetScene(); hud(); stopVoice(); hideDlg();
+  document.body.classList.add('dirMode'); MASTER = 'kira';
+  O = resume ? ownGet() : null;
+  if (O && O.reg && O.month < 12 && !O.over){ if (O.chairRent) OWN_PLACE.chair.rent = O.chairRent; ownScene('stand'); return ownPlan(); }
+  O = ownFresh(); ownClear(); OWN_PLACE.chair.rent = 15000;
+  ownScene('think');
+  panel.innerHTML = ''; panel.append(ownHead('Начало', 'Кира: своё дело'), el('p','wait','Смотрите сцену…'));
+  await say('kira', 'Кира два года стрижёт в найме. Половина денег уходит салону. Накоплено восемьдесят тысяч, есть двадцать пять постоянных клиенток.', {narr:true});
+  await say('kira', 'Хочу работать на себя. Стричь я умею. А вот всё остальное… разберусь!', {mood:'happy'});
+  ayaState('explain'); await say('aya', ownA(471));
+  ownReg();
+}
+function ownReg(){
+  panel.innerHTML = ''; panel.append(ownHead('Оформление', 'Кира: своё дело'));
+  ayaState('explain'); say('aya', ownA(472), {hold:true});
+  const grid = el('div','dirForms');
+  [['self','Самозанятая','4% с оплат от людей, без взносов и отчётов. Нельзя нанимать сотрудников и перепродавать товары. Лимит — 2,4 млн ₽ дохода в год.'],
+   ['ip','ИП на упрощёнке 6%','Налог 6% с выручки и взносы за себя — 57 390 ₽ в год, даже без клиентов. Можно нанимать и продавать товары.']].forEach(([id, t, s]) => {
+    const b = el('button','mbBtn dirForm'); b.type = 'button'; b.append(el('b', null, t), el('span','mbS', s));
+    b.onclick = async () => {
+      [...grid.children].forEach(x => x.disabled = true); stopVoice(); hideDlg();
+      O.reg = id; if (id === 'self') O.flags.deduct = 10000; track('own_reg_' + id); ownPut();
+      ayaState('explain'); await say('aya', ownA(id === 'self' ? 473 : 474));
+      await say('aya', ownA(475));
+      ownPlan();
+    };
+    grid.append(b);
+  });
+  const c = el('div','card','<ul><li>Год — 12 ходов, один ход — месяц.</li><li>Старт: кресло в аренду у Тамары Петровны в «Семейной», 15 000 ₽ в месяц. Свой кабинет — когда накопите.</li><li>Цель: продержаться год на себя и закончить без долгов.</li></ul>');
+  panel.append(grid, c, ownMenuBtn()); fitStage();
+}
+async function ownPlan(){
+  if (O.month >= 12) return ownFinal();
+  ownScene(O.place === 'cab' ? 'mirror' : 'stand');
+  O.ev = {};
+  panel.innerHTML = ''; panel.append(ownHead('Решения на месяц'), ownStatus());
+  const lv = el('div','dirLevers');
+  const prices = O.place === 'cab' ? [[900,'900'],[1000,'1 000'],[1100,'1 100'],[1200,'1 200'],[1400,'1 400']] : [[700,'700'],[800,'800'],[900,'900'],[1000,'1 000'],[1200,'1 200']];
+  if (!prices.some(p => p[0] === O.price)) O.price = O.place === 'cab' ? 1000 : 900;
+  lv.append(dirSeg('Цена стрижки с укладкой, ₽', prices, O.price, v => O.price = v));
+  lv.append(dirSeg('Рабочих дней в неделю', [[17,'4'],[22,'5'],[26,'6']], O.days, v => O.days = v));
+  lv.append(dirSeg('Как искать новых клиенток', [['none','Никак'],['social','Соцсети — бесплатно'],['avito','Авито — 3 000 ₽'],['both','Соцсети и Авито']], O.promo, v => O.promo = v));
+  const ask = el('button','next alt','💬 Спросить Айю'); ask.type = 'button';
+  let n = 0; ask.onclick = () => { ayaState('explain'); say('aya', ownA([476, 477, 513, 514][n++ % 4]), {hold:true}); };
+  const go = el('button','next','Начать месяц'); go.type = 'button';
+  go.onclick = () => { go.disabled = true; stopVoice(); hideDlg(); ownRun(); };
+  const row = el('div','btnrow'); row.append(ask, go);
+  panel.append(lv, row);
+  if (O.place === 'chair'){
+    const cab = el('button','next alt ownCab','🏠 Свой кабинет: аренда 20 000 ₽ + коммуналка 4 000 ₽, оборудование от 150 000 ₽'); cab.type = 'button';
+    cab.onclick = () => { stopVoice(); hideDlg(); ownCabinet(); };
+    panel.append(cab);
+  }
+  panel.append(ownMenuBtn()); fitStage();
+  if (O.month === 0){ ayaState('explain'); say('aya', ownA(476), {hold:true}); }
+}
+function ownCabinet(){
+  panel.innerHTML = ''; panel.append(ownHead('Свой кабинет'), ownStatus());
+  const ready = O.cash >= 150000 && O.pool >= 80;
+  ayaState(ready ? 'explain' : 'warn'); say('aya', ownA(ready ? 484 : 485), {hold:true});
+  const grid = el('div','dirForms');
+  const opt = (t, s, ok, fn) => { const b = el('button','mbBtn dirForm'); b.type = 'button'; b.append(el('b', null, t), el('span','mbS', s)); b.disabled = !ok; b.onclick = () => { stopVoice(); hideDlg(); fn(); }; grid.append(b); };
+  opt('Купить оборудование сразу — 300 000 ₽', O.cash >= 300000 ? 'Денег хватает.' : 'Нужно 300 000 ₽ на счёте.', O.cash >= 300000, () => { O.cash -= 300000; ownMove(); });
+  opt('Б/у оборудование — 150 000 ₽', O.cash >= 150000 ? 'Кресло и мойка с рук, работать можно.' : 'Нужно 150 000 ₽ на счёте.', O.cash >= 150000, () => { O.cash -= 150000; ownMove(); });
+  opt('Рассрочка: 25 000 ₽ в месяц', 'Без первого взноса, 12 месяцев. Платёж каждый месяц, пока не выплачено.', true, () => { O.equip = 25000; O.equipLeft = 12; ownMove(); });
+  const back = el('button','next alt','Пока остаться в кресле'); back.type = 'button'; back.onclick = () => { stopVoice(); hideDlg(); ownPlan(); };
+  panel.append(grid, back, ownMenuBtn()); fitStage();
+}
+function ownMove(){ O.place = 'cab'; O.price = Math.max(O.price, 1000); track('own_cabinet'); ownPut(); ownPlan(); }
+async function ownRun(){
+  panel.innerHTML = ''; panel.append(ownHead('Месяц идёт'), el('p','wait','Кира работает…'));
+  C.kira.pose = SP.kira.cut ? 'cut' : 'stand'; place('kira'); await wait(900);
+  C.kira.pose = SP.kira.phone ? 'phone' : 'stand'; place('kira'); await wait(500);
+  const ev = ownPickEvent();
+  if (ev){ O.used.push(ev.id); const c = await ownDecide(ev.text, ev.opts); ownApply(c.fx); }
+  const r = ownCalc();
+  O.cash += r.net; r.month = O.month;
+  O.months.push({m:O.month, rev:Math.round(r.rev), net:Math.round(r.net), cash:Math.round(O.cash), pool:Math.round(O.pool)});
+  O.month++; ownPut();
+  ownReport(r);
+}
+async function ownReport(r){
+  ownScene(O.place === 'cab' ? 'mirror' : 'stand');
+  panel.innerHTML = ''; panel.append(ownHead('Отчёт месяца', DIR_MON[r.month] + ' · месяц ' + (r.month + 1) + ' из 12'), ownStatus());
+  const t = el('table','dirTbl');
+  const row = (n, v, c) => { const tr = el('tr', c || null); tr.append(el('td', null, n), el('td','num ' + (v < 0 ? 'neg' : ''), (v < 0 ? '−' : '') + rub(Math.round(Math.abs(v))))); t.append(tr); };
+  row('Клиентки: ' + Math.round(r.visits) + ' визитов' + (r.demand > r.cap ? ' (записаться хотели больше — не хватило дней)' : ''), r.rev);
+  row('Материалы', -r.mat);
+  row(O.place === 'cab' ? 'Аренда кабинета и коммуналка' : 'Аренда кресла', -r.place);
+  if (r.equip) row('Рассрочка за оборудование', -r.equip);
+  if (r.promo) row('Авито', -r.promo);
+  if (r.extra) row('Расходы по событию', -r.extra);
+  row(O.reg === 'self' ? 'Налог самозанятой' : 'Налог и взносы ИП', -(r.tax + r.ip));
+  row('Кире на жизнь', -r.life);
+  row('Итог месяца', r.net, 'total');
+  const tw = el('div','dirTblW'); tw.append(t); panel.append(tw);
+  panel.append(el('p','note', 'Новых клиенток: +' + Math.round(r.newC) + ', ушли: −' + Math.round(r.lostC) + '.'));
+  fitStage();
+  ayaState(r.net >= 0 ? 'praise' : 'warn'); await say('aya', ownA(r.net >= 0 ? 478 : 479));
+  if (O.tired >= 70 && !O.flags.tiredSaid){ O.flags.tiredSaid = 1; ayaState('warn'); await say('aya', ownA(477)); }
+  if (O.cash < 0) return ownMoney();
+  const nx = el('button','next', O.month >= 12 ? 'Итоги года' : 'Следующий месяц'); nx.type = 'button';
+  nx.onclick = () => { nx.disabled = true; stopVoice(); hideDlg(); O.month >= 12 ? ownFinal() : ownPlan(); };
+  panel.append(nx, el('p','dirDisc','Цифры и налоги — игровая механика. Для реальных решений сверяйтесь с актуальными данными Правительства РФ и бухгалтером.'));
+  fitStage(); nx.focus({preventScroll:true});
+}
+async function ownMoney(){
+  if (O.debtEver){ return ownBack(); }
+  ayaState('warn'); say('aya', ownA(480), {hold:true});
+  const box = el('div','card'); box.append(el('h2', null, 'На счёте ' + rub(Math.round(O.cash))), el('p', null, 'Мама предлагает 50 000 ₽ в долг без процентов. Вернуть — до конца года.'));
+  const yes = el('button','next','Взять у мамы'); yes.type = 'button';
+  yes.onclick = () => { stopVoice(); hideDlg(); O.debt = 50000; O.debtEver = true; O.cash += 50000; ownPut(); O.month >= 12 ? ownFinal() : ownPlan(); };
+  const no = el('button','next alt','Вернуться в найм'); no.type = 'button'; no.onclick = () => { stopVoice(); hideDlg(); ownBack(); };
+  const row = el('div','btnrow'); row.append(no, yes);
+  panel.append(box, row); fitStage();
+}
+async function ownBack(){
+  track('own_back'); O.over = true; ownClear();
+  panel.innerHTML = ''; panel.append(ownHead('Назад в найм', 'Кира: своё дело'));
+  C.kira.pose = SP.kira.coat ? 'coat' : 'stand'; place('kira'); mood('kira', 'neutral');
+  await say('kira', 'Кира собирает инструмент в сумку и идёт на собеседование в салон.', {narr:true});
+  ayaState('explain'); await say('aya', ownA(481));
+  ownEnd();
+}
+async function ownFinal(){
+  track('own_final');
+  if (O.debt){ O.cash -= O.debt; O.debt = 0; }
+  const stars = [true, !O.debtEver, O.pool >= 60];
+  const win = O.cash >= 0 && !O.debtEver;
+  panel.innerHTML = ''; panel.append(ownHead('Итоги года', 'Кира: своё дело'));
+  const card = el('div','card'); card.append(el('h2', null, win ? 'Год на себя — получилось' : O.cash < 0 ? 'Год пройден, но долг маме вернуть не из чего' : O.debtEver ? 'Год пройден, долг маме вернули' : 'Год пройден'));
+  const ul = el('ul','dirStars');
+  [['Продержалась год', 'не вернулась в найм'], ['Без долгов', 'не занимала у мамы'], ['Своя база', '60 и больше постоянных клиенток (сейчас ' + Math.round(O.pool) + ')']].forEach(([t, s], i) => {
+    const li = el('li', stars[i] ? 'on' : null); li.append(el('b', null, (stars[i] ? '★ ' : '☆ ') + t), el('span', null, ' — ' + s)); ul.append(li);
+  });
+  card.append(ul, el('p', null, 'На счёте после возврата долгов: <b>' + (O.cash < 0 ? '−' : '') + rub(Math.abs(Math.round(O.cash))) + '</b> (в начале было 80 000 ₽). Кира работает: <b>' + (O.place === 'cab' ? 'в своём кабинете' : 'в арендованном кресле в «Семейной»') + '</b>.' + (O.equipLeft > 0 ? ' Рассрочка за оборудование ещё выплачивается.' : '')));
+  panel.append(card);
+  const errs = O.log.filter(x => !x.ok && x.best);
+  if (errs.length){
+    const w = el('div','card'); w.append(el('h2', null, 'Работа над ошибками'));
+    const l = el('ul'); errs.forEach(x => { const li = el('li'); li.append(el('span', null, DIR_MON[x.m] + ': ' + x.ev + ' '), el('br'), el('b', null, 'Лучше: '), document.createTextNode(x.best)); l.append(li); });
+    w.append(l); panel.append(w);
+  }
+  panel.append(el('p','dirDisc','Цифры и налоги — игровая механика по правилам 2026 года. Для реальных решений сверяйтесь с актуальными данными Правительства РФ и бухгалтером.'));
+  fitStage();
+  C.kira.pose = SP.kira.diploma ? 'diploma' : 'stand'; place('kira'); mood('kira', win ? 'happy' : 'neutral');
+  ayaState(win ? 'praise' : 'explain'); await say('aya', ownA(win ? 482 : 483));
+  O.over = true; ownClear();
+  ownEnd();
+}
+function ownEnd(){
+  const again = el('button','next','Сыграть год заново'); again.type = 'button'; again.onclick = () => { stopVoice(); hideDlg(); ownStart(false); };
+  const row = el('div','btnrow'); row.append(again);
+  panel.append(row, ownMenuBtn()); fitStage();
 }
 
 /* ================= ПЕРСОНАЖИ: кто есть кто в игре ================= */
