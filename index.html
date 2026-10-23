@@ -528,6 +528,8 @@ body.dirMode .hud .plate:not(.pDirCash):not(.pDirRep){display:none}
 @media (max-width:520px){.plate.pDirRep{max-width:none}}
 
 .dirThermo[hidden],.plate[hidden]{display:none!important}
+
+.chPlay{align-self:flex-start;margin-top:6px;font-size:14px;padding:9px 18px}
 </style>
 </head>
 <body>
@@ -1910,7 +1912,7 @@ function intro(){
   const all = [], box = el('div','menuBS');
   box.append(el('div','hsTitle','Симулятор парикмахера'), el('div','mbSub','Академия Льва Кравца'));
   const start = el('button','hsPlay mbStart mbSalon'); start.type = 'button';
-  start.append(el('span','mbBig','🏪 Выбор салона'), el('span','mbS','Выберите героя — Киру или Эрика — и салон, где он будет работать'));
+  start.append(el('span','mbBig','🏪 Выбор салона'), el('span','mbS','Мастер: Кира или Эрик — и салон, где работать. Директор: Тамара Петровна открывает свою парикмахерскую'));
   start.onclick = () => { all.forEach(x => x.disabled = true); QUICK = true; heroSelect(); };
   const story = el('button','mbStory','или пройти сюжет с самого начала: выход из Академии'); story.type = 'button';
   story.onclick = () => { all.forEach(x => x.disabled = true); QUICK = false; heroSelect(); };
@@ -4712,10 +4714,10 @@ function ownEnd(){
 /* ================= ПЕРСОНАЖИ: кто есть кто в игре ================= */
 const CHARS = [
  {g:'Игроки', items:[
-  {img:'kira_e1', name:'Кира', sub:'Парикмахер-универсал · около 22', where:'Все женские салоны; «Пижон» — попробовать',
+  {img:'kira_e1', play:'kira', name:'Кира', sub:'Парикмахер-универсал · около 22', where:'Все женские салоны; «Пижон» — попробовать',
    d:'Выпускница Академии Льва Кравца (от 320 ак. ч, 3-й разряд). Дружелюбная, старательная, немного волнуется. Путь: стажёр → стилист → преподаватель.',
    stats:[['Женские',4],['Мужские',3],['Цвет',3],['Общение',3]], lim:'Форма бороды с окантовкой бритвой — пока не её.'},
-  {img:'eric_e1', name:'Эрик', sub:'Барбер · 24', where:'Барбершопы',
+  {img:'eric_e1', play:'eric', name:'Эрик', sub:'Барбер · 24', where:'Барбершопы',
    d:'Курсы барберов, 80 ак. ч. Уверенный, чуть дерзкий, с самоиронией; любит футбол и машины. Сначала рад быть барбером, потом понимает, что нужно учиться всему.',
    stats:[['Женские',0],['Мужские',4],['Бороды',5],['Общение',2]], lim:'Удлинённые стрижки и женский зал — после повышения квалификации.'}]},
  {g:'Наставники и персонал', items:[
@@ -4727,8 +4729,8 @@ const CHARS = [
    d:'Кряхтит, успехи приписывает салону: «Двадцать лет работаем», «Клиенты-то мои». Не злодей. Проводит собеседование и смотрит работу на модели.'},
   {img:'admin_b0', name:'Алёна', sub:'Администратор · около 30', where:'«Ромашка»; в «Семейной» — клиентка',
    d:'Приветливая, но формалистка: «Запись у нас через меня». Встречает клиенток и передаёт их мастеру.'},
-  {img:'tamara_b4', name:'Тамара Петровна', sub:'Владелица · около 54', where:'«Семейная парикмахерская»',
-   d:'Практичная и усталая, считает деньги и расходники, говорит на «ты». Собеседование, две смены и разговор об уходе Киры.'}]},
+  {img:'tamara_b4', play:'dir', name:'Тамара Петровна', sub:'Владелица · около 54 · можно играть за директора', where:'«Семейная парикмахерская»',
+   d:'Практичная и усталая, считает деньги и расходники, говорит на «ты». Собеседование, две смены и разговор об уходе Киры. В режиме директора — открывает свою парикмахерскую с нуля: помещение, кресла, мастера, займы.'}]},
  {g:'Клиентки', items:[
   {img:'marina_e1', name:'Марина, 34', sub:'Новая, сомневающаяся', where:'«Ромашка», тренажёр',
    d:'Зашла без записи по совету подруги, недовольна прошлым мастером, хочет каре по фото.', teach:'Первый визит, доверие, право на тишину'},
@@ -4801,6 +4803,13 @@ function charsShow(){
       }
       if (p.lim){ const l = el('p','chT'); l.textContent = 'Предел: ' + p.lim; tx.append(l); }
       if (p.teach){ const l = el('p','chT'); l.textContent = 'Чему учит: ' + p.teach; tx.append(l); }
+      if (p.play){
+        const pb = el('button','next chPlay', p.play === 'dir' ? '▶ Играть за директора' : '▶ Играть за ' + (p.play === 'kira' ? 'Киру' : 'Эрика')); pb.type = 'button';
+        pb.onclick = () => { pb.disabled = true; stopVoice(); hideDlg(); track('chars_play_' + p.play);
+          if (p.play === 'dir') return dirStart(true);
+          QUICK = true; HERO = p.play; vis(p.play === 'kira' ? 'eric' : 'kira', false); careerStart(); };
+        tx.append(pb);
+      }
       c.append(ph, tx); list.append(c);
     });
     fitStage();
