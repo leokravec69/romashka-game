@@ -530,19 +530,15 @@ body.dirMode .hud .plate:not(.pDirCash):not(.pDirRep){display:none}
 .dirThermo[hidden],.plate[hidden]{display:none!important}
 
 .chPlay{align-self:flex-start;margin-top:6px;font-size:14px;padding:9px 18px}
+
+/* реплики по нажатию */
+.fs.auto{font-size:12px}
+.fs.auto.off{opacity:.55}
+.dlg.manual.more::after{content:"нажмите ▸";font-size:11px;font-weight:700;opacity:0;animation:none;bottom:3px;right:10px;letter-spacing:.02em;transition:opacity .25s}
+.dlg.manual.more.ready::after{opacity:.75;animation:blink 1.2s infinite}
+.dlg.manual.more{padding-bottom:18px}
+@media (max-width:560px){ .autoW{display:none} }
 </style>
-<!-- Yandex.Metrika counter -->
-<script>
-window.YM_ID=113842352;
-(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
-k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
-ym(113842352,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
-window.ymGoal=function(g,p){try{ym(113842352,"reachGoal",g,p||{})}catch(e){}};
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/113842352" style="position:absolute;left:-9999px;" alt=""></div></noscript>
-<!-- /Yandex.Metrika counter -->
 </head>
 <body>
 <div class="wrap">
@@ -558,10 +554,11 @@ window.ymGoal=function(g,p){try{ym(113842352,"reachGoal",g,p||{})}catch(e){}};
     <button type="button" class="fs snd" id="musBtn" hidden aria-label="Выключить музыку">🎵</button>
     <div class="musPop" id="musPop" hidden><label for="musVol">Музыка</label><input type="range" id="musVol" min="0" max="100" step="5" value="35"><b id="musOut">35%</b></div>
     <button type="button" class="fs snd" id="sndBtn" hidden aria-label="Выключить голос">🔊</button>
+    <button type="button" class="fs auto" id="autoBtn" aria-label="Автопрокрутка реплик">▶<span class="autoW"> Авто</span></button>
     <button type="button" class="fs" id="fsBtn" hidden>На весь экран</button>
   </header>
 
-  <div class="stage" id="stage" aria-label="Сцена салона. Нажмите, чтобы ускорить реплику.">
+  <div class="stage" id="stage" aria-label="Сцена салона. Нажмите, чтобы перейти к следующей реплике.">
     <svg id="scene" viewBox="0 30 1672 690" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Салон «Ромашка»">
       <image id="bg" href="assets/salon.webp" x="0" y="0" width="1672" height="941"/>
       <g id="salonDeco">
@@ -1066,6 +1063,175 @@ const VOICE = {
 "Срок возврата подруге прошёл. Деньги вы вернёте, а доверие — вряд ли.": "audio/aya_528.mp3",
 "Новый салон раскручивается полгода. Первые месяцы клиентов мало — заложите это в расчёт.": "audio/aya_529.mp3",
 "Деньги закончились. Нужен заём, иначе салон закроется. Посмотрите, у кого ещё можно взять.": "audio/aya_530.mp3",
+"Это режим «Своё дело». Кира уходит из найма и работает на себя. Теперь она и мастер, и администратор, и бухгалтер.": "audio/aya_471.mp3",
+"Сначала оформление. Работать на себя без регистрации нельзя: это штрафы и налог задним числом.": "audio/aya_472.mp3",
+"Самозанятость — самый простой старт: четыре процента с оплат от людей, никаких взносов и отчётов. Чек — в приложении «Мой налог».": "audio/aya_473.mp3",
+"Индивидуальный предприниматель платит взносы за себя около пятидесяти семи тысяч в год, даже если клиентов нет. Для старта это тяжело.": "audio/aya_474.mp3",
+"Теперь главное правило: на жизнь — отдельно, на дело — отдельно. Кира откладывает себе пятнадцать тысяч в месяц, остальное — на аренду и развитие.": "audio/aya_475.mp3",
+"Своих клиентов немного: те, кто пошёл за Кирой из салона. Без продвижения новые не появятся.": "audio/aya_476.mp3",
+"Больше рабочих дней — больше денег, но и больше усталости. Уставший мастер теряет клиентов.": "audio/aya_477.mp3",
+"Месяц в плюсе. Подушка растёт — можно думать о своём кабинете.": "audio/aya_478.mp3",
+"Месяц в минусе. Аренда кресла платится, даже когда записи пустые.": "audio/aya_479.mp3",
+"Деньги закончились. Мама готова одолжить пятьдесят тысяч. Это долг, его нужно вернуть.": "audio/aya_480.mp3",
+"Денег снова нет. Кира возвращается в найм. Это не провал: теперь она знает, сколько стоит своё дело.": "audio/aya_481.mp3",
+"Год на себя пройден без долгов. Кира — настоящий самостоятельный мастер.": "audio/aya_482.mp3",
+"Год пройден, но не всё получилось. Посмотрите, где уходили деньги и клиенты.": "audio/aya_483.mp3",
+"Свой кабинет — это свобода и своя атмосфера. Но аренда, коммуналка и оборудование теперь только на вас.": "audio/aya_484.mp3",
+"Рано. Без подушки и без постоянной записи кабинет съест все деньги за пару месяцев.": "audio/aya_485.mp3",
+"Верно. Напоминание накануне снимает почти все неявки.": "audio/aya_486.mp3",
+"Предоплата отпугнёт часть новых клиентов. Сначала попробуйте напоминания.": "audio/aya_487.mp3",
+"Пустое окно — это потерянные деньги. Неявки повторятся.": "audio/aya_488.mp3",
+"Правильно. Чек — это защита и мастера, и клиента.": "audio/aya_489.mp3",
+"Работа без чека — это доход, скрытый от налоговой. Самозанятость могут отнять и начислить штраф.": "audio/aya_490.mp3",
+"Верно. Первая скидка для знакомых — да, работа бесплатно — нет.": "audio/aya_491.mp3",
+"Подруга будет приходить бесплатно всегда. И приводить других «по дружбе».": "audio/aya_492.mp3",
+"Резкий отказ стоит подруги и её рекомендаций.": "audio/aya_493.mp3",
+"Правильно. Без инструмента нет работы — это вложение, а не трата.": "audio/aya_494.mp3",
+"Чужой инструмент — чужие правила. Хозяйка запомнит.": "audio/aya_495.mp3",
+"Отлично. Фото работ с согласия клиентки — лучшая реклама мастера.": "audio/aya_496.mp3",
+"Фото без разрешения — повод для скандала и жалобы.": "audio/aya_497.mp3",
+"Без соцсетей новые клиенты узнают о вас только от старых.": "audio/aya_498.mp3",
+"Правильно. Бесплатное исправление сохраняет и клиентку, и репутацию.": "audio/aya_499.mp3",
+"Деньги вернули, клиентку потеряли. Она расскажет подругам.": "audio/aya_500.mp3",
+"Спор с клиенткой в соцсетях читают все.": "audio/aya_501.mp3",
+"Верно. Неделя отдыха дешевле, чем месяц больничного.": "audio/aya_502.mp3",
+"Через силу — до первой травмы. Спина и руки — главный инструмент мастера.": "audio/aya_503.mp3",
+"Правильно. Налог самозанятой платится до двадцать восьмого числа. Пени — лишняя трата.": "audio/aya_504.mp3",
+"Пени небольшие, но налоговая не забывает. Лучше платить вовремя.": "audio/aya_505.mp3",
+"Верно. Самозанятым нельзя перепродавать чужие товары. Можно посоветовать, где купить.": "audio/aya_506.mp3",
+"Перепродажа — нарушение для самозанятой. Ради пары сотен рублей не стоит рисковать.": "audio/aya_507.mp3",
+"Правильно. Требования к кабинету проверяют. Лучше сделать сразу.": "audio/aya_508.mp3",
+"Без стерилизации и раковины кабинет закроют после первой жалобы.": "audio/aya_509.mp3",
+"Хороший ход. Договориться о цене спокойно — нормальная часть аренды.": "audio/aya_510.mp3",
+"Согласиться сразу — значит платить больше весь год.": "audio/aya_511.mp3",
+"Уйти в никуда — без кресла нет и записи.": "audio/aya_512.mp3",
+"Авито приводит новых клиентов, но за деньги. Считайте, сколько стоит один клиент.": "audio/aya_513.mp3",
+"Соцсети бесплатны, но съедают время: фото, тексты, ответы. Это тоже работа.": "audio/aya_514.mp3",
+"«Не люблю» — это не слабое место, а отказ от работы.": "audio/aya_552.mp3",
+"Собеседование пройдено. Нарцисс увидел мастера, который думает и о клиентах, и о салоне.": "audio/aya_553.mp3",
+"Нарцисс берёт вас на испытательный срок. Клиентки первой смены придут настороженными — их доверие придётся заслужить.": "audio/aya_554.mp3",
+"Теперь ваша очередь. Выберите три вопроса Нарциссу. Хороший вопрос показывает, что вы думаете о работе.": "audio/aya_555.mp3",
+"Отличные вопросы: про запись, стандарты, обучение и деньги. Так спрашивает профессионал.": "audio/aya_556.mp3",
+"Про отпуск и ранний уход лучше спрашивать позже, когда вы уже покажете себя в работе.": "audio/aya_557.mp3",
+"Сплетни о прошлом месте работы на собеседовании — ошибка. Нарцисс запомнит, откуда вы их принесли.": "audio/aya_558.mp3",
+"Первая смена. Ваши клиентки из «Семейной» увидят новые цены. Держите цену салона без оправданий и без скидок по знакомству.": "audio/aya_559.mp3",
+"Честно и тепло: вы не обесценили салон и не оттолкнули клиентку.": "audio/aya_560.mp3",
+"Скидка втихую — это деньги салона и ваша репутация в первый же день.": "audio/aya_561.mp3",
+"Сказано правдиво, но холодно: так уходят навсегда.": "audio/aya_562.mp3",
+"Достойно отпустили и оставили дверь открытой. Такие клиенты возвращаются.": "audio/aya_563.mp3",
+"Обещание акции, которой нет, — лишнее. Лучше честно и с заботой.": "audio/aya_564.mp3",
+"Клиентка запомнит, что её просто перестали замечать.": "audio/aya_565.mp3",
+"Цена объяснена через пользу для клиентки, без оправданий.": "audio/aya_566.mp3",
+"Оправдываться за цену — значит говорить, что она того не стоит.": "audio/aya_567.mp3",
+"Клиентке неинтересны расходы салона. Ей важно, что получит она.": "audio/aya_568.mp3",
+"Консультация от жизни клиентки — основа стрижки, которая носится.": "audio/aya_569.mp3",
+"Модно, но мимо её задачи: утром у неё пять минут.": "audio/aya_570.mp3",
+"Безопасно, но клиентка пришла за переменами.": "audio/aya_571.mp3",
+"Уточнили запрос, а не угадывали. Это и есть консультация.": "audio/aya_572.mp3",
+"«На свой вкус» без вопросов — лотерея для клиентки.": "audio/aya_573.mp3",
+"Логично, но клиентка почувствует себя глупо.": "audio/aya_574.mp3",
+"Совет с пользой и показом — честная продажа ухода.": "audio/aya_575.mp3",
+"Набор «на всё» без объяснений — навязчиво.": "audio/aya_576.mp3",
+"Клиентка спросила совета — и не получила его.": "audio/aya_577.mp3",
+"Уважение к прежнему мастеру и к привычкам клиентки.": "audio/aya_578.mp3",
+"Обещать «лучше» — значит заранее ругать коллегу.": "audio/aya_579.mp3",
+"Жёстко. Клиентку ещё надо завоевать.": "audio/aya_580.mp3",
+"Алгоритм первого визита: сначала доверие, потом перемены.": "audio/aya_581.mp3",
+"Давить на испуганную клиентку — верный способ её потерять.": "audio/aya_582.mp3",
+"Безопасно, но без контакта: клиентка так и не узнает мастера.": "audio/aya_583.mp3",
+"Стандарт салона: встреча, забота, консультация.": "audio/aya_584.mp3",
+"Вежливо, но клиентка сама себя обслуживает.": "audio/aya_585.mp3",
+"«Как обычно» новенькая не знает. И пальто под пеньюаром — неуважение.": "audio/aya_586.mp3",
+"Деньги салона идут через кассу. Так честно и для вас, и для салона.": "audio/aya_587.mp3",
+"Оплата мимо кассы — Нарцисс узнает в тот же день.": "audio/aya_588.mp3",
+"«Потом рассчитаюсь» — так начинаются недостачи.": "audio/aya_589.mp3",
+"Смена закрыта, клиентки довольны. Так и собирается своя база в салоне.": "audio/aya_590.mp3",
+"Смена закрыта, но не все клиентки ушли довольными. Посмотрите, где я подсказывала.": "audio/aya_591.mp3",
+"Прошёл месяц. Сегодня придут новые клиентки и проверят вас на прочность. Спокойствие — ваш главный инструмент.": "audio/aya_592.mp3",
+"Знать свои границы и беречь волосы клиентки — это профессионализм.": "audio/aya_593.mp3",
+"Сильный оксид «подольше» — прямой путь к сожжённым волосам.": "audio/aya_594.mp3",
+"Отказ с оценкой внешности обидит. И варианта клиентка не получила.": "audio/aya_595.mp3",
+"Клиентка уходит с результатом и с планом. Желание перемен не пропало.": "audio/aya_596.mp3",
+"Клиентка пришла и ушла ни с чем. Настроение и деньги потеряны.": "audio/aya_597.mp3",
+"Опять за пределами своих навыков — тот же риск, только меньше.": "audio/aya_598.mp3",
+"Претензия решена спокойно и при всех — так растёт доверие к салону.": "audio/aya_599.mp3",
+"Спорить с клиенткой при всех — проиграть, даже если вы правы.": "audio/aya_600.mp3",
+"Брать деньги за исправление своей работы — терять клиентку.": "audio/aya_601.mp3",
+"Научить клиентку укладке — значит продлить жизнь стрижке.": "audio/aya_602.mp3",
+"Совет без показа клиентка забудет на следующее утро.": "audio/aya_603.mp3",
+"Лак вместо умения — решение на один день.": "audio/aya_604.mp3",
+"Спокойно, без оправданий и заискивания. И сразу к делу.": "audio/aya_605.mp3",
+"Заискивание только усиливает сомнения клиентки.": "audio/aya_606.mp3",
+"Грубо. Клиентка уйдёт и расскажет, как здесь встречают.": "audio/aya_607.mp3",
+"Уважать чужую работу и чётко договориться — профессионально.": "audio/aya_608.mp3",
+"Ломать чужую форму без спроса — потерять клиентку и коллегу.": "audio/aya_609.mp3",
+"Слишком осторожно: клиентка заплатила за работу, а не за страх.": "audio/aya_610.mp3",
+"Спокойно, без обиды и без заискивания. Клиентка получила вариант.": "audio/aya_611.mp3",
+"Ответили грубостью на грубость — скандал стал вашим.": "audio/aya_612.mp3",
+"Унижаться и давать скидку — значит признать, что вы хуже.": "audio/aya_613.mp3",
+"Скандал закончился за дверью. Следующая клиентка — с чистого листа.": "audio/aya_614.mp3",
+"Обсуждать клиентов при клиентах — следующая решит, что обсудят и её.": "audio/aya_615.mp3",
+"Ваше настроение стало проблемой следующей клиентки.": "audio/aya_616.mp3",
+"Показали, объяснили и предложили адаптацию. Стеснительной клиентке так легче.": "audio/aya_617.mp3",
+"Пообещали невозможное — и клиентка уйдёт расстроенной.": "audio/aya_618.mp3",
+"Честно, но резко. Стеснительная клиентка больше не придёт.": "audio/aya_619.mp3",
+"Показ и поддержка — так стеснительные клиентки становятся постоянными.": "audio/aya_620.mp3",
+"Вместо помощи — продажа услуги. Студентке это не по карману.": "audio/aya_621.mp3",
+"Клиентка пришла к мастеру, а не за ссылкой на видео.": "audio/aya_622.mp3",
+"Ещё через месяц. Ваши клиентки возвращаются. Похвалу примите с благодарностью и превратите её в постоянную запись.": "audio/aya_623.mp3",
+"Похвалу приняли с благодарностью и вернули разговор к делу.": "audio/aya_624.mp3",
+"Обесценивать свою работу — значит учить клиентку не ценить её.": "audio/aya_625.mp3",
+"Хвастовство и упрёк коллегам — Нарцисс слышит каждое слово.": "audio/aya_626.mp3",
+"Запись наперёд — главный признак постоянной клиентки.": "audio/aya_627.mp3",
+"«Когда отрастёт» — значит, когда-нибудь. Клиентка может и не дойти.": "audio/aya_628.mp3",
+"Запись мимо администратора — нарушение правил салона.": "audio/aya_629.mp3",
+"Похвала превращается в рекомендацию — так растёт база мастера.": "audio/aya_630.mp3",
+"Свои цены и своя запись мимо салона — так увольняют.": "audio/aya_631.mp3",
+"Пропустили важный момент: довольная клиентка хотела вас рекомендовать.": "audio/aya_632.mp3",
+"Даже постоянной клиентке уточняют запрос — тогда результат повторится.": "audio/aya_633.mp3",
+"«На пять» без вопроса — а Даша хотела на один.": "audio/aya_634.mp3",
+"Отговаривать без причины — значит не слышать клиентку.": "audio/aya_635.mp3",
+"Не копировать чужую стрижку, а взять идею и адаптировать.": "audio/aya_636.mp3",
+"Обещание «на двадцать» — путь к разочарованию.": "audio/aya_637.mp3",
+"«По возрасту» звучит обидно. Клиентка хотела перемен.": "audio/aya_638.mp3",
+"Шаг за шагом — так клиентка с опытом доверится новому мастеру.": "audio/aya_639.mp3",
+"Давить на сомневающуюся клиентку — потерять её.": "audio/aya_640.mp3",
+"Клиентка пришла за переменами и ушла с тем же.": "audio/aya_641.mp3",
+"Праздник для клиентки, а цена салона не тронута.": "audio/aya_642.mp3",
+"Опять скидка втихую. Клиентка копила — и пришла платить.": "audio/aya_643.mp3",
+"Спешка в праздник обидит больше, чем отказ.": "audio/aya_644.mp3",
+"Внимание к человеку — то, за что возвращаются годами.": "audio/aya_645.mp3",
+"Сухо. Момент, ради которого она копила, пропущен.": "audio/aya_646.mp3",
+"Обесценили чувства клиентки в её праздник.": "audio/aya_647.mp3",
+"Директору — тот же стандарт, что любому клиенту. Это и проверяют.": "audio/aya_648.mp3",
+"Отказаться при директоре — показать, что вы не готовы.": "audio/aya_649.mp3",
+"Без консультации даже директора — ошибка новичка.": "audio/aya_650.mp3",
+"Спокойно уточнили и исправили — без оправданий и суеты.": "audio/aya_651.mp3",
+"Спорить с клиентом в кресле — проиграть. Даже с директором.": "audio/aya_652.mp3",
+"Лишние извинения выдают неуверенность.": "audio/aya_653.mp3",
+"Поздравляю! Нарцисс оставляет вас в штате. Новый ранг — стальные ножницы. Следующий салон — «Пантера».": "audio/aya_654.mp3",
+"Пока довольны меньше четырёх клиенток из пяти. Ещё месяц на испытательном — пройдите третью смену заново.": "audio/aya_655.mp3",
+"Собеседование в «Ромашке». Нарцисс задаст семь вопросов. Отвечайте честно и думайте о клиентах и о салоне.": "audio/aya_531.mp3",
+"Честно и без упрёков. Новому руководителю важно, как вы уходите.": "audio/aya_532.mp3",
+"Кто ругает прошлое место, так же будет говорить и про новое.": "audio/aya_533.mp3",
+"Жалобы на прошлого руководителя звучат как предупреждение о конфликте.": "audio/aya_534.mp3",
+"Трезво. Цену оправдывает работа, а не обещания.": "audio/aya_535.mp3",
+"Самоуверенно. Разница в триста рублей для многих заметна.": "audio/aya_536.mp3",
+"Цену в чужом салоне не меняют без директора. Это деньги салона.": "audio/aya_537.mp3",
+"Профессионал советует и отвечает за результат.": "audio/aya_538.mp3",
+"А потом клиентка скажет подругам, что её испортили в «Ромашке».": "audio/aya_539.mp3",
+"Отказ без варианта — потерянная клиентка.": "audio/aya_540.mp3",
+"Правила салона соблюдены, клиентка не обижена.": "audio/aya_541.mp3",
+"Две записи на одно время — и скандал в субботу.": "audio/aya_542.mp3",
+"Уводить клиентов салона — повод для увольнения в первый же день.": "audio/aya_543.mp3",
+"Продажа через заботу: клиентке польза, салону доход.": "audio/aya_544.mp3",
+"Совет по домашнему уходу — часть работы мастера.": "audio/aya_545.mp3",
+"Навязчивость отпугивает клиентов сильнее цены.": "audio/aya_546.mp3",
+"Честно и с уважением к обеим клиенткам.": "audio/aya_547.mp3",
+"Чужое опоздание стало вашим.": "audio/aya_548.mp3",
+"Правило есть, но без варианта клиентка не вернётся.": "audio/aya_549.mp3",
+"Знать свои границы — признак профессионала.": "audio/aya_550.mp3",
+"Мастер без слабых мест не растёт.": "audio/aya_551.mp3",
 "__silent": "audio/silent.mp3"
 };
 const MUSIC = "audio/music.mp3";
@@ -1304,6 +1470,17 @@ function soundBtn(){
   b.onclick = () => { soundOn = !soundOn; if (!soundOn) stopVoice(); try { localStorage.setItem('romashka_sound', soundOn ? 'on' : 'off'); } catch(e){} soundBtn(); };
 }
 soundBtn();
+/* Авто: реплики сами сменяют друг друга. По умолчанию выключено — следующая реплика по нажатию (замечание преподавателя) */
+let autoOn = false; try { autoOn = localStorage.getItem('romashka_auto') === 'on'; } catch(e){}
+function autoBtn(){
+  const b = document.getElementById('autoBtn'); if (!b) return;
+  b.innerHTML = '▶<span class="autoW"> Авто</span>'; b.classList.toggle('off', !autoOn);
+  b.setAttribute('aria-pressed', String(autoOn));
+  b.title = autoOn ? 'Реплики идут сами. Нажмите, чтобы листать по нажатию' : 'Реплики листаются по нажатию. Нажмите, чтобы шли сами';
+  b.onclick = e => { e.stopPropagation(); autoOn = !autoOn; try { localStorage.setItem('romashka_auto', autoOn ? 'on' : 'off'); } catch(e){} autoBtn(); if (autoOn && skipFn) skipFn(); };
+}
+autoBtn();
+const waitTxt = () => autoOn ? 'Смотрите сцену…' : 'Нажимайте на сцену, чтобы читать дальше…';
 /* ---------- реплики: пузырь под сценой с хвостиком к говорящему; директор и администратор всплывают ---------- */
 let skipFn = null, holdOn = false;
 const bust = document.getElementById('bust'), bustImg = document.getElementById('bustImg');
@@ -1371,17 +1548,21 @@ async function say(id, text, opt = {}){
   holdOn = false;
   dlg.classList.add('more');
   const vp = id === 'aya' ? playVoice(text) : null;
+  dlg.classList.toggle('manual', !autoOn);
   await new Promise(res => {
-    let t = null;
-    skipFn = () => { clearTimeout(t); stopVoice(); res(); };
+    let t = null; const t0 = Date.now();
+    skipFn = () => { if (Date.now() - t0 < 300) return; clearTimeout(t); stopVoice(); res(); };   // защита от случайного двойного нажатия
+    if (!autoOn){ if (vp) vp.then(() => dlg.classList.add('ready')); else dlg.classList.add('ready'); return; }   // по умолчанию: следующая реплика только по нажатию
     if (vp) vp.then(ok => { t = setTimeout(res, ok ? 150 : readMs(text)); });   // ждём конец фразы; без звука — время на чтение
     else t = setTimeout(res, readMs(text));
   });
+  dlg.classList.remove('ready');
   skipFn = null; dlg.classList.remove('more'); stop();
   hideDlg(); bust.className = 'bust';            // реплика исчезает вместе с говорящим
 }
 function clearHeld(){ holdOn = false; }
 stage.addEventListener('click', () => { if (skipFn) skipFn(); });
+document.addEventListener('keydown', e => { if (skipFn && (e.key === ' ' || e.key === 'Enter') && !/INPUT|TEXTAREA|BUTTON|SELECT/.test((e.target.tagName || ''))){ e.preventDefault(); skipFn(); } });
 
 function narcMood(t){
   if (/Что тут|распугиваешь|Двадцать лет работаем, а ты/.test(t)) return 'angry';
@@ -1736,7 +1917,7 @@ async function enter(id){
   curTitle = node.title || ''; stage.style.height = '';
   if (node.mood) S.mood = node.mood;
   mood('marina', S.mood); mood('kira','neutral'); ayaState('explain');
-  panel.innerHTML = ''; panel.append(head(node), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(head(node), el('p','wait',waitTxt()));
   busy = true;
   await camWide(); bust.className = 'bust'; hideDlg(); stopVoice();
   if (node.scene) await node.scene();
@@ -1859,7 +2040,7 @@ async function kiraFinale(m){
 async function summary(){
   track('visit_finish');
   stopTimer(); clearHeld(); panel.innerHTML = '';
-  panel.append(head({title:'Итог визита', stage:10}), el('p','wait','Смотрите сцену…'));
+  panel.append(head({title:'Итог визита', stage:10}), el('p','wait',waitTxt()));
   if (C.marina.vis && S.end !== 'ref'){
     if (Math.abs(C.marina.x - P.rec[0]) > 40) await toReception();
     mood('marina', S.outcome === 'unh' && !S.fixed ? 'upset' : 'smile');
@@ -1897,8 +2078,8 @@ async function summary(){
     : 'Посмотрите, где я подсказывала, и пройдите визит без них.';
   ayaState(S.mistakes === 0 || S.end === 'ref' ? 'praise' : 'cheer'); await say('aya', tip);
   const r = el('button','next alt','Сыграть визит снова'); r.type = 'button'; r.onclick = () => restart(true);
-  doneMark('marina'); statsAdd('kira', {visits:1, happy:S.outcome === 'sat' ? 1 : 0, money:e.total || 0}); savePut({kind:'shift', master:'kira', salon:'romashka', i:0, total:ROM.length, xPts:0, xMoney:e.total || 0, money:e.total || 0, happy:0, career:true});
-  const cont = el('button','next','Дальше по смене: Таня, Ольга, Ирина'); cont.type = 'button'; cont.onclick = () => { cont.disabled = true; saveResume('kira'); };
+  doneMark('marina'); statsAdd('kira', {visits:1, happy:S.outcome === 'sat' ? 1 : 0, money:e.total || 0}); savePut({kind:'shift', master:'kira', salon:'romashka', cycle:1, i:0, total:romBuild(1).length, xPts:0, xMoney:e.total || 0, money:e.total || 0, happy:0, career:true});
+  const cont = el('button','next','Первая смена в «Ромашке»'); cont.type = 'button'; cont.onclick = () => { cont.disabled = true; saveResume('kira'); };
   const rowE = el('div','btnrow'); rowE.append(r, cont); panel.append(rowE);
 }
 
@@ -1957,7 +2138,7 @@ function intro(){
   const home = el('button','mbStory','📲 Сохранить игру на экран «Домой»'); home.type = 'button'; home.onclick = () => a2hsShow(false);
   box.append(start, story, grid, rk, fb, code);
   if (!a2hsStandalone()) box.append(home);
-  const c = el('div','card','<ul><li>Выбирайте реплики и действия — персонажи разыгрывают их на сцене.</li><li>Плашка с настроением сверху — как себя чувствует клиент. Если упадёт до −80, клиент уйдёт.</li><li>Нажмите на сцену или на реплику, чтобы ускорить её.</li><li>Айя подсказывает голосом: 🔊 — голос, 🎵 — громкость музыки.</li></ul>');
+  const c = el('div','card','<ul><li>Выбирайте реплики и действия — персонажи разыгрывают их на сцене.</li><li>Плашка с настроением сверху — как себя чувствует клиент. Если упадёт до −80, клиент уйдёт.</li><li>Нажмите на сцену или на реплику — появится следующая. Кнопка ▶ Авто включает автопрокрутку.</li><li>Айя подсказывает голосом: 🔊 — голос, 🎵 — громкость музыки.</li></ul>');
   panel.append(box, c);
   stopVoice(); hideDlg(); bust.className = 'bust';
   if (!introSaid){ introSaid = true; try { sessionStorage.setItem('aya_hi', '1'); } catch(e){} say('aya', 'Привет! Я Айя, ваш технолог. Буду подсказывать по ходу визита.', {hold:true}); }
@@ -2109,7 +2290,7 @@ async function drillStart(){
 async function drillRound(){
   const R = DR.order[DR.i], id = R.id;
   PARTNER = id; S.meter = 0; hud(); stopTimer(); hideDlg(); bust.className = 'bust';
-  panel.innerHTML = ''; panel.append(drillHead(R.title, DR.i + 1), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(drillHead(R.title, DR.i + 1), el('p','wait',waitTxt()));
   ['galina','andrey','sonya','viktoria','marina'].forEach(x => vis(x, false));
   await camWide(); camSet(600);
   if (id === 'marina') C.marina.pose = 'dress';
@@ -2309,7 +2490,7 @@ async function examStart(){
   vis('marina', false); coatOn = false; clips(false);
   const other = EXH === 'kira' ? 'eric' : 'kira'; vis(other, false);
   MASTER = EXH; C[EXH].pose = 'stand'; setPos(EXH, 980, 690); face(EXH, -1); vis(EXH, true); camSet(900);
-  panel.innerHTML = ''; panel.append(drillHead('Экзамен в Академии', 0, 'Академия'), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(drillHead('Экзамен в Академии', 0, 'Академия'), el('p','wait',waitTxt()));
   ayaState('explain');
   await say('aya', exName('Кира, добро пожаловать на экзамен. Пятнадцать заданий: общение, колористика, время и нормы, продажи. Чтобы получить новый ранг, нужно восемьдесят процентов верных ответов.'));
   examAsk();
@@ -2570,7 +2751,7 @@ async function careerStart(){
   if (HERO === 'eric') return ericStart();
   vis('eric', false);
   pose('kira','diploma'); setPos('kira', 1000, 700); face('kira', 1); mood('kira','happy'); camSet(900);
-  panel.innerHTML = ''; panel.append(prHead('Куда пойти?'), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(prHead('Куда пойти?'), el('p','wait',waitTxt()));
   await say('kira', 'Кира выходит из Академии с дипломом в руках. Курсы позади. Что дальше?', {narr:true});
   ayaState('cheer'); await say('aya', PV[95]);
   const exp = await prAsk('Опыт работы', 96, [
@@ -2604,7 +2785,7 @@ async function ericStart(){
   vis('kira', false);
   C.eric.pose = 'diploma'; setPos('eric', 1000, 700); face('eric', 1); vis('eric', true); mood('eric','happy'); camSet(900);
   PR.rank = 'barber'; PR.exp = 0; PR.skills = ['Мужские стрижки'];
-  panel.innerHTML = ''; panel.append(prHead('Куда пойти?'), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(prHead('Куда пойти?'), el('p','wait',waitTxt()));
   await say('eric', 'Эрик выходит с курсов барберов с сертификатом. Восемьдесят часов, один месяц — и он уже барбер!', {narr:true});
   await say('eric', 'Всё, я барбер! Фейды, бороды — это моё.', {mood:'happy'});
   ayaState('cheer'); await say('aya', ERIC_TXT.hello);
@@ -2705,7 +2886,7 @@ function quickChoose(){
 function segLoc(i){ const s = SEG[i]; if (s.id === 'eplus') return 'salon'; return s.img; }
 async function heroEnter(i){
   const id = HERO, s = SEG[i];
-  panel.innerHTML = ''; panel.append(prHead('«' + s.name + '»'), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(prHead('«' + s.name + '»'), el('p','wait',waitTxt()));
   hideDlg(); bust.className = 'bust'; await camWide();
   const loc = segLoc(i); if (loc === 'salon') setLocation('salon'); else setLocation2(loc);
   ['kira','eric','tamara','narc'].forEach(x => { if (x !== id) vis(x, false); });
@@ -2810,17 +2991,6 @@ async function ericSad(i, title, text){
   const row = el('div','btnrow'); row.append(menu, again, back); panel.append(c, row); fitStage();
 }
 /* ---------- средний уровень: «Ромашка», Нарцисс отправляет на пробную работу ---------- */
-async function midStart(){
-  PARTNER = 'marina'; S = fresh(); resetScene(); hud();
-  panel.innerHTML = ''; panel.append(prHead('Собеседование в «Ромашке»'), el('p','wait','Смотрите сцену…'));
-  setPos('narc', 1250, 640); face('narc', -1); vis('narc', true); mood('narc','suspicious');
-  ayaState('explain'); await say('aya', PV[114]);
-  const bonus = await famNarc();
-  await say('narc', 'Диплом — это бумага. Вот кресло, сейчас придёт клиентка. Покажите, как вы работаете.', {mood:'suspicious'});
-  vis('narc', false);
-  restart(true);
-  if (bonus){ S.meter = clamp(S.meter + bonus, -100, 100); hud(); }
-}
 /* ---------- эконом: «Семейная парикмахерская», Тамара Петровна ---------- */
 const ECO_CALL = [
   {line:'Алло. По вакансии? Ну, рассказывайте.', tip:116, c:() => [
@@ -2882,7 +3052,7 @@ async function ecoAnswer(Q, o){
   if (Q.tip) await say('aya', typeof Q.tip === 'number' ? PV[Q.tip] : Q.tip);
 }
 async function ecoVisit(){
-  panel.innerHTML = ''; panel.append(prHead('Визит в салон', 'Собеседование'), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(prHead('Визит в салон', 'Собеседование'), el('p','wait',waitTxt()));
   await say('kira', 'На следующий день, 9:55. Цокольный этаж, окна под потолком. Тамара Петровна уже ждёт.', {narr:true});
   setLocation2('econom'); pose('kira','stand'); setPos('kira', P.door[0], 690); face('kira', 1);
   setPos('tamara', 1020, 690); face('tamara', -1); vis('tamara', true); camSet(900);
@@ -2964,10 +3134,10 @@ let MV = null;
 const MEN_PRICE = {romashka:{cut:900, beard:0, norm:44, beardMin:0}, pijon:{cut:1800, beard:800, norm:27, beardMin:17}, family:{cut:600, beard:200, norm:21, beardMin:17, share:0.35}};
 const MEN_BEARD = {viktor:true, mikhail:true};                       // в визите есть борода
 const MEN_RETAIL = {mark:['матовая глина', 1200], mikhail:['масло для бороды', 1100]};   // продажа при лучшем втором ответе (только у Эрика)
-const MEN_SCALE = {artem:0.9};
+const MEN_SCALE = {artem:0.9, narc:0.95};
 const FAM_X = {zoya:430, gennady:520, lena:470, dasha:520, valery:420, alena:480};   // где клиент «Семейной» останавливается у входа                                          // Артём нарисован крупнее остальных
 const MEN_PHOTO = {aleksey:'man_aleksey_photo'};                        // фото стрижки на телефоне клиента
-function menHead(title, n, total){ const h = el('div','head'); h.append(el('h1', null, title), el('span','step', n ? (MV && MV.fam ? 'Смена ' + MV.cycle + ' · ' : MV && MV.cycle > 1 ? 'Цикл ' + MV.cycle + ' · ' : '') + (MV && MV.salon === 'romashka' ? 'Клиентка ' : 'Клиент ') + n + ' из ' + total : (MV && MV.salon === 'romashka' ? '«Ромашка»' : MV && MV.fam ? '«Семейная» · лёгкий уровень' : 'Мужской зал'))); return h; }
+function menHead(title, n, total){ const h = el('div','head'); h.append(el('h1', null, title), el('span','step', n ? (MV && (MV.fam || MV.salon === 'romashka') ? 'Смена ' + MV.cycle + ' · ' : MV && MV.cycle > 1 ? 'Цикл ' + MV.cycle + ' · ' : '') + (MV && MV.salon === 'romashka' ? 'Клиентка ' : 'Клиент ') + n + ' из ' + total : (MV && MV.salon === 'romashka' ? '«Ромашка»' : MV && MV.fam ? '«Семейная» · лёгкий уровень' : 'Мужской зал'))); return h; }
 function imgSize(n){
   if (typeof ASSET_LIST !== 'undefined' && !ASSET_LIST.includes(n)) return Promise.resolve(null);   // файла нет — не запрашиваем
   return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = IMG(n); });
@@ -2975,7 +3145,7 @@ function imgSize(n){
 /* картинки клиента: стоя (обязательно), без верхней одежды и в кресле (если положить файлы в assets — подхватятся сами):
    assets/man_ИМЯ_stand.webp, assets/man_ИМЯ_nocoat.webp, assets/man_ИМЯ_sit.webp */
 async function menSprite(v){
-  const pre = v.pre || 'man_', W8 = pre === 'woman_';
+  const pre = v.pre ?? 'man_', W8 = pre === 'woman_' || !!v.fem;
   const n = pre + v.img + '_stand', k = MEN_SCALE[v.img] || 1;
   const hs = (im, def) => W8 ? 425 * im.naturalHeight / 760 : def;   // женщины: высота на сцене по высоте картинки (лист нормирован на 760)
   let w = v.w, h = v.h, half = false;
@@ -3006,6 +3176,7 @@ async function menSprite(v){
     const f = await imgSize(pre + v.img + '_' + e);
     if (f){ SP.client[e] = [pre + v.img + '_' + e, f.naturalWidth, f.naturalHeight, hs(f, 440 * k), 1, '']; NAT[pre + v.img + '_' + e] = [f.naturalWidth, f.naturalHeight]; }
   }));
+  { const rb = typeof romBusts === 'function' && MV && MV.salon === 'romashka' ? romBusts(v) : null; if (rb) SP.client.busts = rb; }
   NAMES.client = v.speaker || v.name;
   MV.clientY = half ? 762 : MV.salon === 'romashka' ? 672 : 690;
 }
@@ -3049,8 +3220,8 @@ async function menStart(master, fromCareer, salonArg, resume){
   track((rom ? 'rom_start_' : 'men_start_') + master);
   S = fresh(); resetScene(); hud(); stopVoice();
   const pj = master === 'eric' && salon === 'pijon', fam = master === 'kira' && salon === 'family' && !hard;
-  const cyc = pj ? ((resume && resume.cycle) || pjNextCycle()) : fam ? ((resume && resume.cycle) || famNextShift()) : 1;
-  MV = {master, salon, hard, pj, cycle:cyc, fam, list:rom ? ROM : fam ? famBuild(cyc) : pj && cyc > 1 ? pjBuild(cyc) : MEN.filter(v => v.salon === (hard ? 'family' : salon)), i:0, log:[], happy:0, career:!!fromCareer, clientY:rom ? 672 : 690, money:0};
+  const cyc = pj ? ((resume && resume.cycle) || pjNextCycle()) : fam ? ((resume && resume.cycle) || famNextShift()) : rom ? ((resume && resume.cycle) || romNext()) : 1;
+  MV = {master, salon, hard, pj, cycle:cyc, fam, list:rom ? romBuild(cyc) : fam ? famBuild(cyc) : pj && cyc > 1 ? pjBuild(cyc) : MEN.filter(v => v.salon === (hard ? 'family' : salon)), i:0, log:[], happy:0, career:!!fromCareer, clientY:rom ? 672 : 690, money:0};
   MASTER = master; HERO = master;
   if (MV.pj && !MV.list.length) return pjNobody();
   if (resume && resume.i >= 0 && resume.i < MV.list.length){ MV.i = resume.i; MV.money = resume.money || 0; MV.happy = resume.happy || 0; S.xPts = resume.xPts || 0; S.xMoney = resume.xMoney || 0; hud(); }
@@ -3075,8 +3246,8 @@ const MEN_INTRO = {eric:'«Пижон», вечерняя смена. Музык
                    kiraPijon:'«Пижон», вечерняя смена. Кира — единственная девушка в зале. Клиенты ждут барберской подачи, цены выше, а мужской тон Кире ещё непривычен.'};
 async function menRound(){
   const v = MV.list[MV.i], m = MV.master;
-  await menSprite(v); PARTNER = 'client'; S.meter = 0; hud(); stopTimer(); hideDlg(); bust.className = 'bust';
-  panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','Смотрите сцену…'));
+  await menSprite(v); PARTNER = 'client'; S.meter = (MV.salon === 'romashka' && MV.cycle === 1) ? romStartMood() : 0; hud(); stopTimer(); hideDlg(); bust.className = 'bust';
+  panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait',waitTxt()));
   const rom = MV.salon === 'romashka';
   await camWide(); camSet(rom ? 700 : 800);
   if (rom){ C[m].pose = 'stand'; setPos(m, P.showK[0], P.showK[1]); face(m, -1); mood(m, 'neutral'); }
@@ -3086,6 +3257,7 @@ async function menRound(){
   svcTime(null);
   MV.noTips = false;
   if (MV.fam && MV.i === 0) await famShiftStart(MV.cycle);
+  else if (rom && MV.i === 0) await romShiftStart(MV.cycle);
   else if (MV.i === 0) await say(m, rom ? ROM_INTRO : MV.hard ? MEN_INTRO.kiraPijon : MV.pj && MV.cycle === 2 ? PJ_INTRO[2] : MV.pj && MV.cycle === 3 ? PJ_INTRO[3] : MEN_INTRO[m], {narr:true});
   if (MV.pj && MV.i === 0 && MV.cycle === 3){
     ayaState('explain'); await say('aya', pjA(303));
@@ -3097,7 +3269,7 @@ async function menRound(){
     if (MV.cycle === 1 && MV.i === 1) await pjCleanDecision(1);
     else if (v.clean === 3) await pjCleanDecision(3);
     else await pjCleanAnim();
-    panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','Смотрите сцену…'));
+    panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait',waitTxt()));
     C[m].pose = 'stand'; setPos(m, 960, 690); face(m, -1);
   }
   if (MV.fam){
@@ -3127,9 +3299,9 @@ function splitIntro(t){
 }
 async function menAsk(v, step){
   const d = step === 1 ? v.d1 : v.d2;
-  panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(menHead(v.name + ', ' + v.age + ' — ' + v.title, MV.i + 1, MV.list.length), el('p','wait',waitTxt()));
   let holdText = '', holdNarr = false;
-  if (step === 1){ holdText = noteLine(v.lineNote, v.line); if (v.img === 'mark') mood('client', 'happy'); if (v.img === 'valery') mood('client', 'angry'); }
+  if (step === 1 && (v.line || !d.intro)){ holdText = noteLine(v.lineNote, v.line); if (v.img === 'mark') mood('client', 'happy'); if (v.img === 'valery') mood('client', 'angry'); }
   else {
     const it = splitIntro(d.intro || '');
     if (it.narr && it.line) await say(MV.master, it.narr, {narr:true});
@@ -3210,7 +3382,7 @@ async function menSeat(v){
     }
     await Promise.all([walk('client', P.chairStand[0], P.chairStand[1], {cam:narrow()}), walk(m, P.chairK[0], P.chairK[1])]);
     if (sp.sit){ C.client.pose = 'sit'; setPos('client', P.chairSit[0], P.chairSit[1]); face('client', 1); }
-    else { C.client.pose = 'nocoat'; face('client', 1); place('client'); }
+    else { C.client.pose = sp.nocoat ? 'nocoat' : 'stand'; face('client', 1); place('client'); }
     C[m].pose = 'cut'; setPos(m, P.cutK[0], P.cutK[1]); face(m, 1);
     return 'rom';
   }
@@ -3271,7 +3443,7 @@ async function menFinal(v){
   if (v.kid === 'chair' && MV.ok2 && val > 0 && SP.x2.after){ C.x2.pose = 'after'; setPos('x2', CHAIR.x - 40, MV.clientY); face('x2', 1); }
   if (v.noPay){
     await walk('client', P.door[0], MV.clientY, {cam:narrow()}); vis('client', false);
-    await say(m, 'Дверь хлопает. Лена в кресле выдыхает.', {narr:true});
+    await say(m, MV.salon === 'romashka' ? (v.img === 'zoya' ? 'Зоя Ивановна уходит. Дверь тихо закрывается.' : 'Дверь хлопает. Клиентки в зале переглядываются.') : 'Дверь хлопает. Лена в кресле выдыхает.', {narr:true});
   } else if (MV.ok2 && val > 0){
     mood('client', moodFor(val)); mood(m, 'happy');
     for (const c of v.fin){
@@ -3285,7 +3457,7 @@ async function menFinal(v){
   }
   /* деньги мастера за визит */
   const rows = [], price = v.price || (P0.cut + (MEN_BEARD[v.img] ? P0.beard : 0)), share = P0.share || 0.5;
-  if (!v.noPay) rows.push([(v.svc ? v.svc + ' ' : MEN_BEARD[v.img] ? 'Стрижка + борода ' : 'Стрижка ') + rub(price) + ', ' + Math.round(share * 100) + '% мастеру', Math.round(price * share)]);
+  if (!v.noPay && !v.free) rows.push([(v.svc ? v.svc + ' ' : MEN_BEARD[v.img] ? 'Стрижка + борода ' : 'Стрижка ') + rub(price) + ', ' + Math.round(share * 100) + '% мастеру', Math.round(price * share)]);
   if (m === 'eric' && MV.ok2 && MEN_RETAIL[v.img]){ const r = MEN_RETAIL[v.img]; rows.push(['Продажа: ' + r[0] + ' ' + rub(r[1]) + ', 10%', r[1] * 0.1]); }
   if (v.retail && MV.ok2 && val > 0){ const r = v.retail; rows.push(['Продажа: ' + r[0] + ' ' + rub(r[1]) + ', 10%', r[1] * 0.1]); }
   else if (v.retail) await say('client', MV.fam ? 'Спрей? В другой раз.' : 'Крем? Подумаю.');
@@ -3293,13 +3465,14 @@ async function menFinal(v){
   if (MV.pj){ const p = pjGet(); p.out[MV.cycle] = p.out[MV.cycle] || {}; p.out[MV.cycle][v.img] = pjOut(val); pjPut(p); }
   const earned = rows.reduce((a, r) => a + r[1], 0);
   S.xMoney = (S.xMoney || 0) + earned; MV.money += earned;
-  const happyV = val >= 20 || (v.noPay && MV.ok1 && MV.ok2);
+  const happyV = val >= 20 || ((v.noPay || rom) && MV.ok1 && MV.ok2);
   if (happyV){ MV.happy++; S.xPts = (S.xPts || 0) + 5; }
   if (MV.fam) famVisitDone(v, happyV);
+  if (rom) romVisitDone(v, happyV);
   hud();
   if (v.ayaFin && !(MV.fam && !happyV)) ayaTail(v.ayaFin, val >= 20 ? 'praise' : 'explain');
   /* клиент встаёт и уходит */
-  if (rom){ C.client.pose = val >= 20 && SP.client.after ? 'after' : 'nocoat'; setPos('client', P.chairStand[0], P.chairStand[1]); face('client', -1); if (C.client.pose === 'nocoat') clientPose(); }
+  if (rom){ C.client.pose = val >= 20 && SP.client.after ? 'after' : SP.client.nocoat ? 'nocoat' : 'stand'; setPos('client', P.chairStand[0], P.chairStand[1]); face('client', -1); if (C.client.pose === 'nocoat') clientPose(); }
   else if (v.stay){ vis('client', false); C.x2.pose = 'stand'; await famExtra('woman_', 'lena', 'Лена', ['sit','stand','happy','skeptic','angry','sad','phone']); C.x2.pose = 'sit'; setPos('x2', CHAIR.x, CHAIR.y); face('x2', -1); vis('x2', true); }
   else if (C.client.pose === 'sit' || C.client.pose === 'nocoat'){ C.client.pose = val >= 20 && SP.client.after ? 'after' : SP.client.stand[0].startsWith('woman_') && SP.client.nocoat ? 'nocoat' : 'stand'; setPos('client', CHAIR.x - 60, MV.clientY); face('client', -1); if (C.client.pose === 'nocoat') clientPose(); }
   C[m].pose = 'stand'; place(m);
@@ -3308,7 +3481,7 @@ async function menFinal(v){
   panel.innerHTML = ''; panel.append(menHead('Визит окончен', MV.i, MV.list.length));
   const c = el('div','card');
   c.append(el('h2', null, v.name + ': настроение ' + (val > 0 ? '+' : val < 0 ? '−' : '') + Math.abs(val)),
-    el('p', null, v.noPay ? (happyV ? 'Валерий ушёл, но зал остался спокойным: клиентка в кресле не пострадала.' : 'Валерий ушёл, а осадок остался у всех, кто был в зале.') : (happyV ? (rom ? 'Клиентка довольна и записалась снова.' : 'Клиент доволен и вернётся.') : val >= 0 ? 'Без восторга, но и без обиды.' : (rom ? 'Клиентка ушла недовольной.' : 'Клиент ушёл недовольным.')) + ' Время визита: ' + svcMin + ' мин при норме ' + MV.norm + '.'));
+    el('p', null, v.noPay ? (rom ? (happyV ? 'Клиентка ушла, но разговор был достойным — так и было нужно.' : 'Клиентка ушла, и осадок остался у всех в зале.') : happyV ? 'Валерий ушёл, но зал остался спокойным: клиентка в кресле не пострадала.' : 'Валерий ушёл, а осадок остался у всех, кто был в зале.') : (happyV ? (rom ? (v.boss ? 'Нарцисс доволен.' : 'Клиентка довольна.') : 'Клиент доволен и вернётся.') : val >= 0 ? 'Без восторга, но и без обиды.' : (rom ? 'Клиентка ушла недовольной.' : 'Клиент ушёл недовольным.')) + ' Время визита: ' + svcMin + ' мин при норме ' + MV.norm + '.'));
   const ul = el('ul','money'); rows.forEach(r => { const li = el('li'); li.append(el('span', null, r[0]), el('b', null, '+' + rub(r[1]))); ul.append(li); }); c.append(ul);
   const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(v.ayaFin || ''));
   if (!v.ayaFin || (MV.fam && !happyV)) h.hidden = true;
@@ -3335,19 +3508,20 @@ async function menSummary(){
   saveClear(MV.master); doneMark(MV.salon + '_' + MV.master);
   const m = MV.master, n = MV.i;
   let pjp = null;
-  let famR = null;
-  if (MV.fam){ panel.innerHTML = ''; panel.append(menHead('Итог смены', 0), el('p','wait','Смотрите сцену…')); vis('x2', false); famR = await famShiftEnd(); }
-  if (MV.pj){ panel.innerHTML = ''; panel.append(menHead('Итог смены', 0), el('p','wait','Смотрите сцену…')); C.eric.pose = 'stand'; setPos('eric', 900, 690); face('eric', -1); camSet(900); pjp = await pjCycleEnd(); }
+  let famR = null, romR = null;
+  if (rom){ panel.innerHTML = ''; panel.append(menHead('Итог смены', 0), el('p','wait',waitTxt())); romR = await romShiftEnd(); }
+  if (MV.fam){ panel.innerHTML = ''; panel.append(menHead('Итог смены', 0), el('p','wait',waitTxt())); vis('x2', false); famR = await famShiftEnd(); }
+  if (MV.pj){ panel.innerHTML = ''; panel.append(menHead('Итог смены', 0), el('p','wait',waitTxt())); C.eric.pose = 'stand'; setPos('eric', 900, 690); face('eric', -1); camSet(900); pjp = await pjCycleEnd(); }
   panel.innerHTML = ''; panel.append(menHead('Итог смены', 0));
   const picks = MV.log.filter(r => r.picked !== 'Слишком долгая пауза с ответом');
   const okN = picks.filter(r => r.ok).length;
   statsAdd(m, {shifts:1, visits:n, happy:MV.happy, best:okN, answers:picks.length, money:MV.money, salon:MV.salon});
   const c0 = el('div','card');
-  c0.innerHTML = '<h2>' + (rom ? 'Кира · «Ромашка»' : MV.hard ? 'Кира · «Пижон»' : m === 'eric' ? 'Эрик · «Пижон»' : 'Кира · «Семейная», смена ' + MV.cycle) + '</h2><p>' + (rom ? 'Записались снова' : 'Довольных клиентов') + ': <b>' + MV.happy + ' из ' + n + '</b>. Лучших ответов: <b>' + okN + ' из ' + picks.length + '</b> (' + Math.round(okN / Math.max(1, picks.length) * 100) + '%).</p>'
+  c0.innerHTML = '<h2>' + (rom ? 'Кира · «Ромашка», смена ' + MV.cycle : MV.hard ? 'Кира · «Пижон»' : m === 'eric' ? 'Эрик · «Пижон»' : 'Кира · «Семейная», смена ' + MV.cycle) + '</h2><p>' + (rom ? 'Довольных клиенток' : 'Довольных клиентов') + ': <b>' + MV.happy + ' из ' + n + '</b>. Лучших ответов: <b>' + okN + ' из ' + picks.length + '</b> (' + Math.round(okN / Math.max(1, picks.length) * 100) + '%).</p>'
     + '<p>Заработано за смену: <b>' + rub(MV.money) + '</b>. Баллы мастерства: <b>' + (S.xPts || 0) + '</b>.</p>'
-    + (famR ? famCard(famR) : '')
+    + (famR ? famCard(famR) : '') + (romR ? romCard(romR, n) : '')
     + (MV.pj ? '<p><b>Цикл ' + MV.cycle + ' из 3</b>' + (MV.cycle === 3 ? (pjp && pjp.passed ? ' — уровень пройден! Эрик идёт на повышение квалификации. Сцена в Академии — в следующей версии.' : ' — для перехода нужно: вернулись 6 из 8 клиентов и решение учиться.') : ' — через месяц клиенты вернутся.') + '</p>' : '')
-    + (rom || MV.fam ? (MV.fam ? '' : '<p>Практичная стрижка, честная продажа ухода и вопрос старшему мастеру вместо догадок — это и есть работа постоянного мастера.</p>') : MV.pj && MV.cycle > 1 ? '' : m === 'eric' ? '<p>Удлинённые стрижки (Денис) — предел барбера. Повышение квалификации в Академии откроет и их, и женский зал.</p>' : '<p>Форма бороды с окантовкой (Михаил) — предел Киры. Это отдельный курс в Академии.</p>');
+    + (rom || MV.fam ? '' : MV.pj && MV.cycle > 1 ? '' : m === 'eric' ? '<p>Удлинённые стрижки (Денис) — предел барбера. Повышение квалификации в Академии откроет и их, и женский зал.</p>' : '<p>Форма бороды с окантовкой (Михаил) — предел Киры. Это отдельный курс в Академии.</p>');
   const c1 = el('div','card'); c1.append(el('h2', null, 'Работа над ошибками'));
   const ul = el('ul','review');
   MV.log.forEach(r => {
@@ -3361,13 +3535,13 @@ async function menSummary(){
   c1.append(ul);
   panel.append(c0, c1); fitStage();
   const perfect = n === MV.list.length && okN === picks.length && picks.length === MV.log.length;
-  if (rom){ C[m].pose = 'stand'; setPos(m, P.showK[0], P.showK[1]); face(m, -1); mood(m, perfect ? 'happy' : 'smile'); camSet(700); ayaState('explain'); await say('aya', 'Смена окончена. Давай посмотрим, что получилось.'); }
+  if (rom){ C[m].pose = 'stand'; setPos(m, P.showK[0], P.showK[1]); face(m, -1); mood(m, perfect ? 'happy' : 'smile'); camSet(700); }
   else { C[m].pose = 'stand'; setPos(m, 900, 690); face(m, -1); mood(m, perfect ? 'happy' : 'smile'); camSet(800); }
   if (rom || MV.pj) {}
   else if (m === 'eric') await say('eric', perfect ? 'Мужской зал — мой. А дальше — повышение квалификации, чтобы и Денис ушёл с кудрями.' : 'Барбер — это не только машинка. Разберу ошибки — и завтра лучше.', {mood: perfect ? 'happy' : 'smile'});
   if (!rom && !MV.pj && !MV.fam) ayaTail(perfect ? 'Чистый визит без ошибок. Так держать!' : 'Ошибаться — нормально. Перечитайте мои подсказки и попробуйте ещё раз.', perfect ? 'praise' : 'cheer');
-  const again = el('button','next', MV.pj && MV.cycle < 3 ? 'Следующий цикл: через месяц' : famR && famR.passed ? 'Собеседование в «Ромашке»' : famR ? 'Следующий визит: через месяц' : 'Ещё раз'); again.type = 'button';
-  again.onclick = () => famR && famR.passed ? midStart() : menStart(m, MV.career, MV.salon);
+  const again = el('button','next', romR ? (romR.passed ? 'Пройти «Ромашку» заново' : romR.again ? 'Третья смена ещё раз' : 'Смена ' + (romR.cyc + 1) + ': через месяц') : MV.pj && MV.cycle < 3 ? 'Следующий цикл: через месяц' : famR && famR.passed ? 'Собеседование в «Ромашке»' : famR ? 'Следующий визит: через месяц' : 'Ещё раз'); again.type = 'button';
+  again.onclick = () => romR && romR.passed ? midStart() : famR && famR.passed ? midStart() : menStart(m, MV.career, MV.salon);
   const other = el('button','next alt', m === 'eric' ? 'За Киру' : 'За Эрика'); other.type = 'button'; other.onclick = () => menStart(m === 'eric' ? 'kira' : 'eric');
   if (rom || MV.hard || MV.fam) other.hidden = true;
   const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
@@ -3400,13 +3574,13 @@ function saveShift(){
 }
 const SALON_NAME = {romashka:'«Ромашка»', pijon:'«Пижон»', family:'«Семейная»'};
 function saveLabel(o){
-  const who = o.master === 'eric' ? 'Эрик' : 'Кира', noun = (o.salon === 'family' ? 'смена ' + (o.cycle || 1) + ' · ' : '') + (o.salon === 'romashka' ? 'клиентка' : 'клиент');
+  const who = o.master === 'eric' ? 'Эрик' : 'Кира', noun = (o.salon === 'family' || o.salon === 'romashka' ? 'смена ' + (o.cycle || 1) + ' · ' : '') + (o.salon === 'romashka' ? 'клиентка' : 'клиент');
   const d = new Date(o.t), dd = String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth() + 1).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
   return who + ' · ' + (SALON_NAME[o.salon] || o.salon) + ' · ' + noun + ' ' + (o.i + 1) + ' из ' + o.total + ' · сохранено ' + dd;
 }
 function saveResume(m){ const o = saveGet(m); if (!o || o.kind !== 'shift') return restart(false); track('save_resume'); menStart(o.master, o.career, o.salon, o); }
 /* код сохранения: перенести прогресс на другое устройство без сервера */
-const SAVE_KEYS = [SAVE_KEY + '_kira', SAVE_KEY + '_eric', DONE_KEY, STATS_KEY, 'romashka_rank', 'romashka_career', 'romashka_pijon', 'romashka_family', 'romashka_director', 'romashka_director_best', 'romashka_own'];
+const SAVE_KEYS = [SAVE_KEY + '_kira', SAVE_KEY + '_eric', DONE_KEY, STATS_KEY, 'romashka_rank', 'romashka_career', 'romashka_pijon', 'romashka_family', 'romashka_director', 'romashka_director_best', 'romashka_own', 'romashka_rom'];
 function saveCode(){
   const o = {}; SAVE_KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v !== null) o[k] = v; } catch(e){} });
   return btoa(unescape(encodeURIComponent(JSON.stringify(o))));
@@ -3548,6 +3722,185 @@ async function romMentor(){
   ab.pose = 'cross'; face('ab', -1); place('ab'); PARTNER = 'client';
   await walk('kira', P.cutK[0], P.cutK[1], {face:1, cam:narrow()});
   C.kira.pose = 'cut'; place('kira');
+}
+
+
+/* ================= «РОМАШКА»: собеседование у Нарцисса, вопросы Киры и три смены по пять клиенток ================= */
+const ROM_IV = [{"q":"Расскажи, почему от Тамары уходишь. Поругались?","o":[{"ok":true,"t":"«Нет, расстались по-доброму: я предупредила заранее и доработала свои записи. Хочу расти, а у вас больше услуг и сильные мастера»","aya":"Честно и без упрёков. Новому руководителю важно, как вы уходите."},{"ok":false,"t":"«Да там копейки платят, а клиенты одни пенсионеры. Я там свои руки впустую трачу, а хочу нормально зарабатывать, как все»","aya":"Кто ругает прошлое место, так же будет говорить и про новое."},{"ok":false,"t":"«Тамара Петровна меня не ценила: всё время придиралась к мелочам, а похвалы от неё за полгода я так и не дождалась»","aya":"Жалобы на прошлого руководителя звучат как предупреждение о конфликте."}]},{"q":"У нас стрижка девятьсот, а у Тамары шестьсот. Твои клиенты за тобой пойдут?","o":[{"ok":true,"t":"«Часть пойдёт, часть останется — это нормально. Тем, кто придёт, покажу, за что они платят: консультация, время, результат»","aya":"Трезво. Цену оправдывает работа, а не обещания."},{"ok":false,"t":"«Конечно, пойдут все до одной! Они меня обожают и говорят, что за мной хоть на край города. Цена для них вообще не важна»","aya":"Самоуверенно. Разница в триста рублей для многих заметна."},{"ok":false,"t":"«Скажу им, что сделаю по старой цене, по знакомству. Разницу никто и не заметит, а клиенты останутся со мной и с салоном»","aya":"Цену в чужом салоне не меняют без директора. Это деньги салона."}]},{"q":"Клиентка приносит фото, а волосы у неё совсем не такие. Что делаешь?","o":[{"ok":true,"t":"«Объясню, что получится на её волосах, и предложу близкий вариант. Если настаивает на том, что испортит волосы, — не возьмусь»","aya":"Профессионал советует и отвечает за результат."},{"ok":false,"t":"«Сделаю точно как на фото, она же за это платит. Клиент всегда прав, а если не понравится — это её выбор, не мой»","aya":"А потом клиентка скажет подругам, что её испортили в «Ромашке»."},{"ok":false,"t":"«Сразу скажу, что такое на её волосах невозможно, и пусть поищет другой салон, где возьмутся. Зачем мне лишний риск?»","aya":"Отказ без варианта — потерянная клиентка."}]},{"q":"Запись у нас через администратора Алёну. А клиентка пишет тебе в личку. Твои действия?","o":[{"ok":true,"t":"«Отвечу, что рада ей, и передам Алёне: запись у нас через администратора, так никто не потеряется и окна не пересекутся»","aya":"Правила салона соблюдены, клиентка не обижена."},{"ok":false,"t":"«Запишу её сама в свободное окно, какая разница. Так даже быстрее: Алёна занята, а я клиентку знаю и сама всё помню»","aya":"Две записи на одно время — и скандал в субботу."},{"ok":false,"t":"«Предложу ей прийти ко мне домой вечером, так выйдет дешевле. Ей выгодно, и мне лишний заработок не помешает»","aya":"Уводить клиентов салона — повод для увольнения в первый же день."}]},{"q":"Витрину видишь? Уход продавать будешь? Тебе — десять процентов","o":[{"ok":true,"t":"«Буду рекомендовать, когда вижу проблему: покажу на волосах, зачем средство и как им пользоваться. Навязывать не буду»","aya":"Продажа через заботу: клиентке польза, салону доход."},{"ok":false,"t":"«Нет, я мастер, а не продавец. Пусть клиентки сами смотрят витрину и спрашивают у администратора, если что-то нужно»","aya":"Совет по домашнему уходу — часть работы мастера."},{"ok":false,"t":"«Конечно! Буду каждой предлагать самое дорогое с витрины, так и мне процент побольше, и салону выручка хорошая»","aya":"Навязчивость отпугивает клиентов сильнее цены."}]},{"q":"Клиентка опоздала на двадцать минут, а у тебя следом запись. Как будешь?","o":[{"ok":true,"t":"«Сразу скажу, что успеваем стрижку без укладки, или предложу перенести. Следующая клиентка не должна ждать из-за опоздания»","aya":"Честно и с уважением к обеим клиенткам."},{"ok":false,"t":"«Сделаю всё как обычно, без спешки. Следующая клиентка немного подождёт на диване с чаем, ничего с ней не случится»","aya":"Чужое опоздание стало вашим."},{"ok":false,"t":"«Откажу: опоздала — значит, сама виновата. Пусть записывается заново через Алёну, у нас всё строго по времени»","aya":"Правило есть, но без варианта клиентка не вернётся."}]},{"q":"А что у тебя пока плохо получается? Только честно","o":[{"ok":true,"t":"«Сложное окрашивание, выход из тёмного. Таких клиенток пока буду передавать колористу салона и учиться у старших мастеров»","aya":"Знать свои границы — признак профессионала."},{"ok":false,"t":"«Да вроде всё получается, жалоб от клиентов не было. В Академии хвалили, и у Тамары Петровны ко мне претензий не было»","aya":"Мастер без слабых мест не растёт."},{"ok":false,"t":"«Мужские стрижки не люблю и делать их не собираюсь, даже если очередь. Это не моё, пусть их делают другие мастера»","aya":"«Не люблю» — это не слабое место, а отказ от работы."}]}];
+const ROM_SH = [[{"salon":"romashka","master":"kira","img":"zoya","pre":"woman_","name":"Зоя Ивановна","age":72,"title":"Девятьсот?!","enter":"Входит, оглядывается: «Кирочка, я за тобой! Красота-то какая, как в кино…» Алёна протягивает прайс. Зоя Ивановна надевает очки и замолкает.","line":"","chair":[],"fin":[{"who":"narr","t":"Зоя Ивановна застёгивает пальто и улыбается на прощание."},{"who":"client","t":"Спасибо, Кирочка. К празднику — к тебе."}],"ayaFin":"","d1":{"title":"цена салона","intro":"«Девятьсот?! У меня пенсия, дочке помогаю… Кирочка, может, по-старому, за шестьсот?»","opts":[{"ok":true,"t":"«Зоя Ивановна, цены здесь ставит салон, менять их я не могу. Но я вам очень рада — давайте подумаем вместе, как лучше поступить»","aya":"Честно и тепло: вы не обесценили салон и не оттолкнули клиентку.","pts":12},{"ok":false,"t":"«Давайте я сделаю за шестьсот, а разницу как-нибудь потом закрою сама. Только вы Нарциссу ничего не говорите, хорошо? Это между нами»","aya":"Скидка втихую — это деньги салона и ваша репутация в первый же день.","pts":-8},{"ok":false,"t":"«Ну, здесь такие цены, Зоя Ивановна, это же салон, а не парикмахерская у дома. Тут уж или платите, или, извините, никак»","aya":"Сказано правдиво, но холодно: так уходят навсегда.","pts":-6}]},"d2":{"title":"достойно отпустить","intro":"Зоя Ивановна вздыхает: «Не потяну я, Кирочка. Пойду, наверное…»","opts":[{"ok":true,"t":"«Понимаю. У Тамары Петровны вас подстригут хорошо, я ей оставила вашу стрижку. А к празднику приходите ко мне — буду очень рада»","aya":"Достойно отпустили и оставили дверь открытой. Такие клиенты возвращаются.","pts":12},{"ok":false,"t":"«Жалко… Ну ладно, раз так. Если что — заходите, может, когда-нибудь у нас будет акция или скидка для пенсионеров»","aya":"Обещание акции, которой нет, — лишнее. Лучше честно и с заботой.","pts":-8},{"ok":false,"t":"Молча кивнуть и повернуться к следующей клиентке: не стоит тратить своё время на того, кто всё равно сегодня не будет стричься","aya":"Клиентка запомнит, что её просто перестали замечать.","pts":-6}]},"noChair":true,"noPay":true,"coat":"пальто и берет"},{"salon":"romashka","master":"kira","img":"lena","pre":"woman_","name":"Лена","age":30,"title":"За что дороже?","enter":"Без Тимоши: «Оставила с бабушкой, впервые за год пришла для себя!» Видит цену: «Дороговато… но за твои руки — согласна».","line":"","chair":[],"fin":[{"who":"narr","t":"Лена встряхивает головой — форма ложится сама."},{"who":"client","t":"Пять минут утром — проверю! Алёна, запишите меня."}],"ayaFin":"","d1":{"title":"вопрос о цене","intro":"«Кира, скажи честно — а за что здесь на триста рублей дороже? Ты же та же самая»","opts":[{"ok":true,"t":"«Я та же, а времени на вас здесь больше: спокойная консультация, мытьё с уходом, укладка. Хочу, чтобы вы ушли отдохнувшей»","aya":"Цена объяснена через пользу для клиентки, без оправданий.","pts":12},{"ok":false,"t":"«Ой, это не я решаю, это всё Нарцисс, мне самой неудобно. Если честно, я бы и сама стригла за шестьсот, но тут такие правила»","aya":"Оправдываться за цену — значит говорить, что она того не стоит.","pts":-8},{"ok":false,"t":"«Здесь аренда дороже, ремонт, администратор, кофемашина — всё это кто-то должен оплачивать, вот поэтому и цена здесь выше»","aya":"Клиентке неинтересны расходы салона. Ей важно, что получит она.","pts":-6}]},"d2":{"title":"консультация","intro":"«Мне бы что-то, что утром за пять минут укладывается. У меня Тимоша, на себя времени нет»","opts":[{"ok":true,"t":"«Сколько у вас минут утром и чем сушите? Сделаю форму, которая ложится сама, и покажу, как уложить её феном за пять минут»","aya":"Консультация от жизни клиентки — основа стрижки, которая носится.","pts":12},{"ok":false,"t":"«Сделаем модное каре с чёлкой, сейчас все такое носят. Укладывать, правда, придётся каждый день, но красота требует жертв»","aya":"Модно, но мимо её задачи: утром у неё пять минут.","pts":-8},{"ok":false,"t":"«Просто подровняю кончики, как обычно, и всё. Так быстрее, и вам не придётся переживать, что что-то вдруг не получится»","aya":"Безопасно, но клиентка пришла за переменами.","pts":-6}]},"coat":"куртку"},{"salon":"romashka","master":"kira","img":"dasha","pre":"woman_","name":"Даша","age":20,"title":"Как в прошлый раз, только по-другому","enter":"Фотографирует зал для сторис: «Тут так красиво! Дорого, конечно, но оно того стоит». Садится в кресло.","line":"","chair":[],"fin":[{"who":"narr","t":"Даша делает селфи у зеркала."},{"who":"client","t":"Выкладываю сторис и отмечаю салон!"}],"ayaFin":"","d1":{"title":"уточнить запрос","intro":"«Сделай как в прошлый раз, только по-другому!»","opts":[{"ok":true,"t":"«Давай посмотрим в зеркало: что тебе понравилось в прошлый раз, а что надоело? Тогда пойму, что именно хочется поменять»","aya":"Уточнили запрос, а не угадывали. Это и есть консультация.","pts":12},{"ok":false,"t":"«Поняла, сделаю что-нибудь новенькое на свой вкус. Доверься мне, ты же меня давно знаешь, я всегда что-нибудь придумаю»","aya":"«На свой вкус» без вопросов — лотерея для клиентки.","pts":-8},{"ok":false,"t":"«Так ведь это две разные стрижки: или как в прошлый раз, или по-другому. Ты уж сначала определись, а потом я начну стричь»","aya":"Логично, но клиентка почувствует себя глупо.","pts":-6}]},"d2":{"title":"уход для волос","intro":"Стрижка готова. Даша трогает кончики: «Сухие какие-то… это из-за выпрямителя?»","opts":[{"ok":true,"t":"«Да, от выпрямителя. Перед ним нужна термозащита — вот такая, покажу, сколько наносить. Купить можно у Алёны на витрине»","aya":"Совет с пользой и показом — честная продажа ухода.","pts":12},{"ok":false,"t":"«Да, это выпрямитель. Возьми у нас маску, сыворотку и масло, а лучше сразу весь набор с витрины — будут как новые»","aya":"Набор «на всё» без объяснений — навязчиво.","pts":-8},{"ok":false,"t":"«Это нормально, у всех так. Отрастут — подстрижём ещё раз, ничего страшного, ты совсем не переживай из-за этого»","aya":"Клиентка спросила совета — и не получила его.","pts":-6}]},"coat":"шубку","retail":["термозащитный спрей",900]},{"salon":"romashka","master":"kira","img":"tanya","pre":"woman_","name":"Таня","age":31,"title":"А вы точно справитесь?","enter":"Её мастер Вика ушла из салона. Таня садится настороженно: «А вы точно справитесь? Вика меня три года стригла».","line":"","chair":[],"fin":[{"who":"narr","t":"Таня рассматривает себя в зеркале и улыбается."},{"who":"client","t":"Хорошо получилось. Приду к вам ещё."}],"ayaFin":"","d1":{"title":"доверие","intro":"«Вика меня так чувствовала… А вы новенькая. Что скажете?»","opts":[{"ok":true,"t":"«Три года — это доверие. Расскажите, что Вика делала и что вам нравилось, — сохраню то, что вы любите, и не буду рисковать»","aya":"Уважение к прежнему мастеру и к привычкам клиентки.","pts":12},{"ok":false,"t":"«Не переживайте, я сделаю даже лучше, чем Вика. У меня новые техники из Академии, вы сами сразу увидите разницу»","aya":"Обещать «лучше» — значит заранее ругать коллегу.","pts":-8},{"ok":false,"t":"«Вика ушла, теперь я ваш мастер, так что придётся привыкать ко мне. Садитесь удобнее, начнём, время у нас ограничено»","aya":"Жёстко. Клиентку ещё надо завоевать.","pts":-6}]},"d2":{"title":"первый визит","intro":"Таня колеблется: «Может, просто подровняете? Боюсь что-то менять…»","opts":[{"ok":true,"t":"«Вы ещё не знаете моих рук. Давайте сегодня освежим форму и сделаем укладку, а изменения обсудим в следующий раз»","aya":"Алгоритм первого визита: сначала доверие, потом перемены.","pts":12},{"ok":false,"t":"«Давайте всё-таки обновим образ, я сразу вижу, что вам пойдёт короче. Поверьте, будет намного лучше, чем было у вас»","aya":"Давить на испуганную клиентку — верный способ её потерять.","pts":-8},{"ok":false,"t":"«Как скажете. Подровняю пару сантиметров, и всё на этом. Если захотите что-то другое — скажете мне потом сами»","aya":"Безопасно, но без контакта: клиентка так и не узнает мастера.","pts":-6}]},"coat":"куртку"},{"salon":"romashka","master":"kira","img":"olga","pre":"woman_","name":"Ольга Николаевна","age":39,"title":"Новенькая? Ну-ну…","enter":"Ходит сюда много лет, знакома с Нарциссом. Приглядывается к Кире: «Новенькая? Ну-ну…»","line":"","chair":[],"fin":[{"who":"narr","t":"Ольга Николаевна кивает своему отражению."},{"who":"client","t":"Толковая девочка. Нарциссу так и скажу."}],"ayaFin":"","d1":{"title":"встреча","intro":"Ольга Николаевна садится в кресло сразу, не снимая пальто.","opts":[{"ok":true,"t":"«Добрый день! Меня зовут Кира. Давайте я помогу с пальто и предложу чай — пока заваривается, расскажете, что хотите»","aya":"Стандарт салона: встреча, забота, консультация.","pts":12},{"ok":false,"t":"«Добрый день, сейчас начнём, только пальто снимите, пожалуйста, вон туда на вешалку, и садитесь обратно в кресло, пожалуйста»","aya":"Вежливо, но клиентка сама себя обслуживает.","pts":-8},{"ok":false,"t":"Сразу накинуть пеньюар прямо поверх пальто и спросить: «Как обычно?» — она же постоянная, всё знает и так","aya":"«Как обычно» новенькая не знает. И пальто под пеньюаром — неуважение.","pts":-6}]},"d2":{"title":"оплата","intro":"После стрижки: «Кирочка, давайте я вам переводом на карту. Так удобнее, и чаевые сразу».","opts":[{"ok":true,"t":"«Спасибо! Оплата у нас на кассе у Алёны — так вам придёт чек. А чаевые можно оставить там же, мне будет очень приятно»","aya":"Деньги салона идут через кассу. Так честно и для вас, и для салона.","pts":12},{"ok":false,"t":"«Давайте, конечно, вот мой номер. Только Нарциссу не говорите, пожалуйста, а то он у нас очень строгий насчёт оплаты»","aya":"Оплата мимо кассы — Нарцисс узнает в тот же день.","pts":-8},{"ok":false,"t":"«Можно и переводом, мне всё равно, как удобнее. Скину вам номер телефона, а с салоном я потом сама как-нибудь рассчитаюсь»","aya":"«Потом рассчитаюсь» — так начинаются недостачи.","pts":-6}]},"coat":"пальто"}],[{"salon":"romashka","master":"kira","img":"tanya","pre":"woman_","name":"Таня","age":31,"title":"Хочу в блонд!","enter":"Довольна прошлой стрижкой, теперь хочет большего: «Кира, хочу в блонд! Прямо сегодня, из моего тёмного каштана».","line":"","chair":[],"fin":[{"who":"narr","t":"Волосы блестят, форма свежая."},{"who":"client","t":"План есть, и блеск уже сегодня. Спасибо, Кира!"}],"ayaFin":"","d1":{"title":"свои границы","intro":"«Сделаете? Подружка за один раз осветлилась — и ничего!»","opts":[{"ok":true,"t":"«За один раз из тёмного в блонд — волосы сильно пострадают. Я так не рискую. Давайте покажу вас колористу салона, он составит план»","aya":"Знать свои границы и беречь волосы клиентки — это профессионализм.","pts":12},{"ok":false,"t":"«Конечно, сделаю! Возьму оксид посильнее, подержим подольше — и будет блонд, как у вашей подружки, а может, даже и лучше»","aya":"Сильный оксид «подольше» — прямой путь к сожжённым волосам.","pts":-8},{"ok":false,"t":"«Нет, блонд я не делаю и вам не советую: вам он вообще не пойдёт. Оставайтесь лучше в своём цвете, так всем будет спокойнее»","aya":"Отказ с оценкой внешности обидит. И варианта клиентка не получила.","pts":-6}]},"d2":{"title":"что сделать сегодня","intro":"Таня расстроена: «А сегодня тогда что? Я так настроилась на перемены…»","opts":[{"ok":true,"t":"«Сегодня освежим форму и добавим лёгкий тонирующий уход для блеска — перемены будут заметны. А блонд начнём по плану колориста»","aya":"Клиентка уходит с результатом и с планом. Желание перемен не пропало.","pts":12},{"ok":false,"t":"«Ну, раз блонд нельзя, давайте сегодня ничего не делать — придёте, когда колорист освободится. Так будет даже честнее»","aya":"Клиентка пришла и ушла ни с чем. Настроение и деньги потеряны.","pts":-8},{"ok":false,"t":"«Давайте я хотя бы пряди у лица высветлю сама, по-быстрому — будет почти блонд, вы сразу увидите эффект и успокоитесь»","aya":"Опять за пределами своих навыков — тот же риск, только меньше.","pts":-6}]},"coat":"куртку"},{"salon":"romashka","master":"kira","img":"olga","pre":"woman_","name":"Ольга Николаевна","age":39,"title":"Прядь торчит","enter":"Подходит к креслу при других клиентах: «Кирочка, неделю носила — слева прядь торчит. Посмотрите?»","line":"","chair":[],"fin":[{"who":"narr","t":"Ольга Николаевна пробует круглую щётку сама."},{"who":"client","t":"Получается! Вот теперь спасибо."}],"ayaFin":"","d1":{"title":"претензия при всех","intro":"Ольга Николаевна показывает прядь. В зале тихо, все слушают.","opts":[{"ok":true,"t":"«Спасибо, что сразу сказали. Садитесь, пожалуйста, посмотрю и поправлю прямо сейчас — бесплатно, это моя работа»","aya":"Претензия решена спокойно и при всех — так растёт доверие к салону.","pts":12},{"ok":false,"t":"«Да она не торчит, это вы просто так её укладываете. Попробуйте сушить по-другому, феном вниз, и всё будет нормально»","aya":"Спорить с клиенткой при всех — проиграть, даже если вы правы.","pts":-8},{"ok":false,"t":"«Поправлю, конечно, только за коррекцию у нас отдельная цена — двести рублей. Сейчас Алёна вам пробьёт по кассе»","aya":"Брать деньги за исправление своей работы — терять клиентку.","pts":-6}]},"d2":{"title":"укладка дома","intro":"После коррекции «А как мне её дома укладывать, чтобы снова не торчала?»","opts":[{"ok":true,"t":"«Вот смотрите: сушим прядь от лица на круглую щётку, а в конце — холодный воздух. Попробуйте сами, я подскажу, как держать»","aya":"Научить клиентку укладке — значит продлить жизнь стрижке.","pts":12},{"ok":false,"t":"«Да просто сушите, как обычно, теперь всё будет хорошо, я же поправила. Главное — не трогайте её руками лишний раз в течение дня»","aya":"Совет без показа клиентка забудет на следующее утро.","pts":-8},{"ok":false,"t":"«Купите у нас лак сильной фиксации, побольше брызгайте с утра — и прядь будет стоять как надо, хоть весь день»","aya":"Лак вместо умения — решение на один день.","pts":-6}]},"coat":"пальто","free":true,"svc":"Коррекция"},{"salon":"romashka","master":"kira","img":"viktoria","pre":"","name":"Виктория","age":42,"title":"Почему так дёшево?","enter":"Её стилист из премиум-салона заболел. Оглядывается, садится, не выпуская телефона: «Почему у вас так дёшево? На чём вы вообще работаете? И кофе без сахара».","line":"","chair":[],"fin":[{"who":"narr","t":"Виктория долго смотрит в зеркало и наконец откладывает телефон."},{"who":"client","t":"Аккуратно. Форму сохранили. Это вам."}],"ayaFin":"","d1":{"title":"вопрос о цене","intro":"«Девятьсот рублей… У моего стилиста — пять тысяч. Подозрительно»","opts":[{"ok":true,"t":"«Материалы профессиональные, а цена — потому что мы салон для района. Кофе сейчас принесу. Расскажите, что делает ваш стилист»","aya":"Спокойно, без оправданий и заискивания. И сразу к делу.","pts":12},{"ok":false,"t":"«Ой, у нас тоже всё хорошее, честно-честно! Не волнуйтесь, пожалуйста, я очень постараюсь, сделаю не хуже, чем у вас там»","aya":"Заискивание только усиливает сомнения клиентки.","pts":-8},{"ok":false,"t":"«Если вам у нас дёшево, можете подождать своего стилиста, никто вас не держит. Кофе — на столике у входа, там же сахар»","aya":"Грубо. Клиентка уйдёт и расскажет, как здесь встречают.","pts":-6}]},"d2":{"title":"чужая форма","intro":"«Стилист ведёт форму, отращиваю. Только не испортите — через месяц у меня важная встреча»","opts":[{"ok":true,"t":"«Сохраню форму вашего стилиста: освежу контур и уберу лишний вес, длину не трогаю. Посмотрите в зеркало — вот здесь и здесь»","aya":"Уважать чужую работу и чётко договориться — профессионально.","pts":12},{"ok":false,"t":"«Давайте я заодно сделаю по-своему, у меня есть идея — будет даже интереснее. Стилисту потом скажете, что так задумано»","aya":"Ломать чужую форму без спроса — потерять клиентку и коллегу.","pts":-8},{"ok":false,"t":"«Тогда подровняю чуть-чуть кончики, а форму не трогаю — вдруг что-то не так пойдёт. Ваш стилист потом сам поправит»","aya":"Слишком осторожно: клиентка заплатила за работу, а не за страх.","pts":-6}]},"fem":true},{"salon":"romashka","master":"kira","img":"irina","pre":"woman_","name":"Ирина Павловна","age":50,"title":"Где директор?","enter":"Заходит, видит Киру и повышает голос: «Мне сказали, тут лучшие мастера, а вы девочка! Где директор?»","line":"","chair":[],"fin":[{"who":"narr","t":"Кира спокойно встречает следующую клиентку. Зал снова работает."}],"ayaFin":"","d1":{"title":"скандал у стойки","intro":"Ирина Павловна стоит у стойки и громко возмущается. Клиентки оборачиваются.","opts":[{"ok":true,"t":"«Понимаю, вы рассчитывали на опытного мастера. Давайте Алёна подберёт вам время у старшего мастера — так будет спокойнее»","aya":"Спокойно, без обиды и без заискивания. Клиентка получила вариант.","pts":12},{"ok":false,"t":"«Вот и идите к лучшим, раз я вам не подхожу! Директора нет, а мне ваши крики тут при клиентах совсем не нужны, извините»","aya":"Ответили грубостью на грубость — скандал стал вашим.","pts":-8},{"ok":false,"t":"«Ой, простите, пожалуйста, я правда хорошо стригу! Давайте я сделаю вам со скидкой, только не уходите, очень прошу»","aya":"Унижаться и давать скидку — значит признать, что вы хуже.","pts":-6}]},"d2":{"title":"следующая клиентка","intro":"Ирина Павловна хлопает дверью и уходит, ничего не заказав. Следующая клиентка смотрит на Киру.","opts":[{"ok":true,"t":"Выдохнуть, улыбнуться и пригласить следующую клиентку: «Извините за ожидание, проходите, пожалуйста, — я вас жду»","aya":"Скандал закончился за дверью. Следующая клиентка — с чистого листа.","pts":12},{"ok":false,"t":"Обсудить с клиенткой в кресле, какая грубая была женщина: «Видели? Вот как с такими вообще работать? Ужас просто какой-то»","aya":"Обсуждать клиентов при клиентах — следующая решит, что обсудят и её.","pts":-8},{"ok":false,"t":"Уйти в подсобку на десять минут, чтобы успокоиться и выпить воды, и попросить Алёну передать клиентке, что придётся подождать","aya":"Ваше настроение стало проблемой следующей клиентки.","pts":-6}]},"noChair":true,"noPay":true,"coat":"пальто"},{"salon":"romashka","master":"kira","img":"sonya","pre":"","name":"Соня","age":19,"title":"Как на Пинтересте","enter":"Стесняется, молча протягивает телефон: каскад из Пинтереста на густых волосах. У Сони волосы тонкие и редкие. «В видео сказали, что всем подойдёт…»","line":"","chair":[],"fin":[{"who":"narr","t":"Соня сама сушит волосы головой вниз — и объём держится."},{"who":"client","t":"Правда держится! Попробую сама."}],"ayaFin":"","d1":{"title":"фото и реальность","intro":"Соня тихо: «Вот так хочу… Получится?»","opts":[{"ok":true,"t":"«Давай приложим фото к зеркалу. На твоих волосах такой каскад повиснет. Сделаю похожий объём, но короче — и будет держаться»","aya":"Показали, объяснили и предложили адаптацию. Стеснительной клиентке так легче.","pts":12},{"ok":false,"t":"«Конечно, получится! Сделаю один в один как на фото, ты будешь просто огонь, все подружки от зависти лопнут, вот увидишь»","aya":"Пообещали невозможное — и клиентка уйдёт расстроенной.","pts":-8},{"ok":false,"t":"«Нет, на твоих волосах такое не сделать, даже не мечтай. Давай просто подровняем кончики, и пойдёшь домой спокойно»","aya":"Честно, но резко. Стеснительная клиентка больше не придёт.","pts":-6}]},"d2":{"title":"укладка дома","intro":"Соня робко: «А укладывать это сложно? Я не умею…»","opts":[{"ok":true,"t":"«Совсем несложно. Покажу на тебе: немного мусса у корней, сушим головой вниз — и объём на весь день. Попробуешь сама?»","aya":"Показ и поддержка — так стеснительные клиентки становятся постоянными.","pts":12},{"ok":false,"t":"«Ой, это сложно, конечно, тут без навыка не обойтись. Можешь приходить ко мне на укладку, у нас она стоит семьсот»","aya":"Вместо помощи — продажа услуги. Студентке это не по карману.","pts":-8},{"ok":false,"t":"«Посмотри видео на ютубе, там всё подробно показывают, я сама по ним училась. Ничего сложного, разберёшься потом»","aya":"Клиентка пришла к мастеру, а не за ссылкой на видео.","pts":-6}]},"fem":true}],[{"salon":"romashka","master":"kira","img":"lena","pre":"woman_","name":"Лена","age":30,"title":"Золотые руки","enter":"Влетает сияющая: «Кира, у тебя золотые руки! Стрижка два месяца носится, а укладка — пять минут, как ты и обещала. Не зря переплачиваю!»","line":"","chair":[],"fin":[{"who":"narr","t":"Лена записывается у Алёны на дату через два месяца."},{"who":"client","t":"Спасибо, Кира! До встречи."}],"ayaFin":"","d1":{"title":"принять похвалу","intro":"Лена при всех в зале хвалит Киру. Алёна и Нарцисс слышат.","opts":[{"ok":true,"t":"«Спасибо, Лена, мне очень приятно! Вы сами молодец, что делаете укладку дома. Давайте посмотрим, что сегодня освежим»","aya":"Похвалу приняли с благодарностью и вернули разговор к делу.","pts":12},{"ok":false,"t":"«Да ладно вам, ничего особенного, обычная стрижка. Любой мастер так сделает, это совсем несложно, правда-правда»","aya":"Обесценивать свою работу — значит учить клиентку не ценить её.","pts":-8},{"ok":false,"t":"«Конечно! Я же лучшая в этом салоне, у меня руки особенные. Вы просто раньше у плохих мастеров стриглись, вот и всё»","aya":"Хвастовство и упрёк коллегам — Нарцисс слышит каждое слово.","pts":-6}]},"d2":{"title":"запись наперёд","intro":"Стрижка готова. «Вот бы так всегда…»","opts":[{"ok":true,"t":"«Давайте сразу запишем вас через два месяца, пока форма не потерялась. Алёна подберёт удобное время под садик Тимоши»","aya":"Запись наперёд — главный признак постоянной клиентки.","pts":12},{"ok":false,"t":"«Приходите, когда отрастёт, я всегда здесь работаю. Позвоните заранее или просто зайдите, если будет свободное окно»","aya":"«Когда отрастёт» — значит, когда-нибудь. Клиентка может и не дойти.","pts":-8},{"ok":false,"t":"«Можете записаться ко мне напрямую в личку, так удобнее и быстрее, чем через Алёну, — я вам сама всё подберу»","aya":"Запись мимо администратора — нарушение правил салона.","pts":-6}]},"coat":"куртку"},{"salon":"romashka","master":"kira","img":"dasha","pre":"woman_","name":"Даша","age":20,"title":"Девчонки спрашивают","enter":"«Кира, девчонки в комментариях спрашивают, где я стриглась! После душа ложится сама, вообще без фена. Дорого, но оно того стоит»","line":"","chair":[],"fin":[{"who":"narr","t":"Даша снимает новое видео для сторис."},{"who":"client","t":"Подругу приведу на следующей неделе!"}],"ayaFin":"","d1":{"title":"рекомендация","intro":"Даша показывает Кире комментарии под сторис.","opts":[{"ok":true,"t":"«Спасибо, Даша, очень приятно! Если подруги захотят — пусть записываются через Алёну и скажут, что от тебя. Я буду рада»","aya":"Похвала превращается в рекомендацию — так растёт база мастера.","pts":12},{"ok":false,"t":"«Скинь им мой личный номер, я их без очереди возьму, и подешевле, чем по прайсу, — для твоих подружек сделаю скидку»","aya":"Свои цены и своя запись мимо салона — так увольняют.","pts":-8},{"ok":false,"t":"«Ага, спасибо. Ну ладно, давай быстрее садись, а то у меня после тебя ещё три клиентки, и все сегодня записаны»","aya":"Пропустили важный момент: довольная клиентка хотела вас рекомендовать.","pts":-6}]},"d2":{"title":"«чуть короче»","intro":"«Сделай сегодня так же, только чуть короче»","opts":[{"ok":true,"t":"«На сколько короче — покажи пальцами. И скажи, где сейчас мешает: у лица или сзади? Тогда сохраню то, что тебе нравится»","aya":"Даже постоянной клиентке уточняют запрос — тогда результат повторится.","pts":12},{"ok":false,"t":"«Поняла, сделаю короче сантиметров на пять, будет даже интереснее, чем было. Не переживай, я твои волосы уже знаю»","aya":"«На пять» без вопроса — а Даша хотела на один.","pts":-8},{"ok":false,"t":"«Короче не советую, отрастать будет долго, лучше оставим как есть. Подровняю кончики, и посмотрим потом, как пойдёт»","aya":"Отговаривать без причины — значит не слышать клиентку.","pts":-6}]},"coat":"шубку"},{"salon":"romashka","master":"kira","img":"galina","pre":"","name":"Галина Сергеевна","age":58,"title":"Хочу как у Даши","enter":"Дочь показала ей сторис Даши. Галина Сергеевна протягивает телефон: «Хочу как у этой девочки!» У неё совсем другие волосы и форма лица.","line":"","chair":[],"fin":[{"who":"narr","t":"Галина Сергеевна поворачивает голову к зеркалу то так, то эдак."},{"who":"client","t":"Двадцать лет одно и то же — а тут посвежела! Дочке покажу."}],"ayaFin":"","d1":{"title":"чужая стрижка","intro":"«Вот такую же! Мне дочка сказала, тут умеют»","opts":[{"ok":true,"t":"«Даше мы делали под её волосы. Давайте сделаем так же легко и современно, но под ваши — покажу на вас, что получится»","aya":"Не копировать чужую стрижку, а взять идею и адаптировать.","pts":12},{"ok":false,"t":"«Конечно, сделаю точно такую же, как у Даши, один в один. Она очень модная сейчас, вы будете выглядеть на двадцать лет»","aya":"Обещание «на двадцать» — путь к разочарованию.","pts":-8},{"ok":false,"t":"«Вам такое не подойдёт, это стрижка для молодых девушек. Давайте я сделаю вам что-нибудь классическое, по возрасту»","aya":"«По возрасту» звучит обидно. Клиентка хотела перемен.","pts":-6}]},"d2":{"title":"страх перемен","intro":"Галина Сергеевна сомневается: «А вдруг не пойдёт? Я двадцать лет с одной стрижкой…»","opts":[{"ok":true,"t":"«Начнём мягко: обновим форму и уберём тяжесть, а длину оставим. Понравится — в следующий раз сделаем смелее»","aya":"Шаг за шагом — так клиентка с опытом доверится новому мастеру.","pts":12},{"ok":false,"t":"«Не бойтесь, всё будет отлично, я уверена! Давайте прямо сегодня сделаем коротко, смелее, — вам точно понравится»","aya":"Давить на сомневающуюся клиентку — потерять её.","pts":-8},{"ok":false,"t":"«Тогда давайте оставим всё как было, раз вы боитесь. Двадцать лет носили — значит, это ваше, зачем тогда менять»","aya":"Клиентка пришла за переменами и ушла с тем же.","pts":-6}]},"fem":true},{"salon":"romashka","master":"kira","img":"zoya","pre":"woman_","name":"Зоя Ивановна","age":72,"title":"День рождения","enter":"Приходит, только если в смене 1 Кира отпустила её достойно. «Кирочка, у меня день рождения! Накопила — хочу к тебе, как к большому мастеру».","line":"","chair":[],"fin":[{"who":"narr","t":"Зоя Ивановна держит телефон, а Кира делает снимок."},{"who":"client","t":"Вот это праздник. Спасибо, дочка."}],"ayaFin":"","d1":{"title":"праздник","intro":"Зоя Ивановна волнуется и держит конверт с деньгами.","opts":[{"ok":true,"t":"«Зоя Ивановна, с днём рождения! Как я рада, что вы пришли. Сделаем праздничную укладку, а чай сегодня за мой счёт»","aya":"Праздник для клиентки, а цена салона не тронута.","pts":12},{"ok":false,"t":"«С днём рождения! Давайте сегодня за шестьсот, как раньше, — в честь праздника, я Нарциссу потом сама всё объясню»","aya":"Опять скидка втихую. Клиентка копила — и пришла платить.","pts":-8},{"ok":false,"t":"«С днём рождения. Проходите, садитесь — у меня как раз пятнадцать минут до следующей записи, должны успеть»","aya":"Спешка в праздник обидит больше, чем отказ.","pts":-6}]},"d2":{"title":"у зеркала","intro":"После укладки Зоя Ивановна смотрит в зеркало и прослезилась.","opts":[{"ok":true,"t":"«Вы прекрасно выглядите! Давайте сделаем фото для вашей дочки — пусть увидит, какая у неё сегодня красивая мама»","aya":"Внимание к человеку — то, за что возвращаются годами.","pts":12},{"ok":false,"t":"«Ну всё, готово, с вас девятьсот. Оплата на кассе у Алёны, и не забудьте свой зонтик у входа, пожалуйста»","aya":"Сухо. Момент, ради которого она копила, пропущен.","pts":-8},{"ok":false,"t":"«Не плачьте, а то тушь потечёт и вся укладка испортится! Ну что вы, это же просто стрижка, ничего особенного»","aya":"Обесценили чувства клиентки в её праздник.","pts":-6}]},"coat":"пальто и берет","price":700,"svc":"Праздничная укладка","zoya3":true},{"salon":"romashka","master":"kira","img":"narc","pre":"","name":"Нарцисс","age":60,"title":"Подровняй меня","enter":"Конец дня. Нарцисс садится в кресло: «Ну-ка, подровняй меня. Погляжу, что там про тебя говорят».","line":"","chair":[],"fin":[],"ayaFin":"","d1":{"title":"директор в кресле","intro":"Директор в кресле. Кира волнуется.","opts":[{"ok":true,"t":"«С удовольствием! Как вы обычно носите и что сегодня хотите? Давайте помогу с пиджаком и накину пеньюар»","aya":"Директору — тот же стандарт, что любому клиенту. Это и проверяют.","pts":12},{"ok":false,"t":"«Ой, а можно я не буду? Я при вас ужасно волнуюсь, вдруг испорчу, — пусть лучше вас подстрижёт старший мастер»","aya":"Отказаться при директоре — показать, что вы не готовы.","pts":-8},{"ok":false,"t":"Сразу взяться за машинку без вопросов: Нарцисс всё равно всегда носит одно и то же, все в салоне это знают","aya":"Без консультации даже директора — ошибка новичка.","pts":-6}]},"d2":{"title":"виски покороче","intro":"Нарцисс в зеркале: «А виски-то покороче бы…»","opts":[{"ok":true,"t":"«Покороче на сколько — до середины уха или выше? Сейчас поправлю, это пара минут. Посмотрите, так будет хорошо?»","aya":"Спокойно уточнили и исправили — без оправданий и суеты.","pts":12},{"ok":false,"t":"«Я сделала по стандарту, так сейчас носят все. Если хотите коротко — это уже совсем другая стрижка, не моя»","aya":"Спорить с клиентом в кресле — проиграть. Даже с директором.","pts":-8},{"ok":false,"t":"«Ой, простите-простите! Я сейчас всё исправлю, не сердитесь, пожалуйста, я правда очень старалась для вас»","aya":"Лишние извинения выдают неуверенность.","pts":-6}]},"boss":true,"free":true,"svc":"Стрижка директора"}]];
+const ROM_AYA = {"531": "Собеседование в «Ромашке». Нарцисс задаст семь вопросов. Отвечайте честно и думайте о клиентах и о салоне.", "553": "Собеседование пройдено. Нарцисс увидел мастера, который думает и о клиентах, и о салоне.", "554": "Нарцисс берёт вас на испытательный срок. Клиентки первой смены придут настороженными — их доверие придётся заслужить.", "555": "Теперь ваша очередь. Выберите три вопроса Нарциссу. Хороший вопрос показывает, что вы думаете о работе.", "556": "Отличные вопросы: про запись, стандарты, обучение и деньги. Так спрашивает профессионал.", "557": "Про отпуск и ранний уход лучше спрашивать позже, когда вы уже покажете себя в работе.", "558": "Сплетни о прошлом месте работы на собеседовании — ошибка. Нарцисс запомнит, откуда вы их принесли.", "559": "Первая смена. Ваши клиентки из «Семейной» увидят новые цены. Держите цену салона без оправданий и без скидок по знакомству.", "590": "Смена закрыта, клиентки довольны. Так и собирается своя база в салоне.", "591": "Смена закрыта, но не все клиентки ушли довольными. Посмотрите, где я подсказывала.", "592": "Прошёл месяц. Сегодня придут новые клиентки и проверят вас на прочность. Спокойствие — ваш главный инструмент.", "623": "Ещё через месяц. Ваши клиентки возвращаются. Похвалу примите с благодарностью и превратите её в постоянную запись.", "654": "Поздравляю! Нарцисс оставляет вас в штате. Новый ранг — стальные ножницы. Следующий салон — «Пантера».", "655": "Пока довольны меньше четырёх клиенток из пяти. Ещё месяц на испытательном — пройдите третью смену заново."};
+const ROM_KEY = 'romashka_rom';
+const romNew = () => ({done:0, out:{1:{}, 2:{}, 3:{}}, prob:false, q:'', passed:false, zoyaBack:false, bonusUsed:false});
+function romGet(){ try { const o = Object.assign(romNew(), JSON.parse(localStorage.getItem(ROM_KEY) || '{}')); o.out = Object.assign({1:{}, 2:{}, 3:{}}, o.out); return o; } catch(e){ return romNew(); } }
+function romPut(o){ try { localStorage.setItem(ROM_KEY, JSON.stringify(o)); } catch(e){} }
+function romNext(){ const R = romGet(); return R.passed ? 1 : Math.min(3, R.done + 1); }
+/* смена 3: Зоя Ивановна приходит, только если в смене 1 Кира отпустила её достойно */
+function romBuild(cyc){
+  const R = romGet();
+  let L = ROM_SH[cyc - 1].map(v => JSON.parse(JSON.stringify(v)));
+  if (cyc === 3 && !R.zoyaBack) L = L.filter(v => !v.zoya3);
+  return L;
+}
+const ROM_BUSTS = {galina:'galina_e', sonya:'sonya_e', viktoria:'viktoria_e'};
+function romBusts(v){
+  if (v.boss) return {happy:'narc_b1', skeptic:'narc_b3', angry:'narc_b2', sad:'narc_b4', phone:'narc_b0'};
+  const p = ROM_BUSTS[v.img]; return p ? {happy:p + '4', skeptic:p + '2', angry:p + '3', sad:p + '3', phone:p + '0'} : null;
+}
+const ROM_INTRO3 = {1:'«Ромашка», первая смена. Алёна за ресепшеном, у дальнего кресла — Александр Борисович. В записи у Киры — её клиентки из «Семейной» и две постоянные клиентки салона.',
+                    2:'Через месяц. Будний день в «Ромашке». Две клиентки из прошлой смены записались снова, остальные — новые.',
+                    3:'Ещё через месяц. Суббота, запись у Киры полная. Нарцисс с утра в зале и всё видит.'};
+async function romShiftStart(cyc){
+  await say(MV.master, ROM_INTRO3[cyc], {narr:true});
+  ayaState('explain'); await say('aya', ROM_AYA[{1:559, 2:592, 3:623}[cyc]]);
+}
+/* настроение клиенток первой смены зависит от собеседования */
+function romStartMood(){ const R = romGet(); return (R.prob ? -10 : 0) + (R.q === 'strong' ? 10 : 0); }
+function romVisitDone(v, happy){
+  const R = romGet(); R.out[MV.cycle] = R.out[MV.cycle] || {}; R.out[MV.cycle][v.img] = happy ? 'good' : 'bad';
+  if (MV.cycle === 1 && v.img === 'zoya') R.zoyaBack = !!MV.ok2;
+  romPut(R);
+}
+/* конец смены: кто подводит итог и что дальше */
+async function romShiftEnd(){
+  const R = romGet(), cyc = MV.cycle, n = MV.list.length, good = MV.happy >= Math.min(4, n);
+  C.kira.pose = 'stand'; setPos('kira', P.showK[0], P.showK[1]); face('kira', 1); camSet(900);
+  if (cyc === 1){
+    setPos('narc', 1250, 640); face('narc', -1); vis('narc', true);
+    await say('narc', 'Троих привела, одна ушла. Нормально. Кхм. Клиенты-то наши теперь.', {mood:'grumble'});
+    vis('narc', false);
+  } else if (cyc === 2){
+    C.ab.pose = 'stand'; setPos('ab', 1180, 668); face('ab', -1); vis('ab', true); mood('ab', 'think');
+    await say('ab', 'Видел, как Ирина Павловна ушла. А ты сама что заметила?');
+    await say('kira', 'Она ждала опытного мастера, а увидела меня. Я не спорила и не уговаривала — предложила старшего мастера.');
+    await say('ab', 'Вот. Скандал закончился за дверью — и это твоя заслуга.', {mood:'approve'});
+    C.ab.pose = 'cross'; setPos('ab', 1420, 668); place('ab');
+  }
+  if (cyc < 3){
+    ayaState(good ? 'praise' : 'explain'); await say('aya', ROM_AYA[good ? 590 : 591]);
+    R.done = Math.max(R.done, cyc); romPut(R);
+    return {cyc, next:true, good};
+  }
+  setPos('narc', 1250, 640); face('narc', -1); vis('narc', true);
+  if (good){
+    await say('narc', 'Двадцать лет работаем… Ну что, остаёшься. Теперь ты наша.', {mood:'ok'});
+    const up = getRank() < 2; if (up){ setRank(2); hud(); }
+    R.done = 3; R.passed = true; romPut(R); track('rom_passed');
+    ayaState('praise'); await say('aya', ROM_AYA[654]);
+    vis('narc', false);
+    return {cyc, passed:true, up};
+  }
+  await say('narc', 'Рано тебе задирать нос. Ещё месяц на испытательном.', {mood:'sigh'});
+  R.done = 2; romPut(R);
+  ayaState('explain'); await say('aya', ROM_AYA[655]);
+  vis('narc', false);
+  return {cyc, again:true};
+}
+function romCard(r, n){
+  if (r.passed) return '<p><b>Уровень «Ромашка» пройден!</b> Нарцисс оставляет Киру в штате.' + (r.up ? ' Новый ранг: <b>' + RANKS[2] + '</b>.' : '') + ' Следующий салон — «Пантера».</p>';
+  if (r.again) return '<p><b>Пока на испытательном.</b> Чтобы остаться в «Ромашке», в третьей смене должны быть довольны ' + (n < 5 ? 'все четыре клиентки: Зоя Ивановна не пришла, потому что в первой смене её отпустили не лучшим образом' : 'четыре клиентки из пяти') + '. Пройдите смену ещё раз.</p>';
+  return '<p>Смена ' + r.cyc + ' из 3. Через месяц клиентки вернутся — и вспомнят, как их встретили.</p>';
+}
+/* ---------- собеседование: семь вопросов Нарцисса ---------- */
+function romIvAsk(q, i){
+  return new Promise(res => {
+    panel.innerHTML = ''; panel.append(prHead('Собеседование у Нарцисса', 'Вопрос ' + (i + 1) + ' из ' + ROM_IV.length));
+    mood('narc', 'suspicious'); say('narc', q.q, {hold:true});
+    let done = false;
+    const finish = async (o) => {
+      const best = q.o.find(x => x.ok);
+      if (!o.timeout) await say('kira', o.t.replace(/^«|»$/g, ''));
+      mood('narc', o.ok ? 'ok' : 'grumble');
+      const fb = el('div','chips'); fb.append(el('span', 'chip ' + (o.ok ? 'plus' : 'minus'), o.ok ? 'Лучший ответ' : 'Нарцисс хмурится')); panel.append(fb);
+      if (o.aya){ ayaTail(o.aya, o.ok ? 'praise' : 'warn'); const h = el('div','hint','<b>Айя:</b>&nbsp;'); h.append(document.createTextNode(o.aya)); panel.append(h); }
+      if (!o.ok){ const b = el('div','hint best','<b>Лучше:</b>&nbsp;'); b.append(document.createTextNode(best.t)); panel.append(b); }
+      const nx = el('button','next', i + 1 < ROM_IV.length ? 'Следующий вопрос' : 'Дальше'); nx.type = 'button';
+      nx.onclick = () => { nx.disabled = true; stopVoice(); hideDlg(); res(o); };
+      panel.append(nx); fitStage(); nx.focus({preventScroll:true});
+    };
+    const box = prOptions(shuffle(q.o.slice()), o => { if (done) return; done = true; stopTimer(); clearHeld(); const tm = panel.querySelector('.timer'); if (tm) tm.remove(); finish(o); });
+    panel.append(box);
+    startTimer(MEN_SEC, wrap => {
+      if (done) return; done = true; [...box.children].forEach(x => x.disabled = true); clearHeld();
+      panel.insertBefore(el('div','toast','Пауза затянулась — Нарцисс ждал ответа.'), wrap);
+      finish({ok:false, timeout:true, t:'Слишком долгая пауза', aya:'На собеседовании пауза выглядит как неуверенность. Отвечайте сразу, своими словами.'});
+    });
+    fitStage();
+  });
+}
+/* ---------- вопросы Киры: выбрать три из восьми ---------- */
+const ROM_KQ = [
+  {t:'Как у вас устроена запись и кто ведёт клиентскую базу?', k:'s', r:'Алёна. Все клиенты — в журнале салона. Клиенты-то мои… то есть наши.', m:'ok'},
+  {t:'Есть ли стандарт обслуживания: как встречаем, консультируем, провожаем?', k:'s', r:'Двадцать лет работаем! Чай, консультация, запись на следующий раз. Айя тебе подскажет.', m:'ok'},
+  {t:'Можно учиться у старших мастеров? Есть ли обучение в салоне?', k:'s', r:'Александр Борисович смотрит за новенькими. Раз в месяц — разбор работ.', m:'ok'},
+  {t:'На каких материалах работает салон и кто закупает расходники?', k:'s', r:'Материалы салона, своё не носить. Расход — в тетрадь, я проверяю.', m:'ok'},
+  {t:'Как считается мой процент и когда выплата?', k:'s', r:'Пятьдесят процентов с услуги, десять — с продажи. Каждые две недели.', m:'ok'},
+  {t:'А можно уходить пораньше, если нет записи?', k:'w', r:'Клиенты с улицы заходят до восьми. Сидишь до конца смены.', m:'grumble'},
+  {t:'Когда у меня первый отпуск?', k:'w', r:'Ты ещё не начала, а уже отдыхать… Кхм.', m:'sigh'},
+  {t:'А правда, что от вас мастера уходят? Тамара Петровна рассказывала…', k:'g', r:'Мало ли что Тамара рассказывает. Здесь так не разговаривают.', m:'angry'}];
+function romKiraQ(){
+  return new Promise(res => {
+    panel.innerHTML = ''; panel.append(prHead('Вопросы Киры', 'Собеседование'));
+    const note = el('p','menStep'); note.textContent = 'Выберите три вопроса, которые Кира задаст Нарциссу'; panel.append(note);
+    const box = el('div','choices'); box.setAttribute('role','group'); const sel = new Set();
+    const go = el('button','next','Задать вопросы (0 из 3)'); go.type = 'button'; go.disabled = true;
+    shuffle(ROM_KQ.slice()).forEach(q => {
+      const b = el('button','choice'); b.type = 'button'; b.setAttribute('aria-pressed','false');
+      b.innerHTML = '<span class="k" aria-hidden="true"></span><span></span>'; b.lastChild.textContent = '«' + q.t + '»';
+      b.onclick = () => {
+        if (sel.has(q)){ sel.delete(q); b.classList.remove('picked'); b.setAttribute('aria-pressed','false'); }
+        else if (sel.size < 3){ sel.add(q); b.classList.add('picked'); b.setAttribute('aria-pressed','true'); }
+        go.disabled = sel.size !== 3; go.textContent = 'Задать вопросы (' + sel.size + ' из 3)';
+      };
+      box.append(b);
+    });
+    go.onclick = () => { go.disabled = true; [...box.children].forEach(x => x.disabled = true); clearHeld(); stopVoice(); res([...sel]); };
+    panel.append(box, go); fitStage();
+  });
+}
+async function midStart(){
+  PARTNER = 'marina'; S = fresh(); resetScene(); hud(); MV = null;
+  track('rom_interview');
+  panel.innerHTML = ''; panel.append(prHead('Собеседование в «Ромашке»'), el('p','wait',waitTxt()));
+  C.kira.pose = 'stand'; setPos('kira', P.showK[0], P.showK[1]); face('kira', 1);
+  setPos('narc', 1250, 640); face('narc', -1); vis('narc', true); mood('narc','suspicious'); camSet(950);
+  ayaState('explain'); await say('aya', ROM_AYA[531]);
+  const F = famGet();
+  if (F.passed && F.branch === 'A') await say('narc', 'Слышал я, как ты уходила… Ну, рассказывай.', {mood:'angry'});
+  let best = 0; const log = [];
+  for (let i = 0; i < ROM_IV.length; i++){ const o = await romIvAsk(ROM_IV[i], i); if (o.ok) best++; log.push(o); }
+  panel.innerHTML = ''; panel.append(prHead('Собеседование в «Ромашке»', 'Итог'), el('p','wait',waitTxt()));
+  const pass = best >= 5;
+  await say('narc', pass ? 'Кхм. Толково отвечаешь. Двадцать лет работаем — таких сразу видно.' : 'Кхм. Возьму на испытательный срок. Посмотрим, как в деле.', {mood: pass ? 'ok' : 'sigh'});
+  ayaState(pass ? 'praise' : 'explain'); await say('aya', ROM_AYA[pass ? 553 : 554]);
+  await say('narc', 'Ну, а у тебя ко мне вопросы есть?', {mood:'grumble'});
+  ayaState('explain'); say('aya', ROM_AYA[555], {hold:true});
+  const qs = await romKiraQ();
+  panel.innerHTML = ''; panel.append(prHead('Вопросы Киры', 'Собеседование'), el('p','wait',waitTxt()));
+  for (const q of qs){ await say('kira', q.t); await say('narc', q.r, {mood:q.m}); }
+  const kind = qs.some(q => q.k === 'g') ? 'gossip' : qs.some(q => q.k === 'w') ? 'weak' : 'strong';
+  if (kind === 'strong') await say('narc', 'Вот это разговор!', {mood:'ok'});
+  ayaState(kind === 'strong' ? 'praise' : 'warn'); await say('aya', ROM_AYA[{strong:556, weak:557, gossip:558}[kind]]);
+  const R = romNew(); R.prob = !pass || kind === 'gossip'; R.q = kind; romPut(R);
+  panel.innerHTML = ''; panel.append(prHead('Собеседование в «Ромашке»', 'Итог'));
+  const c = el('div','card');
+  c.innerHTML = '<h2>' + (R.prob ? 'Испытательный срок' : 'Собеседование пройдено') + '</h2><p>Лучших ответов: <b>' + best + ' из ' + ROM_IV.length + '</b> (нужно 5). Вопросы Киры: <b>' + {strong:'сильные', weak:'есть слабые', gossip:'был неуместный'}[kind] + '</b>.</p>'
+    + '<p>' + (R.prob ? 'Клиентки первой смены придут настороженными: стартовое настроение ниже.' : kind === 'strong' ? 'Нарцисс доволен: клиентки первой смены начнут с хорошего настроения.' : 'Нарцисс берёт Киру. Дальше — пробная работа с моделью и три смены.') + '</p>';
+  const ul = el('ul','review');
+  log.forEach((o, i) => { const li = el('li', o.ok ? 'ok' : 'bad'); const h = el('div','rt'); h.textContent = (o.ok ? '✓ ' : '✗ ') + ROM_IV[i].q; li.append(h); if (!o.ok){ const b = el('div','rb'); b.textContent = 'Лучше: ' + ROM_IV[i].o.find(x => x.ok).t; li.append(b); } ul.append(li); });
+  const c1 = el('div','card'); c1.append(el('h2', null, 'Работа над ошибками'), ul);
+  const go = el('button','next','К пробной работе'); go.type = 'button';
+  go.onclick = async () => {
+    go.disabled = true; stopVoice();
+    await say('narc', 'Диплом — это бумага. Вот кресло, сейчас придёт клиентка. Покажи, как ты работаешь.', {mood:'suspicious'});
+    vis('narc', false);
+    const F2 = famGet(); let bonus = 0;
+    if (F2.passed && F2.branch && !F2.narc){ bonus = {A:-10, B:0, C:10}[F2.branch] || 0; F2.narc = true; famPut(F2); }
+    restart(true);
+    if (bonus){ S.meter = clamp(S.meter + bonus, -100, 100); hud(); }
+  };
+  const menu = el('button','next alt','В меню'); menu.type = 'button'; menu.onclick = () => restart(false);
+  const row = el('div','btnrow'); row.append(menu, go);
+  panel.append(c, c1, row); fitStage();
 }
 
 /* ================= «СЕМЕЙНАЯ»: Кира, две смены (лёгкий уровень) и переход в «Ромашку» ================= */
@@ -3741,7 +4094,7 @@ async function famShiftEnd(){
 }
 /* переход в «Ромашку»: как уйти от Тамары Петровны */
 async function famLeave(happy){
-  panel.innerHTML = ''; panel.append(menHead('Переход в «Ромашку»', 0), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(menHead('Переход в «Ромашку»', 0), el('p','wait',waitTxt()));
   C.tamara.pose = SP.tamara.cash ? 'cash' : 'stand'; setPos('tamara', 1150, 690); face('tamara', -1); vis('tamara', true); mood('tamara', 'warm');
   await say('kira', 'Следующее утро, 8:50. Тамара Петровна листает тетрадь кассы. У Киры в кармане визитка «Ромашки».', {narr:true});
   await say('tamara', 'И скандал выдержала, и деньги сошлись. Ну, рассказывай, чего мнёшься?');
@@ -3806,8 +4159,8 @@ const DIR_MON = ['Январь','Февраль','Март','Апрель','Ма
 const DIR_SEAS = [-.25,-.05,.15,0,.05,0,-.20,.15,0,0,0,.25];
 const DIR_MROT = 27093, DIR_IPFIX = 57390, DIR_CHAIR = 80000, DIR_SIGN = 30000;
 const DIR_PREM = {
-  basement:{t:'Полуподвал в спальном районе', s:'40 м², до 3 кресел. Мало прохожих, зато дёшево.', rent:35000, util:12000, max:3, traffic:9},
-  stop:{t:'Первый этаж у остановки', s:'60 м², до 4 кресел. Люди идут мимо каждый день.', rent:60000, util:18000, max:4, traffic:13},
+  basement:{t:'Полуподвал в спальном районе', s:'40 м², до 3 кресел. Не проходное место: мало прохожих, зато дёшево.', rent:35000, util:12000, max:3, traffic:9},
+  stop:{t:'Первый этаж у остановки', s:'60 м², до 4 кресел. Проходное место: люди идут мимо каждый день.', rent:60000, util:18000, max:4, traffic:13},
   avenue:{t:'Помещение на проспекте', s:'90 м², до 6 кресел. Большой поток и большая аренда.', rent:100000, util:27000, max:6, traffic:20}};
 const DIR_FORMS = {
   emp:{t:'Трудовой договор', s:'Оклад не ниже МРОТ, отпускные, взносы 30% сверху. Мастера спокойны, салону дорого.'},
@@ -4124,7 +4477,7 @@ async function dirStart(resume){
   dirSalonScene('stand'); dirThermoShow(null);
   if (D && D.form && D.month < 12 && !D.over){ dirHud(); return D.opened ? dirPlan() : dirMoney(true); }
   D = dirFresh(); dirClear(); dirHud();
-  panel.innerHTML = ''; panel.append(dirHead('Начало', 'Директор «Семейной»'), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(dirHead('Начало', 'Директор «Семейной»'), el('p','wait',waitTxt()));
   mood('tamara','warm');
   await say('tamara', 'Тамара Петровна тридцать лет стригла у чужих. Теперь решилась: своя парикмахерская. Денег на счёте — ноль.', {narr:true});
   await say('tamara', 'Назову «Семейная». Стричь умею, а считать… ну, научимся.', {mood:'warm'});
@@ -4573,7 +4926,7 @@ async function ownStart(resume){
   if (O && O.reg && O.month < 12 && !O.over){ if (O.chairRent) OWN_PLACE.chair.rent = O.chairRent; ownScene('stand'); return ownPlan(); }
   O = ownFresh(); ownClear(); OWN_PLACE.chair.rent = 15000;
   ownScene('think');
-  panel.innerHTML = ''; panel.append(ownHead('Начало', 'Кира: своё дело'), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(ownHead('Начало', 'Кира: своё дело'), el('p','wait',waitTxt()));
   await say('kira', 'Кира два года стрижёт в найме. Половина денег уходит салону. Накоплено восемьдесят тысяч, есть двадцать пять постоянных клиенток.', {narr:true});
   await say('kira', 'Хочу работать на себя. Стричь я умею. А вот всё остальное… разберусь!', {mood:'happy'});
   ayaState('explain'); await say('aya', ownA(471));
@@ -5124,7 +5477,7 @@ async function pjNobody(){
   saveClear('eric');
   setLocation2('barber_pijon'); clips(false); ['kira','eric','tamara','narc','ab','client'].forEach(x => vis(x, false));
   C.eric.pose = 'stand'; setPos('eric', 900, 690); face('eric', 1); vis('eric', true); camSet(1000);
-  panel.innerHTML = ''; panel.append(menHead('«Пижон», цикл 3', 0), el('p','wait','Смотрите сцену…'));
+  panel.innerHTML = ''; panel.append(menHead('«Пижон», цикл 3', 0), el('p','wait',waitTxt()));
   pjStaff('grisha', 1250, true); if (SP.grisha.laptop){ C.grisha.pose = 'laptop'; place('grisha'); }
   await say('grisha', 'Ни один клиент не записался снова. Таблица пустая. Давай начнём сначала: новые люди, новый шанс — и разбор ошибок.', {mood:'sad'});
   ayaState('warn'); await say('aya', pjA(328));
@@ -5139,7 +5492,7 @@ async function pjCycleEnd(){
   const p = pjGet(), cyc = MV.cycle;
   p.done = Math.max(p.done, cyc);
   const lost = pjLost(p);
-  if (cyc === 3){ p.passed = (8 - lost.length) >= 6 && !!MV.upskill; if (MV.upskill) p.up = true; }
+  if (cyc === 3){ p.passed = (8 - lost.length) >= 6 && !!MV.upskill; if (MV.upskill) p.up = true; if (p.passed && getRank() < 2){ setRank(2); hud(); } }
   pjPut(p);
   /* уборка в конце смены */
   if (SP.eric.sweep){ C.eric.pose = 'sweep'; place('eric'); }
