@@ -1,16 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><!-- Yandex.Metrika counter -->
-<script>
-window.YM_ID=113842352;
-(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
-k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
-ym(113842352,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
-window.ymGoal=function(g,p){try{ym(113842352,"reachGoal",g,p||{})}catch(e){}};
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/113842352" style="position:absolute;left:-9999px;" alt=""></div></noscript>
-<!-- /Yandex.Metrika counter -->
-</head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Нормы времени мастера</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
@@ -233,4 +221,22 @@ function syncCalc(){
 renderTable(); syncCalc();
 </script>
 
+<script>
+/* фоновая музыка игры и на странице норм: та же громкость, продолжает с того же места */
+(function(){
+  var on=true, vol=0.35;
+  try{ on=localStorage.getItem('romashka_music')!=='off'; var v=localStorage.getItem('romashka_music_vol'); if(v!==null) vol=Math.max(0,Math.min(1,+v)); }catch(e){}
+  if(!on||vol<=0) return;
+  var m=new Audio('audio/music.mp3'); m.loop=true; var started=false, ctx=null, g=null;
+  function play(){
+    if(!started){ started=true; try{ var t=+sessionStorage.getItem('romashka_music_t'); if(t>0) m.currentTime=t; }catch(e){}
+      try{ var AC=window.AudioContext||window.webkitAudioContext; if(AC){ ctx=new AC(); var s=ctx.createMediaElementSource(m); g=ctx.createGain(); g.gain.value=vol; s.connect(g); g.connect(ctx.destination); } else m.volume=vol; }catch(e){ m.volume=vol; } }
+    if(ctx&&ctx.state==='suspended') ctx.resume();
+    var p=m.play(); if(p&&p.catch) p.catch(function(){});
+  }
+  ['pointerdown','touchend','click','keydown'].forEach(function(ev){ document.addEventListener(ev,function(){ if(m.paused) play(); },true); });
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden&&started&&m.paused) play(); });
+  addEventListener('pagehide',function(){ try{ sessionStorage.setItem('romashka_music_t',String(m.currentTime||0)); }catch(e){} });
+})();
+</script>
 </body></html>

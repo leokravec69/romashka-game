@@ -534,9 +534,10 @@ body.dirMode .hud .plate:not(.pDirCash):not(.pDirRep){display:none}
 /* реплики по нажатию */
 .fs.auto{font-size:12px}
 .fs.auto.off{opacity:.55}
-.dlg.manual.more::after{content:"нажмите ▸";font-size:11px;font-weight:700;opacity:0;animation:none;bottom:3px;right:10px;letter-spacing:.02em;transition:opacity .25s}
-.dlg.manual.more.ready::after{opacity:.75;animation:blink 1.2s infinite}
-.dlg.manual.more{padding-bottom:18px}
+.dlg.manual.more::after{content:"Далее ▸";position:sticky;align-self:flex-end;flex:none;margin-left:auto;font-size:15px;font-weight:800;color:#fff;background:#ff6a00;border:2px solid #1c2620;border-radius:99px;padding:6px 14px;opacity:1;animation:nextPulse 1.1s ease-in-out infinite;box-shadow:0 3px 0 #1c2620;letter-spacing:.02em;white-space:nowrap;bottom:0;right:0}
+.dlg.manual.more.ready::after{background:#ff3d00}
+@keyframes nextPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@media (prefers-reduced-motion:reduce){.dlg.manual.more::after{animation:none}}
 @media (max-width:560px){ .autoW{display:none} }
 </style>
 </head>
@@ -1437,11 +1438,20 @@ function musicPlay(){
   if (!MUSIC_SRC || !musicOn || musVol <= 0) return;
   if (!music.src) music.src = MUSIC_SRC;
   musicGraph(); if (actx && actx.state === 'suspended') actx.resume();
+  if (!musStarted){ musStarted = true;              // продолжить с того места, где музыка была до «Норм времени»
+    try { const t = +sessionStorage.getItem('romashka_music_t'); if (t > 0) music.currentTime = t; } catch(e){} }
   musicLevel(); const p = music.play(); if (p && p.catch) p.catch(() => {});
 }
-document.addEventListener('pointerdown', () => { if (music.paused) musicPlay(); }, true);
+let musStarted = false;
+/* iPhone даёт включить звук только по касанию/клику, причём не всегда по pointerdown — пробуем на всех жестах */
+['pointerdown','touchend','click','keydown'].forEach(ev => document.addEventListener(ev, () => { if (music.paused) musicPlay(); }, true));
+/* вернулись во вкладку/разблокировали телефон — музыка снова играет */
+document.addEventListener('visibilitychange', () => { if (!document.hidden && musStarted && music.paused) musicPlay(); });
+addEventListener('pagehide', () => { try { sessionStorage.setItem('romashka_music_t', String(music.currentTime || 0)); } catch(e){} });
 voice.addEventListener('play', () => { ducked = true; musicLevel(); });
-['pause','ended'].forEach(ev => voice.addEventListener(ev, () => { ducked = false; musicLevel(); }));
+/* на iPhone голос Айи может остановить музыку — после реплики включаем её обратно */
+['pause','ended'].forEach(ev => voice.addEventListener(ev, () => { ducked = false; musicLevel(); if (musStarted && music.paused) musicPlay(); }));
+music.addEventListener('pause', () => { if (musStarted && musicOn && musVol > 0 && !document.hidden) setTimeout(() => { if (music.paused && voice.paused) musicPlay(); }, 400); });
 function musicBtn(){
   const b = document.getElementById('musBtn'), pop = document.getElementById('musPop'), r = document.getElementById('musVol'), o = document.getElementById('musOut');
   if (!b) return;
