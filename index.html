@@ -534,9 +534,10 @@ body.dirMode .hud .plate:not(.pDirCash):not(.pDirRep){display:none}
 /* реплики по нажатию */
 .fs.auto{font-size:12px}
 .fs.auto.off{opacity:.55}
-.dlg.manual.more::after{content:"Далее ▸";position:relative;align-self:flex-end;flex:none;margin-left:auto;font-size:15px;font-weight:800;color:#fff;background:#ff6a00;border:2px solid #1c2620;border-radius:99px;padding:6px 14px;opacity:1;-webkit-animation:nextPulse 1s ease-in-out infinite;animation:nextPulse 1s ease-in-out infinite;letter-spacing:.02em;white-space:nowrap;bottom:auto;right:auto;will-change:transform}
-@-webkit-keyframes nextPulse{0%,100%{-webkit-transform:scale(1);background:#ff6a00;box-shadow:0 3px 0 #1c2620,0 0 0 0 rgba(255,106,0,.7)}50%{-webkit-transform:scale(1.14);background:#ff2d00;box-shadow:0 3px 0 #1c2620,0 0 0 10px rgba(255,106,0,0)}}
-@keyframes nextPulse{0%,100%{transform:scale(1);background:#ff6a00;box-shadow:0 3px 0 #1c2620,0 0 0 0 rgba(255,106,0,.7)}50%{transform:scale(1.14);background:#ff2d00;box-shadow:0 3px 0 #1c2620,0 0 0 10px rgba(255,106,0,0)}}
+body.manualMode .panel .wait{display:block;align-self:center;width:min(300px,84%);margin:4px auto 0;box-sizing:border-box;text-align:center;cursor:pointer;user-select:none;-webkit-user-select:none;font-size:18px;font-weight:800;color:#fff;background:#ff6a00;border:2px solid #1c2620;border-radius:99px;padding:12px 20px;letter-spacing:.02em;-webkit-tap-highlight-color:transparent;-webkit-animation:nextPulse 1s ease-in-out infinite;animation:nextPulse 1s ease-in-out infinite;will-change:transform}
+body.manualMode .panel .wait:active{-webkit-animation:none;animation:none;transform:translateY(2px);box-shadow:0 1px 0 #1c2620}
+@-webkit-keyframes nextPulse{0%,100%{-webkit-transform:scale(1);background:#ff6a00;box-shadow:0 3px 0 #1c2620,0 0 0 0 rgba(255,106,0,.7)}50%{-webkit-transform:scale(1.07);background:#ff2d00;box-shadow:0 3px 0 #1c2620,0 0 0 10px rgba(255,106,0,0)}}
+@keyframes nextPulse{0%,100%{transform:scale(1);background:#ff6a00;box-shadow:0 3px 0 #1c2620,0 0 0 0 rgba(255,106,0,.7)}50%{transform:scale(1.07);background:#ff2d00;box-shadow:0 3px 0 #1c2620,0 0 0 10px rgba(255,106,0,0)}}
 @media (max-width:560px){ .autoW{display:none} }
 </style>
 </head>
@@ -1487,11 +1488,15 @@ function autoBtn(){
   const b = document.getElementById('autoBtn'); if (!b) return;
   b.innerHTML = '▶<span class="autoW"> Авто</span>'; b.classList.toggle('off', !autoOn);
   b.setAttribute('aria-pressed', String(autoOn));
+  document.body.classList.toggle('manualMode', !autoOn);
+  document.querySelectorAll('.panel .wait').forEach(w => { w.textContent = waitTxt(); });
   b.title = autoOn ? 'Реплики идут сами. Нажмите, чтобы листать по нажатию' : 'Реплики листаются по нажатию. Нажмите, чтобы шли сами';
   b.onclick = e => { e.stopPropagation(); autoOn = !autoOn; try { localStorage.setItem('romashka_auto', autoOn ? 'on' : 'off'); } catch(e){} autoBtn(); if (autoOn && skipFn) skipFn(); };
 }
 autoBtn();
-const waitTxt = () => autoOn ? 'Смотрите сцену…' : 'Нажимайте на сцену, чтобы читать дальше…';
+function waitTxt(){ return autoOn ? 'Смотрите сцену…' : 'Далее ▸'; }
+/* в ручном режиме строка под сценой — большая кнопка «Далее» */
+document.getElementById('panel').addEventListener('click', e => { if (e.target.closest && e.target.closest('.wait') && skipFn) skipFn(); });
 /* ---------- реплики: пузырь под сценой с хвостиком к говорящему; директор и администратор всплывают ---------- */
 let skipFn = null, holdOn = false;
 const bust = document.getElementById('bust'), bustImg = document.getElementById('bustImg');
