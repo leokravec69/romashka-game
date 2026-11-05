@@ -534,8 +534,11 @@ body.dirMode .hud .plate:not(.pDirCash):not(.pDirRep){display:none}
 /* реплики по нажатию */
 .fs.auto{font-size:12px}
 .fs.auto.off{opacity:.55}
-body.manualMode .panel .wait{display:block;align-self:center;width:min(300px,84%);margin:4px auto 0;box-sizing:border-box;text-align:center;cursor:pointer;user-select:none;-webkit-user-select:none;font-size:18px;font-weight:800;color:#fff;background:#ff6a00;border:2px solid #1c2620;border-radius:99px;padding:12px 20px;letter-spacing:.02em;-webkit-tap-highlight-color:transparent;-webkit-animation:nextPulse 1s ease-in-out infinite;animation:nextPulse 1s ease-in-out infinite;will-change:transform}
-body.manualMode .panel .wait:active{-webkit-animation:none;animation:none;transform:translateY(2px);box-shadow:0 1px 0 #1c2620}
+body.manualMode .panel .wait{display:block;align-self:center;width:min(300px,84%);margin:4px auto 0;box-sizing:border-box;text-align:center;user-select:none;-webkit-user-select:none;font-size:18px;font-weight:800;color:#fff;background:#8a8f99;border:2px solid #1c2620;border-radius:99px;padding:12px 20px;letter-spacing:.02em;-webkit-tap-highlight-color:transparent;opacity:.85}
+body.manualMode .panel .wait.go{cursor:pointer;background:#ff6a00;opacity:1;-webkit-animation:nextPulse 1s ease-in-out infinite;animation:nextPulse 1s ease-in-out infinite;will-change:transform}
+body.manualMode .panel .wait.go:active{-webkit-animation:none;animation:none;transform:translateY(2px);box-shadow:0 1px 0 #1c2620}
+body.manualMode .panel .wait.idle{display:none}
+.mbConts:has(> :nth-child(2)) .mbBig{font-size:18px}
 @-webkit-keyframes nextPulse{0%,100%{-webkit-transform:scale(1);background:#ff6a00;box-shadow:0 3px 0 #1c2620,0 0 0 0 rgba(255,106,0,.7)}50%{-webkit-transform:scale(1.07);background:#ff2d00;box-shadow:0 3px 0 #1c2620,0 0 0 10px rgba(255,106,0,0)}}
 @keyframes nextPulse{0%,100%{transform:scale(1);background:#ff6a00;box-shadow:0 3px 0 #1c2620,0 0 0 0 rgba(255,106,0,.7)}50%{transform:scale(1.07);background:#ff2d00;box-shadow:0 3px 0 #1c2620,0 0 0 10px rgba(255,106,0,0)}}
 @media (max-width:560px){ .autoW{display:none} }
@@ -1484,19 +1487,37 @@ function soundBtn(){
 soundBtn();
 /* Авто: реплики сами сменяют друг друга. По умолчанию выключено — следующая реплика по нажатию (замечание преподавателя) */
 let autoOn = false; try { autoOn = localStorage.getItem('romashka_auto') === 'on'; } catch(e){}
+let burst = false;   // после выбора ответа реплики идут сами — до следующего выбора
 function autoBtn(){
   const b = document.getElementById('autoBtn'); if (!b) return;
   b.innerHTML = '▶<span class="autoW"> Авто</span>'; b.classList.toggle('off', !autoOn);
   b.setAttribute('aria-pressed', String(autoOn));
   document.body.classList.toggle('manualMode', !autoOn);
-  document.querySelectorAll('.panel .wait').forEach(w => { w.textContent = waitTxt(); });
+  try { nextSync(); } catch(e){}   // при самом первом вызове skipFn ещё не объявлен
   b.title = autoOn ? 'Реплики идут сами. Нажмите, чтобы листать по нажатию' : 'Реплики листаются по нажатию. Нажмите, чтобы шли сами';
   b.onclick = e => { e.stopPropagation(); autoOn = !autoOn; try { localStorage.setItem('romashka_auto', autoOn ? 'on' : 'off'); } catch(e){} autoBtn(); if (autoOn && skipFn) skipFn(); };
 }
 autoBtn();
-function waitTxt(){ return autoOn ? 'Смотрите сцену…' : 'Далее ▸'; }
+function waitTxt(){ return 'Смотрите сцену…'; }
 /* в ручном режиме строка под сценой — большая кнопка «Далее» */
 document.getElementById('panel').addEventListener('click', e => { if (e.target.closest && e.target.closest('.wait') && skipFn) skipFn(); });
+document.getElementById('panel').addEventListener('click', e => { const c = e.target.closest && e.target.closest('button.choice, button.seg'); if (c && !c.disabled) burst = true; }, true);
+/* кнопка под сценой: «Ждите…» пока идёт сцена, «Жми ▸ Далее» когда можно листать */
+function nextSync(){
+  const pn = document.getElementById('panel'); if (!pn) return;
+  if (burst && !skipFn && pn.querySelector('button:not([disabled]):not(.wait)')) burst = false;   // появился новый выбор — снова листаем вручную
+  const ready = !!skipFn && !autoOn && !burst;
+  let w = pn.querySelector('.wait');
+  if (!w && ready){ w = document.createElement('p'); w.className = 'wait'; w.dataset.orig = 'Смотрите сцену…'; pn.append(w); }
+  if (!w) return;
+  if (w.dataset.orig === undefined) w.dataset.orig = w.textContent;
+  const t = autoOn ? (w.dataset.orig || 'Смотрите сцену…') : ready ? 'Жми ▸ Далее' : 'Ждите…';
+  if (w.textContent !== t) w.textContent = t;
+  const busy = !ready && !!pn.querySelector('button:not([disabled])');   // уже есть варианты ответа — «Ждите» не нужен
+  if (w.classList.contains('go') !== ready) w.classList.toggle('go', ready);
+  if (w.classList.contains('idle') !== busy) w.classList.toggle('idle', busy);
+}
+new MutationObserver(nextSync).observe(document.getElementById('panel'), {childList:true, subtree:true});
 /* ---------- реплики: пузырь под сценой с хвостиком к говорящему; директор и администратор всплывают ---------- */
 let skipFn = null, holdOn = false;
 const bust = document.getElementById('bust'), bustImg = document.getElementById('bustImg');
@@ -1564,16 +1585,18 @@ async function say(id, text, opt = {}){
   holdOn = false;
   dlg.classList.add('more');
   const vp = id === 'aya' ? playVoice(text) : null;
-  dlg.classList.toggle('manual', !autoOn);
+  const autoNow = autoOn || burst;
+  dlg.classList.toggle('manual', !autoNow);
   await new Promise(res => {
     let t = null; const t0 = Date.now();
     skipFn = () => { if (Date.now() - t0 < 300) return; clearTimeout(t); stopVoice(); res(); };   // защита от случайного двойного нажатия
-    if (!autoOn){ if (vp) vp.then(() => dlg.classList.add('ready')); else dlg.classList.add('ready'); return; }   // по умолчанию: следующая реплика только по нажатию
+    nextSync();
+    if (!autoNow){ if (vp) vp.then(() => dlg.classList.add('ready')); else dlg.classList.add('ready'); return; }   // по умолчанию: следующая реплика только по нажатию
     if (vp) vp.then(ok => { t = setTimeout(res, ok ? 150 : readMs(text)); });   // ждём конец фразы; без звука — время на чтение
     else t = setTimeout(res, readMs(text));
   });
   dlg.classList.remove('ready');
-  skipFn = null; dlg.classList.remove('more'); stop();
+  skipFn = null; nextSync(); dlg.classList.remove('more'); stop();
   hideDlg(); bust.className = 'bust';            // реплика исчезает вместе с говорящим
 }
 function clearHeld(){ holdOn = false; }
@@ -2133,10 +2156,14 @@ function intro(){
     mk('🎓', 'Экзамен', 'Кира или Эрик: 80% — новый ранг', () => examPick0()),
     mk('👥', 'Персонажи', 'С кем вы встретитесь в игре', () => charsShow()));
   const conts = ['kira','eric'].map(m => {
-    const sv = saveGet(m); if (!sv || sv.kind !== 'shift') return null;
+    const sv0 = saveGet(m), sv = sv0 && sv0.kind === 'shift' ? sv0 : null, last = heroLast(m);
+    if (!sv && !last) return null;                 // герой ещё не начат — кнопки нет
     const b = el('button','hsPlay mbStart mbSalon mbCont mbCont-' + m); b.type = 'button';
-    b.append(el('span','mbBig','▶ Продолжить за ' + (m === 'eric' ? 'Эрика' : 'Киру')), el('span','mbS', saveLabel(sv)));
-    b.onclick = () => { all.forEach(x => x.disabled = true); saveResume(m); };
+    b.append(el('span','mbBig','▶ Продолжить за ' + (m === 'eric' ? 'Эрика' : 'Киру')),
+      el('span','mbS', sv ? saveLabel(sv) : 'Выбор салона' + (salonTitle(last) ? ' · был: ' + salonTitle(last) : '')));
+    b.onclick = () => { all.forEach(x => x.disabled = true);
+      if (sv) return saveResume(m);
+      stopVoice(); hideDlg(); QUICK = true; HERO = m; vis(m === 'kira' ? 'eric' : 'kira', false); careerStart(); };
     return b;
   }).filter(Boolean);
   const cont = conts.length ? el('div','mbConts') : null; if (cont) cont.append(...conts);
@@ -2864,6 +2891,7 @@ async function prPicked(i){
     const no = el('button','next','Выбрать другой'); no.type = 'button'; no.onclick = () => prChoose();
     const row = el('div','btnrow'); row.append(yes, no); panel.append(row); fitStage(); return;
   }
+  try { localStorage.setItem('romashka_hero_' + HERO, SEG[i].id); } catch(e){}   // герой начат — на главном будет «Продолжить»
   if (HERO === 'eric' && !SEG[i].barber) return ericRejected(i);
   panel.innerHTML = ''; panel.append(prHead('«' + SEG[i].name + '»'), el('p','wait','…'));
   if (HERO === 'eric' && SEG[i].id === 'buxme'){ ayaState('warn'); await say('aya', ERIC_TXT.premium); }
@@ -2873,7 +2901,7 @@ async function prPicked(i){
 }
 async function prGo(i){
   PR.salon = i;
-  try { localStorage.setItem('romashka_career', JSON.stringify({hero:HERO, rank:PR.rank, salon:SEG[i].id})); } catch(e){}
+  try { localStorage.setItem('romashka_career', JSON.stringify({hero:HERO, rank:PR.rank, salon:SEG[i].id})); localStorage.setItem('romashka_hero_' + HERO, SEG[i].id); } catch(e){}
   track('career_salon_' + SEG[i].id);
   if (HERO === 'eric' && !SEG[i].barber) return ericRejected(i);
   if (SEG[i].id === 'econom') return ecoStart();
@@ -3589,6 +3617,17 @@ function saveShift(){
   savePut({kind:'shift', master:MV.master, salon:MV.salon, cycle:MV.cycle || 1, i:MV.i, total:MV.list.length, xPts:S.xPts || 0, xMoney:S.xMoney || 0, money:MV.money, happy:MV.happy, career:MV.career});
 }
 const SALON_NAME = {romashka:'«Ромашка»', pijon:'«Пижон»', family:'«Семейная»'};
+function salonTitle(id){ const g = SEG.find(x => x.id === id); return g ? '«' + g.name + '»' : (SALON_NAME[id] || ''); }
+/* в каком салоне герой был последний раз (для кнопки «Продолжить» на главном экране) */
+function heroLast(m){
+  try {
+    const v = localStorage.getItem('romashka_hero_' + m); if (v) return v;
+    const c = JSON.parse(localStorage.getItem('romashka_career') || 'null'); if (c && c.hero === m && c.salon) return c.salon;
+    if (m === 'kira' && (localStorage.getItem('romashka_rom') || localStorage.getItem('romashka_family'))) return localStorage.getItem('romashka_rom') ? 'eplus' : 'econom';
+    if (m === 'eric' && localStorage.getItem('romashka_pijon')) return 'pijon';
+  } catch(e){}
+  return null;
+}
 function saveLabel(o){
   const who = o.master === 'eric' ? 'Эрик' : 'Кира', noun = (o.salon === 'family' || o.salon === 'romashka' ? 'смена ' + (o.cycle || 1) + ' · ' : '') + (o.salon === 'romashka' ? 'клиентка' : 'клиент');
   const d = new Date(o.t), dd = String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth() + 1).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
@@ -3596,7 +3635,7 @@ function saveLabel(o){
 }
 function saveResume(m){ const o = saveGet(m); if (!o || o.kind !== 'shift') return restart(false); track('save_resume'); menStart(o.master, o.career, o.salon, o); }
 /* код сохранения: перенести прогресс на другое устройство без сервера */
-const SAVE_KEYS = [SAVE_KEY + '_kira', SAVE_KEY + '_eric', DONE_KEY, STATS_KEY, 'romashka_rank', 'romashka_career', 'romashka_pijon', 'romashka_family', 'romashka_director', 'romashka_director_best', 'romashka_own', 'romashka_rom'];
+const SAVE_KEYS = [SAVE_KEY + '_kira', SAVE_KEY + '_eric', DONE_KEY, STATS_KEY, 'romashka_rank', 'romashka_career', 'romashka_pijon', 'romashka_family', 'romashka_director', 'romashka_director_best', 'romashka_own', 'romashka_rom', 'romashka_hero_kira', 'romashka_hero_eric'];
 function saveCode(){
   const o = {}; SAVE_KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v !== null) o[k] = v; } catch(e){} });
   return btoa(unescape(encodeURIComponent(JSON.stringify(o))));
